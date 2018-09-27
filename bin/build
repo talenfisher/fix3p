@@ -1,0 +1,2 @@
+#!/bin/bash
+docker build -t fix3p:0.1.0 .

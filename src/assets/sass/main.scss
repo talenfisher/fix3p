@@ -1,0 +1,138 @@
+$primaryColor: #0D47A1; 
+
+* {
+    padding: 0;
+    margin: 0;
+    font-family: Raleway, sans-serif;
+    box-sizing: border-box;
+    outline: none !important;
+}
+
+.container {
+    padding: 15px;
+}
+
+a {
+    text-decoration: none;
+    color: $primaryColor;
+}
+
+ 
+@import "header"; 
+@import "animations";
+
+.viewport {
+    overflow-x: hidden;
+}
+
+form {
+    white-space: nowrap;
+    position: relative;
+    transition: right .5s;
+    right: 0;
+
+    .screen {
+        width: 100vw;
+        display: inline-block;
+        position: relative;
+        vertical-align: top;
+    }
+}
+
+.upload {
+    text-align: center;
+
+    input {
+        display: none;
+    }
+
+    label {
+        display: block;
+        height: 100vh;
+        width: calc(100% - 30px);
+        padding: 200px 15px;
+        font-size: 2.5em;
+        color: $primaryColor;
+        cursor: pointer;
+        position: relative;
+        
+        small {
+            font-size: 0.8em;
+        }
+
+        i { 
+            font-size: 3em;
+        }
+
+        &:hover, .hover {
+            color: lighten($primaryColor, 10%);
+        }
+    }    
+}
+
+.view  {
+    left: -4px;
+
+    nav {
+        display: flex;
+
+        .tab {
+            display: inline-block;
+            color: $primaryColor;
+            padding: 15px;
+            cursor: pointer;
+            text-align: center;
+            flex-grow: 1;
+
+            &:hover {
+                @extend .active-tab;
+            }
+        }
+    }
+
+    main div {
+        padding: 15px;
+    }
+
+    [data-tag] {
+        display: flex;
+        flex-wrap: wrap;
+
+        label, input {
+            height: 50px;
+            padding: 10px;
+            flex-grow: 1;
+        }
+
+        label {
+            flex-basis: 20%;
+            line-height: 30px;
+            min-width: 200px;
+        }
+        
+        input {
+            flex-basis: 80%;
+        }
+
+        h3, [data-tag] {
+            flex-basis: 100%;
+        }
+    }
+
+    main > div {
+        display: none !important; // !important needed here, cascade doesn't work otherwise
+    }
+
+    @for $i from 1 through 5 {
+        &[data-view="#{$i}"] {
+            nav .tab:nth-child(#{$i + 1}) { @extend .active-tab; }
+            main > div:nth-child(#{$i}) { display: flex !important; }
+        }
+    }
+}
+
+.active-tab {
+    background: $primaryColor;
+    color: white;
+}
+
