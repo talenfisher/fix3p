@@ -23,6 +23,9 @@
     "watch": "concurrently npm:watch:js npm:watch:sass",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "browser": {
+    "ws": false
+  },
   "author": "Talen Fisher",
   "license": "UNLICENSED",
   "private": true

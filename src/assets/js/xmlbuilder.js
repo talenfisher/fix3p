@@ -6,7 +6,7 @@ const DOCTYPE = '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>';
  * Build XML document from HTML Inputs
  */
 export default class XMLBuilder {
-    
+     
     /**
      * Constructs a new XMLBuilder
      * 

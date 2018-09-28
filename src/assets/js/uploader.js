@@ -1,6 +1,9 @@
 import jszip from "jszip";
+import ZipHolder from "./zipholder";
 
+var i = 0;
 let parser = new DOMParser();
+class X3PException {};
 
 export default class Uploader {
     constructor() {
@@ -21,29 +24,62 @@ export default class Uploader {
         this.input.addEventListener("change", e => this.read(e, true));
     }
 
-    read(e, byclick = false) {
+    /**
+     * Read the file that was selected
+     * 
+     * @param {*} e 
+     * @param {*} byclick 
+     */
+    async read(e, byclick = false) {
         this.label.classList.remove("hover");
 
-        var file = (!byclick) ? e.originalEvent.dataTransfer.files[0] : this.input.files[0];
-        fix3p.ZipHolder.filename = file.name;
+        let file = (!byclick) ? e.originalEvent.dataTransfer.files[0] : this.input.files[0];
+        let zip = await jszip().loadAsync(file);
+        
+        try {
+            fix3p.ZipHolder = new ZipHolder(zip, file.name);
+            if(!(await fix3p.ZipHolder.isValid())) {
+                throw new X3PException;
+            }
+        } catch(x3pexception) {
+            console.error("Read invalid X3P file.");
+            return;
+        }
 
-        jszip()
-        .loadAsync(file)
-        .then(zip => {
-            fix3p.ZipHolder.zipfile = zip;
-
-            zip
-            .file("main.xml")
-            .async("text")
-            .then(manifest => {
-                manifest = parser.parseFromString(manifest, "text/xml");
-                this.display(manifest.children[0], document.querySelector(".view main"));
-                document.querySelector("form").style.right = "100vw";
-            });
-        })
-        .catch(err => console.error(err));
+        let manifest = await fix3p.ZipHolder.retrieve("main.xml");
+        manifest = parser.parseFromString(manifest, "application/xml");
+        this.populate(manifest.children[0]);
+        document.querySelector("form").style.right = "100vw";
     }
 
+    /**
+     * Populate existing HTML inputs with values
+     * from the selected X3P file
+     * 
+     * @param {*} node 
+     */
+    populate(node) {
+        if(node.children.length === 0) {
+            let selector = pathArray2DTS(node.getPath());
+            let el = document.querySelector(selector + " input");
+            el.value = node.innerHTML;
+
+        } else {
+            for(let subchild of node.children) {
+                this.populate(subchild);
+            }
+        }
+    }
+
+
+    /**
+     * Dynamically populate the editor with what is in
+     * the X3P file.  (Used in development to generate 
+     * the "viewer" HTML tree in index.html)
+     * 
+     * @param {*} manifest 
+     * @param {*} target 
+     */
     display(manifest, target) {
         for(let child of manifest.children) {
             let el = document.createEasy("div", {
@@ -74,21 +110,24 @@ export default class Uploader {
             } else {
                 let label = document.createEasy("label", {
                     props: {
-                        for: child.tagName,
                         innerHTML: child.tagName + ":"
+                    },
+                    attrs: {
+                        for: "x3p$"+i
                     }
                 });
 
                 let input = document.createEasy("input", {
                     props: {
-                        id: child.tagName,
                         type: "text",
-                        value: child.innerHTML
+                        value: child.innerHTML,
+                        id: "x3p$"+i
                     }
                 });    
                 
                 el.appendChild(label);
                 el.appendChild(input);
+                i++;
             }
     
             target.appendChild(el);
@@ -97,4 +136,18 @@ export default class Uploader {
         return target;
     }    
 
+}
+
+/**
+ * Converts a path array to a data tag selector
+ * @param {string[]} path 
+ */
+function pathArray2DTS(path) {
+    let result = "main ";
+
+    for(let tagname of path) {
+        result += `[data-tag="${tagname}"] `
+    }
+
+    return result;
 }

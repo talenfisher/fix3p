@@ -1,24 +1,18 @@
 import saveAs from "file-saver";
 
+const REQUIRED_FILES = [
+    "main.xml",
+    "md5checksum.hex"
+];
+
 export default class ZipHolder {
-    constructor(zipfile = null) {
-        this._zipfile = zipfile;
+    constructor(zipfile, filename) {
+        this.zipfile = zipfile;
+        this.filename = filename;
     }
 
-    get zipfile() {
-        return this._zipfile;
-    }
-
-    set zipfile(zipfile) {
-        this._zipfile = zipfile;
-    }
-
-    get filename() {
-        return this._filename;
-    }
-
-    set filename(filename) {
-        this._filename = filename;
+    retrieve(filename) {
+        return this.zipfile.file(filename).async("text");
     }
 
     update(filename, contents) {
@@ -30,4 +24,13 @@ export default class ZipHolder {
         .generateAsync({type:"blob"})
         .then(blob => saveAs(blob, filename));
     }
-}
+
+    isValid() {
+        for(let requirement of REQUIRED_FILES) {
+            if(!Object.keys(this.zipfile.files).includes(requirement)) {
+                return false;
+            }
+        }
+        return true; 
+    }
+} 

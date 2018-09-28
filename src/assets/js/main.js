@@ -2,9 +2,7 @@ import ZipHolder from "./zipholder";
 import XMLBuilder from "./xmlbuilder";
 import Uploader from "./uploader";
 
-window.fix3p = {
-    ZipHolder: new ZipHolder,
-};
+window.fix3p = {};
 
 /**
  * Queries only immediate children
@@ -29,6 +27,21 @@ Node.prototype.index = function() {
         if(node === this) return i;
         i++;
     }
+}
+
+/**
+ * Build fully qualified selector 
+ */
+Node.prototype.getPath = function() {
+    let tagnames = [ this.tagName ];
+    let parent = this.parentElement;
+
+    while(parent !== this.ownerDocument.documentElement) {
+        tagnames.push(parent.tagName);
+        parent = parent.parentElement;
+    }
+
+    return tagnames.reverse();
 }
 
 /**
