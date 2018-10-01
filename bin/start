@@ -1,20 +1,11 @@
 #!/bin/bash
 
-
-
 PORT=$1
-VOL=$2
 
 if [[ "$PORT" == "" ]]; then
     PORT=80
 fi
 
-if [[ $VOL == "" ]]; then  
-    if ! docker run -itd -p $PORT:80 --name=fix3p fix3p:0.1.0 >/dev/null; then
-        echo "Error starting FiX3P";
-    fi
-else
-    if ! docker run -itd -p $PORT:80 -v $VOL:/usr/share/nginx/html --name=fix3p fix3p:0.1.0 >/dev/null; then
-        echo "Error starting FiX3P";
-    fi
+if ! docker run -itd -p $PORT:80 -v "$(pwd)":/media/fix3p --name=fix3p-dev fix3p:dev >/dev/null; then
+    echo "Error starting FiX3P";
 fi
