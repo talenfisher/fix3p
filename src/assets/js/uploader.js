@@ -71,7 +71,6 @@ export default class Uploader {
         }
     }
 
-
     /**
      * Dynamically populate the editor with what is in
      * the X3P file.  (Used in development to generate 
