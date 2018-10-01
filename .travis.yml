@@ -4,10 +4,10 @@ node_js:
   - '10'
 
 before_script:
-  - echo "$(echo "$DEPLOY_KEY" | base64 --decode)" > deploy.key
-  - chmod 600 deploy.key
+  - echo "$(echo "$DEPLOY_KEY" | base64 --decode)" > ./deploy.key
+  - chmod 600 ./deploy.key
   - eval "$(ssh-agent -s)"
-  - ssh-add deploy.key
+  - ssh-add ./deploy.key -q
   - npm install 
 
 script:
