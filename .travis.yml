@@ -1,0 +1,27 @@
+language: node_js
+
+node_js:
+  - '10'
+
+before_script:
+  - echo "$(echo "$DEPLOY_KEY" | base64 --decode)" > deploy.key
+  - chmod 600 deploy.key
+  - eval "$(ssh-agent -s)"
+  - ssh-add deploy.key
+  - npm install 
+
+script:
+  - npm run build
+
+after_success:
+  - cd src
+  - git init
+  - git remote add origin git@github.com:talenfisher/fix3p.git
+  - git checkout gh-pages
+  - git add .
+  - git commit -m "Building pages [jobid:$TRAVIS_BUILD_NUMBER]"
+  - git push --set-upstream origin gh-pages --quiet
+
+branches:
+  only:
+    - master 
