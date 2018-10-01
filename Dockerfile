@@ -1,18 +1,13 @@
-FROM nginx
-
-WORKDIR /tmp/fix3p
+FROM node as development
+WORKDIR /media/fix3p
 COPY . .
-
-# Install NPM & Dependencies
-RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests curl gnupg2 apt-transport-https ca-certificates -y
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && apt-get install nodejs -y
-RUN npm install
-
-# Build 
+RUN npm install && npm install http-server -g
 RUN npm run build
+CMD eval "http-server src -p 80 &" && npm run watch
+EXPOSE 80
 
-# Cleanup
-RUN cp -r src/* /usr/share/nginx/html
-RUN cd ../ && rm -rf fix3p
 
+FROM nginx as production
+WORKDIR /usr/share/nginx/html
+COPY --from=development /media/fix3p/src .
 EXPOSE 80
