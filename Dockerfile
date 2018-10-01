@@ -4,10 +4,8 @@ WORKDIR /tmp/fix3p
 COPY . .
 
 # Install NPM & Dependencies
-RUN apt-get update
-RUN apt-get install --no-install-recommends --no-install-suggests curl gnupg2 apt-transport-https ca-certificates -y
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
-RUN apt-get install nodejs -y
+RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests curl gnupg2 apt-transport-https ca-certificates -y
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && apt-get install nodejs -y
 RUN npm install
 
 # Build 
