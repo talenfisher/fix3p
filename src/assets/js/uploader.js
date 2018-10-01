@@ -54,7 +54,7 @@ export default class Uploader {
 
     /**
      * Populate existing HTML inputs with values
-     * from the selected X3P file
+     * from the X3P file
      * 
      * @param {*} node 
      */
