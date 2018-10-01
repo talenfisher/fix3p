@@ -136,3 +136,27 @@ form {
     color: white;
 }
 
+
+.error {
+    padding: 30px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 10vh 15px;
+    height: 50px;
+    line-height: 5px;
+    font-size: 20px;
+    width: calc(100% - 30px);
+    background: white;
+    color: $primaryColor;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .5s;
+    border: 1px solid $primaryColor;
+    border-radius: 25px; 
+
+    &.active {
+        opacity: 1;
+    }
+}
