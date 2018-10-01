@@ -39,10 +39,14 @@ export default class Uploader {
         try {
             fix3p.ZipHolder = new ZipHolder(zip, file.name);
             if(!(await fix3p.ZipHolder.isValid())) {
-                throw new X3PException;
+                throw new X3PException();
             }
         } catch(x3pexception) {
-            console.error("Read invalid X3P file.");
+            var error = document.querySelector(".error");
+            error.innerHTML = "Please upload a valid X3P file.";
+            error.classList.add("active");
+            setTimeout(() => error.classList.remove("active"), 2000);
+            this.input.value = "";
             return;
         }
 
