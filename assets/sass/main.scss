@@ -8,6 +8,10 @@ $primaryColor: #0D47A1;
     outline: none !important;
 }
 
+body {
+    position: relative;
+}
+
 .container {
     padding: 15px;
 }
@@ -20,6 +24,7 @@ a {
  
 @import "header"; 
 @import "animations";
+@import "editor";
 
 .viewport {
     overflow-x: hidden;
@@ -36,6 +41,16 @@ form {
         display: inline-block;
         position: relative;
         vertical-align: top;
+    }
+
+    &[data-view="uploader"] {
+        height: calc(100vh - 70px);
+        overflow-y: hidden;
+    }
+
+    &[data-view="editor"] {
+        right: 100vw;
+        height: auto;
     }
 }
 
@@ -70,93 +85,66 @@ form {
     }    
 }
 
-.view  {
-    left: -4px;
 
-    nav {
+
+.popup {
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    padding: 30px;
+    background: rgba(0,0,0,.3);
+    opacity: 0;
+    z-index: -1;
+    transition: opacity .5s;
+    text-align: center;
+
+    .popup-content {
+        margin-top: 25vh;
+        font-size: 18pt;
+        background: white;
+        max-width: 800px;
+        border-radius: 25px;
+        padding: 15px;
+        color: $primaryColor;
+        width: 100%;
+        display: inline-block;
+        text-align: center;
+        transition: opacity 1s;
+    }
+
+    .popup-btns {
         display: flex;
+        margin: 50px 15px 15px 15px;
 
-        .tab {
-            display: inline-block;
-            color: $primaryColor;
-            padding: 15px;
+        .popup-btn {
+            flex-basis: 50%;
+            background: $primaryColor;
+            color: white;
+            height: 30px;
+            line-height: 30px;
+            font-size: 12pt;
             cursor: pointer;
-            text-align: center;
-            flex-grow: 1;
+
+            &:first-child {
+                border-radius: 25px 0 0 25px;
+                margin-right: 1px;
+            }
+
+            &:last-child {
+                border-radius: 0 25px 25px 0;
+            }
 
             &:hover {
-                @extend .active-tab;
+                background: lighten($primaryColor, 10%);
             }
         }
     }
 
-    main div {
-        padding: 15px;
-    }
-
-    [data-tag] {
-        display: flex;
-        flex-wrap: wrap;
-
-        label, input {
-            height: 50px;
-            padding: 10px;
-            flex-grow: 1;
-        }
-
-        label {
-            flex-basis: 20%;
-            line-height: 30px;
-            min-width: 200px;
-        }
-        
-        input {
-            flex-basis: 80%;
-        }
-
-        h3, [data-tag] {
-            flex-basis: 100%;
-        }
-    }
-
-    main > div {
-        display: none !important; // !important needed here, cascade doesn't work otherwise
-    }
-
-    @for $i from 1 through 5 {
-        &[data-view="#{$i}"] {
-            nav .tab:nth-child(#{$i + 1}) { @extend .active-tab; }
-            main > div:nth-child(#{$i}) { display: flex !important; }
-        }
-    }
-}
-
-.active-tab {
-    background: $primaryColor;
-    color: white;
-}
-
-
-.error {
-    padding: 30px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    margin: 10vh 15px;
-    height: 50px;
-    line-height: 5px;
-    font-size: 20px;
-    width: calc(100% - 30px);
-    background: white;
-    color: $primaryColor;
-    text-align: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .5s;
-    border: 1px solid $primaryColor;
-    border-radius: 25px; 
-
     &.active {
         opacity: 1;
+        z-index: 1;
     }
 }
+

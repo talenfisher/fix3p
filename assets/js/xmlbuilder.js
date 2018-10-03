@@ -49,6 +49,10 @@ export default class XMLBuilder {
         }
     }
 
+    /**
+     * Converts the xml doc to a string
+     * @return {string} xml document as a string
+     */
     toString() {
         return DOCTYPE + serializer.serializeToString(this.xml.documentElement);
     }
