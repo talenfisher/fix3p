@@ -1,7 +1,7 @@
 import jszip from "jszip";
 import ZipHolder from "./zipholder";
+import EditableFields from "./editable-fields.json";
 
-var i = 0;
 let parser = new DOMParser();
 class X3PException {};
 
@@ -41,6 +41,7 @@ export default class Uploader {
             if(!(await fix3p.ZipHolder.isValid())) {
                 throw new X3PException();
             }
+
         } catch(x3pexception) {
             var error = document.querySelector(".error");
             error.innerHTML = "Please upload a valid X3P file.";
@@ -52,7 +53,17 @@ export default class Uploader {
 
         let manifest = await fix3p.ZipHolder.retrieve("main.xml");
         manifest = parser.parseFromString(manifest, "application/xml");
-        this.populate(manifest.children[0]);
+
+        switch(window.fix3p.mode) {
+            case "development": 
+                this.display(manifest.children[0]);
+                break;
+
+            default:
+                this.populate(manifest.children[0]);
+                break;
+        }
+        
         document.querySelector("form").style.right = "100vw";
     }
 
@@ -75,6 +86,13 @@ export default class Uploader {
         }
     }
 
+    display(manifest) {
+        this.count = 0;
+        document.querySelector(".view main").innerHTML = "";
+        document.querySelector(".view nav").innerHTML = '<a href="#" class="tab"><i class="fas fa-download"></i> Download</a>';
+        this.displayIterator(manifest, document.querySelector(".view main"));
+    }
+
     /**
      * Dynamically populate the editor with what is in
      * the X3P file.  (Used in development to generate 
@@ -83,26 +101,26 @@ export default class Uploader {
      * @param {*} manifest 
      * @param {*} target 
      */
-    display(manifest, target) {
+    displayIterator(manifest, target) {
         for(let child of manifest.children) {
             let el = document.createEasy("div", {
                 attrs: { "data-tag": child.tagName } 
             });
             
             if(child.children.length > 0) {
-                el = this.display(child, el);
+                el = this.displayIterator(child, el);
     
                 // record headings should be tabs instead
                 if(!child.tagName.match(/^Record/g)) {
                     let heading = document.createEasy("h3", {
-                        props: { innerHTML: child.tagName }
+                        props: { innerHTML: prettyPrint(child.tagName) }
                     });
                 
                     el.insertBefore(heading, el.children[0]);
     
                 } else {
                     let tab = document.createEasy("div", {
-                        props: { "innerHTML": child.tagName },
+                        props: { "innerHTML": prettyPrint(child.tagName) },
                         attrs: { "data-target": child.tagName },
                         classes: [ "tab" ]
                     });
@@ -113,10 +131,10 @@ export default class Uploader {
             } else {
                 let label = document.createEasy("label", {
                     props: {
-                        innerHTML: child.tagName + ":"
+                        innerHTML: prettyPrint(child.tagName) + ":"
                     },
                     attrs: {
-                        for: "x3p$"+i
+                        for: "x3p$"+this.count
                     }
                 });
 
@@ -124,13 +142,15 @@ export default class Uploader {
                     props: {
                         type: "text",
                         value: child.innerHTML,
-                        id: "x3p$"+i
+                        id: "x3p$"+this.count
                     }
                 });    
+
+                if(!EditableFields.includes(this.count)) input.setAttribute("disabled", "disabled");
                 
                 el.appendChild(label);
                 el.appendChild(input);
-                i++;
+                this.count++;
             }
     
             target.appendChild(el);
@@ -145,11 +165,30 @@ export default class Uploader {
  * Converts a path array to a data tag selector
  * @param {string[]} path 
  */
-function pathArray2DTS(path) {
+window.pathArray2DTS = function(path) {
     let result = "main ";
 
     for(let tagname of path) {
         result += `[data-tag="${tagname}"] `
+    }
+
+    return result;
+}
+
+/**
+ * Pretty print a string.. (CalibrationDate to Calibration Date)
+ * @param {string} string 
+ * @return {string} prettified version of the string parameter
+ */
+window.prettyPrint = function(string) {
+    let result = "";
+
+    for(let i = 0; i < string.length; i++) {
+        if(i !== 0 && 
+            string[i] === string[i].toUpperCase() && 
+            string[i - 1] === string[i - 1].toLowerCase()) result += " "; // CX, CY don't get spaced
+
+        result += string[i];
     }
 
     return result;
