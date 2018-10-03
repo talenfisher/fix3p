@@ -18,6 +18,7 @@ script:
 
 after_success:
   - cd src
+  - sed -i "s/{{version}}/$TRAVIS_BUILD_NUMBER/" index.html
   - git add .
   - git commit -m "Pages build $TRAVIS_BUILD_NUMBER"
   - git push --quiet
