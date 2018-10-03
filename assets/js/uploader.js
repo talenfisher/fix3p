@@ -29,7 +29,7 @@ export default class Uploader {
         this.label.addEventListener("dragenter", () => this.label.classList.add("hover"));
         this.label.addEventListener("dragleave", () => this.label.classList.remove("hover"));
         this.label.addEventListener("drop", this.read.bind(this));
-        this.input.addEventListener("change", e => this.read.apply(this, e, true));
+        this.input.addEventListener("change", e => this.read.apply(this, [e, true]));
     }
 
     /**
