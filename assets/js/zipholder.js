@@ -43,7 +43,7 @@ export default class ZipHolder {
      * Downloads the zip file to the user's computer
      * @param {string} filename the filename to use
      */
-    async download(filename = "file.x3p") {
+    async download(filename = this.filename) {
         let blob = await this.zipfile.generateAsync({type:"blob"});
         saveAs(blob, filename);
     }

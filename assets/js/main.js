@@ -151,4 +151,14 @@ window.addEventListener("load", () => {
             document.querySelector(".view").setAttribute("data-view", e.target.index());
         }
     });
+    
+});
+
+window.addEventListener("keydown", e => {
+    if((e.ctrlKey || e.metaKey) && e.which === 83)  {
+        if(document.querySelector("form").getAttribute("data-view") !== "editor") return true;
+        e.preventDefault();
+        document.querySelector("a.tab").click();
+        return false;
+    }
 });
