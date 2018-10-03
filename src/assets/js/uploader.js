@@ -28,8 +28,8 @@ export default class Uploader {
 
         this.label.addEventListener("dragenter", () => this.label.classList.add("hover"));
         this.label.addEventListener("dragleave", () => this.label.classList.remove("hover"));
-        this.label.addEventListener("drop", this.read);
-        this.input.addEventListener("change", e => this.read(e, true));
+        this.label.addEventListener("drop", this.read.bind(this));
+        this.input.addEventListener("change", e => this.read.apply(this, [e, true]));
     }
 
     /**
@@ -41,7 +41,7 @@ export default class Uploader {
     async read(e, byclick = false) {
         this.label.classList.remove("hover");
 
-        let file = (!byclick) ? e.originalEvent.dataTransfer.files[0] : this.input.files[0];
+        let file = (!byclick) ? e.dataTransfer.files[0] : this.input.files[0];
         let zip = await jszip().loadAsync(file);
         
         try {
