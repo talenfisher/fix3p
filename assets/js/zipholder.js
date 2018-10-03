@@ -1,4 +1,5 @@
 import saveAs from "file-saver";
+import md5 from "md5";
 
 const REQUIRED_FILES = [
     "main.xml",
@@ -50,12 +51,24 @@ export default class ZipHolder {
     /**
      * Check to see if the zip file meets the requirements (must contain main.xml and md5checksum.hex)
      */
-    isValid() {
+    hasRequiredFiles() {
         for(let requirement of REQUIRED_FILES) {
             if(!Object.keys(this.zipfile.files).includes(requirement)) {
                 return false;
             }
         }
+        
         return true; 
+    }
+
+    /**
+     * Check to see if the checksum of the x3p file is correct
+     */
+    async hasValidChecksum() {
+        let contents = await this.retrieve("main.xml");
+        let checksum = await this.retrieve("md5checksum.hex");
+
+        if(md5(contents) !== checksum) return false;
+        return true;
     }
 } 

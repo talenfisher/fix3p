@@ -3,6 +3,7 @@ import XMLBuilder from "./xmlbuilder";
 import Uploader from "./uploader";
 import Editor from "./editor";
 import Popup from "./popup";
+import md5 from "md5";
 
 window.fix3p = {};
 
@@ -129,7 +130,9 @@ window.addEventListener("load", () => {
             e.preventDefault();
 
             let builder = new XMLBuilder(document.querySelector(".view main"));
-            fix3p.ZipHolder.update("main.xml", builder.toString());
+            let contents = builder.toString();
+            fix3p.ZipHolder.update("main.xml", contents);
+            fix3p.ZipHolder.update("md5checksum.hex", md5(contents));
             fix3p.ZipHolder.download();
 
             let popup = new Popup(`Continue editing this file? <div class="popup-btns"><div id="continue-yes" class="popup-btn">Yes</div><div id="continue-no" class="popup-btn">No</div></div>`);

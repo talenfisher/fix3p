@@ -46,7 +46,7 @@ export default class Uploader {
         
         try {
             fix3p.ZipHolder = new ZipHolder(zip, file.name);
-            if(!(await fix3p.ZipHolder.isValid())) {
+            if(!(await fix3p.ZipHolder.hasRequiredFiles())) {
                 throw new X3PException();
             }
 
@@ -59,6 +59,11 @@ export default class Uploader {
 
         let manifest = await fix3p.ZipHolder.retrieve("main.xml");
         fix3p.editor.display(parser.parseFromString(manifest, "application/xml"));
+
+        if(!(await fix3p.ZipHolder.hasValidChecksum())) {
+            let error = new Popup(`<i class="fas fa-exclamation-triangle"></i> Warning: X3P file contains invalid checksum`);
+            error.display(2, true);
+        }
     }
 
     /**
