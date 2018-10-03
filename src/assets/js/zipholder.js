@@ -19,10 +19,9 @@ export default class ZipHolder {
         this.zipfile.file(filename, contents);
     }
 
-    download(filename = "file.x3p") {
-        this.zipfile
-        .generateAsync({type:"blob"})
-        .then(blob => saveAs(blob, filename));
+    async download(filename = "file.x3p") {
+        let blob = await this.zipfile.generateAsync({type:"blob"});
+        saveAs(blob, filename);
     }
 
     isValid() {
