@@ -137,26 +137,32 @@ form {
 }
 
 
-.error {
-    padding: 30px;
-    position: absolute;
+.popup {
+    height: 100%;
+    width: 100%;
     top: 0;
     left: 0;
-    margin: 10vh 15px;
-    height: 50px;
-    line-height: 5px;
-    font-size: 20px;
-    width: calc(100% - 30px);
-    background: white;
-    color: $primaryColor;
-    text-align: center;
+    position: absolute;
+    padding: 30px;
+    background: rgba(0,0,0,.3);
     opacity: 0;
-    pointer-events: none;
+    z-index: -1;
     transition: opacity .5s;
-    border: 1px solid $primaryColor;
-    border-radius: 25px; 
+
+    .popup-content {
+        margin-top: 25%;
+        font-size: 18pt;
+        background: white;
+        border-radius: 25px;
+        padding: 15px;
+        color: $primaryColor;
+        width: 100%;
+        text-align: center;
+        transition: opacity 1s;
+    }
 
     &.active {
         opacity: 1;
+        z-index: 1;
     }
 }
