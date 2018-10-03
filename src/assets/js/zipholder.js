@@ -5,25 +5,51 @@ const REQUIRED_FILES = [
     "md5checksum.hex"
 ];
 
+/**
+ * Holds the x3p file
+ */
 export default class ZipHolder {
+
+    /**
+     * Constructs a new ZipHolder
+     * @param {ZipFile} zipfile the zip file to hold
+     * @param {string} filename the filename of the zip file
+     */
     constructor(zipfile, filename) {
         this.zipfile = zipfile;
         this.filename = filename;
     }
 
+    /**
+     * Retrieves the contents of a file within the zip archive
+     * @param {string} filename name of the file to retrieve
+     * @return {string} the contents of the file
+     */
     retrieve(filename) {
         return this.zipfile.file(filename).async("text");
     }
 
+    /**
+     * Updates the contents of a file within the zip archive
+     * @param {string} filename name of the file to update
+     * @param {string} contents contents to update the file with
+     */
     update(filename, contents) {
         this.zipfile.file(filename, contents);
     }
 
+    /**
+     * Downloads the zip file to the user's computer
+     * @param {string} filename the filename to use
+     */
     async download(filename = "file.x3p") {
         let blob = await this.zipfile.generateAsync({type:"blob"});
         saveAs(blob, filename);
     }
 
+    /**
+     * Check to see if the zip file meets the requirements (must contain main.xml and md5checksum.hex)
+     */
     isValid() {
         for(let requirement of REQUIRED_FILES) {
             if(!Object.keys(this.zipfile.files).includes(requirement)) {

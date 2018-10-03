@@ -1,6 +1,8 @@
 import ZipHolder from "./zipholder";
 import XMLBuilder from "./xmlbuilder";
 import Uploader from "./uploader";
+import Editor from "./editor";
+import Popup from "./popup";
 
 window.fix3p = {};
 
@@ -116,8 +118,11 @@ window.prettyPrint = function(string) {
  */
 
 window.addEventListener("load", () => {
-    new Uploader;
-   
+    fix3p.uploader = new Uploader;
+    fix3p.uploader.display();
+
+    fix3p.editor = new Editor;
+    
     // setup tabs
     document.addEventListener("click", e => {
         if(e.target.matches("a.tab")) {
@@ -126,7 +131,19 @@ window.addEventListener("load", () => {
             let builder = new XMLBuilder(document.querySelector(".view main"));
             fix3p.ZipHolder.update("main.xml", builder.toString());
             fix3p.ZipHolder.download();
+
+            let popup = new Popup(`Continue editing this file? <div class="popup-btns"><div id="continue-yes" class="popup-btn">Yes</div><div id="continue-no" class="popup-btn">No</div></div>`);
+            popup.display();
             
+            popup.el.querySelector("#continue-yes").addEventListener("click", e => {
+                popup.hide(true);
+            });
+
+            popup.el.querySelector("#continue-no").addEventListener("click", e => {
+                popup.hide(true);
+                fix3p.uploader.display();
+            });
+
         } else if(e.target.matches(".tab:not(a)")) {
             document.querySelector(".view").setAttribute("data-view", e.target.index());
         }

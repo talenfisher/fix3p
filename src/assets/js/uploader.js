@@ -7,12 +7,19 @@ let parser = new DOMParser();
 class X3PException {};
 
 export default class Uploader {
+
+    /**
+     * Constructs a new uploader view
+     */
     constructor() {
         this.label = document.querySelector(".upload label");
         this.input = document.querySelector(".upload input");
         this.setupListeners();
     }
 
+    /**
+     * Sets up event listeners
+     */
     setupListeners() {
         let listener = e => e.preventDefault();
         for(let event of ["drag", "dragstart", "dragend", "dragover", "dragenter", "dragleave", "drop"]) {
@@ -28,8 +35,8 @@ export default class Uploader {
     /**
      * Read the file that was selected
      * 
-     * @param {*} e 
-     * @param {*} byclick 
+     * @param {Event} e event object
+     * @param {boolean} byclick whether or not this was triggered by clicking the upload stage
      */
     async read(e, byclick = false) {
         this.label.classList.remove("hover");
@@ -44,15 +51,21 @@ export default class Uploader {
             }
 
         } catch(x3pexception) {
-            let error = new Popup("Please upload a valid X3P file.");
-            error.display(2);
+            let error = new Popup(`<i class="fas fa-exclamation-triangle"></i> Please upload a valid X3P file.`);
+            error.display(2, true);
             this.input.value = "";
             return;
         }
 
         let manifest = await fix3p.ZipHolder.retrieve("main.xml");
-        let editor = new Editor();
+        fix3p.editor.display(parser.parseFromString(manifest, "application/xml"));
+    }
 
-        editor.display(parser.parseFromString(manifest, "application/xml"));
+    /**
+     * Displays the uploader screen
+     */
+    display() {
+        document.querySelector("form").setAttribute("data-view", "uploader");
+        this.input.value = "";
     }
 }
