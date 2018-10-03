@@ -45,7 +45,7 @@ form {
 
     &[data-view="uploader"] {
         height: calc(100vh - 70px);
-        overflow-y: hidden;
+        overflow: hidden;
     }
 
     &[data-view="editor"] {
