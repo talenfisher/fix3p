@@ -132,7 +132,7 @@ window.addEventListener("load", () => {
             let builder = new XMLBuilder(document.querySelector(".view main"));
             let contents = builder.toString();
             fix3p.ZipHolder.update("main.xml", contents);
-            fix3p.ZipHolder.update("md5checksum.hex", md5(contents));
+            fix3p.ZipHolder.update("md5checksum.hex", md5(contents)+" *main.xml");
             fix3p.ZipHolder.download();
 
             let popup = new Popup(`Continue editing this file? <div class="popup-btns"><div id="continue-yes" class="popup-btn">Yes</div><div id="continue-no" class="popup-btn">No</div></div>`);

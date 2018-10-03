@@ -67,8 +67,7 @@ export default class ZipHolder {
     async hasValidChecksum() {
         let contents = await this.retrieve("main.xml");
         let checksum = await this.retrieve("md5checksum.hex");
-
-        if(md5(contents) !== checksum) return false;
+        if(md5(contents)+" *main.xml" !== checksum.trim()) return false;
         return true;
     }
 } 
