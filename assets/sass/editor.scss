@@ -28,10 +28,6 @@
         }
     }
 
-    main div {
-        padding: 15px;
-    }
-
     [data-tag] {
         display: flex;
         flex-wrap: wrap;
@@ -57,9 +53,16 @@
         }
     }
 
+    main div {
+        padding: 15px 0 15px 15px !important;
+    }
+
     main > div {
         display: none !important; // !important needed here, cascade doesn't work otherwise
+        padding-right: 30px !important;
     }
+
+    
 
     @for $i from 1 through 5 {
         &[data-view="#{$i}"] {
