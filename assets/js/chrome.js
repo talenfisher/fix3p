@@ -9,10 +9,6 @@ chrome.webRequest.onBeforeRequest.addListener(function(details) {
     }   
 }, {urls: ['file://*/*'], types:["main_frame", "sub_frame"]}, ['blocking', 'requestBody']);
 
-chrome.runtime.onMessage.addListener((request, sender, response) => {
-    if(request.fix3p) response({ success: true});
-});
-
 var redirect = () => chrome.tabs.create({ url: chrome.extension.getURL("index.html") });
 chrome.browserAction.onClicked.addListener(redirect);
 
