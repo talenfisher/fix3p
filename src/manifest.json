@@ -6,6 +6,7 @@
     "permissions": [
         "webRequest",
         "webRequestBlocking",
+        "tabs",
         "file://*/*"
     ],
     "background": {

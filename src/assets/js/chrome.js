@@ -37,7 +37,7 @@ chrome.extension.isAllowedFileSchemeAccess(allowed => {
 });
 
 chrome.runtime.onInstalled.addListener(() => {
-    chrome.tabs.open({ url: chrome.extension.getURL("setup.html") });
+    chrome.tabs.create({ url: chrome.extension.getURL("setup.html") });
 });
 
 
