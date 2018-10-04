@@ -22,11 +22,22 @@ chrome.extension.isAllowedFileSchemeAccess(allowed => {
             text: "Setup"
         });
 
+        var interval = () => {
+            chrome.extension.isAllowedFileSchemeAccess(allowed => {
+                if(allowed) {
+                    chrome.browserAction.setBadgeText({text:""});
+                    clearInterval(interval);
+                }
+            })
+        };
+
+        setInterval(interval, 1000);
+
         chrome.browserAction.onClicked.removeListener(redirect);
         chrome.browserAction.onClicked.addListener(() => {
             chrome.tabs.create({ url: chrome.extension.getURL("setup.html") })
         });
-    }
+    } else chrome.browserAction.setBadgeText({ text: '' });
 });
 
 
