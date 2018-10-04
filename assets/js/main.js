@@ -114,10 +114,11 @@ window.prettyPrint = function(string) {
     return result;
 }
 
-
-if(typeof window.chrome.runtime.id !== "undefined") {
-    fix3p.extLoaded = true;
-}
+try {
+    if(typeof window.chrome.runtime.id !== "undefined") {
+        fix3p.extLoaded = true;
+    }
+} catch(e) {}
 
 /**
  * Convert manifest (main.xml) to a series of html inputs
