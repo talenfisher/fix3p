@@ -15,15 +15,16 @@ before_script:
 
 script:
   - npm run build
-  - zip 
 
 after_success:
   # Push to GitHub Pages
   - cd src
   - sed -i "s/{{version}}/$TRAVIS_BUILD_NUMBER/" index.html
+  - if [[ $TRAVIS_TAG != "" ]]; then sed -i "s/0\.0\.0/$TRAVIS_TAG/" manifest.json; fi
   - git add .
   - git commit -m "Pages build $TRAVIS_BUILD_NUMBER"
   - git push --quiet
+  
 
   # Publish extension
 
