@@ -1,6 +1,6 @@
 {
     "name": "FiX3P",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "description": "Edit X3P files within chrome",
     "manifest_version": 2,
     "permissions": [
