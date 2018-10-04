@@ -24,7 +24,7 @@
     "watch:sass": "watch 'npm run build:sass' src/assets/sass",
     "watch:js": "watch 'npm run build:js' src/assets/js",
     "watch": "concurrently npm:watch:js npm:watch:sass",
-    "release": "webstore upload --source extension.zip --extension-id $EXTENSION_ID --client-id $CLIENT_ID --client-secret $CLIENT_SECRET --refresh-token $REFRESH_TOKEN --auto-publish",
+    "release": "webstore upload --source extension.zip --extension-id $WS_EXT_ID --client-id $WS_CLIENT_ID --client-secret $WS_CLIENT_SECRET --refresh-token $WS_REFRESH_TOKEN --auto-publish",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "browser": {

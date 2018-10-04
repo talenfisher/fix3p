@@ -6,3 +6,4 @@ git add .
 git commit -m "Pages build $TRAVIS_BUILD_NUMBER"
 git push --quiet
 zip -r ../extension.zip *
+cd ../

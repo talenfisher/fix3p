@@ -21,11 +21,11 @@ deploy:
     script: bash bin/deploy
     skip_cleanup: true
     on:
+      tags: true
       branch: master
 
-  - provider: releases
-    api_key: $GH_AUTH
+  - provider: script
+    script: npm run release
     skip_cleanup: true
-    file: "extension.zip"
     on:
       tags: true
