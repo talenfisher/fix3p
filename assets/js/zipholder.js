@@ -44,7 +44,14 @@ export default class ZipHolder {
      * @param {string} filename the filename to use
      */
     async download(filename = this.filename) {
-        let blob = await this.zipfile.generateAsync({type:"blob"});
+        let blob = await this.zipfile.generateAsync({
+            type: "blob",
+            compression: "DEFLATE",
+            compressionOptions: {
+                level: 9
+            }
+        });
+
         saveAs(blob, filename);
     }
 

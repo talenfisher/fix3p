@@ -21,6 +21,10 @@ export default class Popup {
         document.querySelector("body").appendChild(this.el);
     }
 
+    update(message) {
+        this.el.innerHTML = `<div class="popup-content">${message}</div>`;
+    }
+
     /**
      * Displays the popup
      * @param {int} duration the amount of time in seconds to display the popup.  If 0, it will display until manually hidden
