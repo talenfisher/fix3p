@@ -19,6 +19,20 @@ export default class ZipHolder {
     constructor(zipfile, filename) {
         this.zipfile = zipfile;
         this.filename = filename;
+        this.checkDirectory();
+    }
+
+    /**
+     * Checks to see if the manifest is located within a directory 
+     * inside the archive, stores the directory name if there is one
+     */
+    checkDirectory() {
+        this.folder = "";
+
+        let result = this.zipfile.file(/main\.xml$/g);
+        if(result.length > 0 && result[0].name !== "main.xml") {
+            this.folder = result[0].name.replace("main.xml", "");
+        }
     }
 
     /**
@@ -27,7 +41,7 @@ export default class ZipHolder {
      * @return {string} the contents of the file
      */
     retrieve(filename) {
-        return this.zipfile.file(filename).async("text");
+        return this.zipfile.file(this.folder+filename).async("text");
     }
 
     /**
@@ -36,7 +50,7 @@ export default class ZipHolder {
      * @param {string} contents contents to update the file with
      */
     update(filename, contents) {
-        this.zipfile.file(filename, contents);
+        this.zipfile.file(this.folder+filename, contents);
     }
 
     /**
@@ -60,7 +74,7 @@ export default class ZipHolder {
      */
     hasRequiredFiles() {
         for(let requirement of REQUIRED_FILES) {
-            if(!Object.keys(this.zipfile.files).includes(requirement)) {
+            if(!Object.keys(this.zipfile.files).includes(this.folder+requirement)) {
                 return false;
             }
         }
@@ -72,9 +86,12 @@ export default class ZipHolder {
      * Check to see if the checksum of the x3p file is correct
      */
     async hasValidChecksum() {
-        let contents = await this.retrieve("main.xml");
+        let hash = md5(await this.retrieve("main.xml"));
         let checksum = await this.retrieve("md5checksum.hex");
-        if(md5(contents)+" *main.xml" !== checksum.trim()) return false;
+        
+        if(checksum.match(/\*main\.xml$/)) hash += " *main.xml";
+        
+        if(hash.trim() !== checksum.trim()) return false;
         return true;
     }
 } 
