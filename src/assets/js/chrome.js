@@ -36,6 +36,8 @@ chrome.extension.isAllowedFileSchemeAccess(allowed => {
     } else chrome.browserAction.setBadgeText({ text: '' });
 });
 
-
+chrome.runtime.onInstalled.addListener(() => {
+    chrome.tabs.open({ url: chrome.extension.getURL("setup.html") });
+});
 
 
