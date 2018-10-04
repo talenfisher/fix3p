@@ -24,10 +24,16 @@ after_success:
   - git add .
   - git commit -m "Pages build $TRAVIS_BUILD_NUMBER"
   - git push --quiet
-  
-
-  # Publish extension
+  - zip -r ../extension.zip *
 
 branches:
   only:
     - master 
+
+deploy:
+    provider: releases
+    api_key: $GH_AUTH
+    skip_cleanup: true
+    file: "extension.zip"
+    on:
+      tags: true
