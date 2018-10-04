@@ -1,11 +1,12 @@
 {
     "name": "FiX3P",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "description": "Edit X3P files within chrome",
     "manifest_version": 2,
     "permissions": [
         "webRequest",
         "webRequestBlocking",
+        "tabs",
         "file://*/*"
     ],
     "background": {
