@@ -115,11 +115,8 @@ window.prettyPrint = function(string) {
 }
 
 
-if(typeof window.chrome !== "undefined") {
-    chrome.runtime.sendMessage({ fix3p: true }, function(response) {
-        if(!response.success) return; 
-        window.fix3p.extLoaded = true;
-    });
+if(typeof window.chrome.runtime.id !== "undefined") {
+    fix3p.extLoaded = true;
 }
 
 /**
