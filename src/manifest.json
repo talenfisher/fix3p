@@ -1,0 +1,23 @@
+{
+    "name": "FiX3P",
+    "version": "0.1.0",
+    "description": "Edit X3P files within chrome",
+    "manifest_version": 2,
+    "permissions": [
+        "webRequest",
+        "webRequestBlocking",
+        "file://*/*"
+    ],
+    "background": {
+        "scripts": ["assets/js/chrome.js"],
+        "persistent": true
+    },
+    "icons": {
+        "128": "favicon.png"
+    },
+    "browser_action": {
+        "default_icon": {
+            "128": "favicon.png"
+        }
+    }
+}

@@ -4,8 +4,11 @@ import Uploader from "./uploader";
 import Editor from "./editor";
 import Popup from "./popup";
 import md5 from "md5";
+import axios from "axios";
 
-window.fix3p = {};
+window.fix3p = {
+    extLoaded: false
+};
 
 /**
  * Queries only immediate children
@@ -111,6 +114,14 @@ window.prettyPrint = function(string) {
     return result;
 }
 
+
+if(typeof window.chrome !== "undefined") {
+    chrome.runtime.sendMessage({ fix3p: true }, function(response) {
+        if(!response.success) return; 
+        window.fix3p.extLoaded = true;
+    });
+}
+
 /**
  * Convert manifest (main.xml) to a series of html inputs
  * 
@@ -118,14 +129,33 @@ window.prettyPrint = function(string) {
  * @param {Node} target 
  */
 
-window.addEventListener("load", () => {
+window.addEventListener("load", async () => {
     fix3p.uploader = new Uploader;
     fix3p.uploader.display();
 
     fix3p.editor = new Editor;
-    
+
+    let popup = new Popup("");
+    try {
+        
+        let file = (new URLSearchParams(window.location.search)).get("file");
+        
+        if(file !== null) {
+            popup.update("Reading file...");
+            popup.display();
+
+            let contents = (await axios.get(file, { responseType: "blob" })).data;
+            fix3p.uploader.read({ dataTransfer: { files: [ new File([contents], "file.x3p") ] } });
+            popup.hide(true);
+        }
+
+    } catch(exception) {
+        popup.update("Error reading X3P file.");
+        popup.display(2, true);
+    }
+
     // setup tabs
-    document.addEventListener("click", e => {
+    document.addEventListener("click", async e => {
         if(e.target.matches("a.tab")) {
             e.preventDefault();
 
@@ -133,10 +163,12 @@ window.addEventListener("load", () => {
             let contents = builder.toString();
             fix3p.ZipHolder.update("main.xml", contents);
             fix3p.ZipHolder.update("md5checksum.hex", md5(contents)+" *main.xml");
-            fix3p.ZipHolder.download();
-
-            let popup = new Popup(`Continue editing this file? <div class="popup-btns"><div id="continue-yes" class="popup-btn">Yes</div><div id="continue-no" class="popup-btn">No</div></div>`);
+            
+            let popup = new Popup("Compressing...");
             popup.display();
+
+            await fix3p.ZipHolder.download();
+            popup.update(`Continue editing this file? <div class="popup-btns"><div id="continue-yes" class="popup-btn">Yes</div><div id="continue-no" class="popup-btn">No</div></div>`);
             
             popup.el.querySelector("#continue-yes").addEventListener("click", e => {
                 popup.hide(true);
@@ -151,6 +183,7 @@ window.addEventListener("load", () => {
             document.querySelector(".view").setAttribute("data-view", e.target.index());
         }
     });
+    
     
 });
 
