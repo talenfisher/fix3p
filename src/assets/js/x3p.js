@@ -87,11 +87,11 @@ export default class X3P {
      */
     async hasValidChecksum() {
         let hash = md5(await this.retrieve("main.xml"));
-        let checksum = await this.retrieve("md5checksum.hex");
+        let checksum = (await this.retrieve("md5checksum.hex")).trim();
         
         if(checksum.match(/\*main\.xml$/)) hash += " *main.xml";
-        
-        if(hash.trim() !== checksum.trim()) return false;
+
+        if(hash !== checksum) return false;
         return true;
     }
 } 
