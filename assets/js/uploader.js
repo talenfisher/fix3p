@@ -65,8 +65,7 @@ export default class Uploader {
         fix3p.editor.display(parser.parseFromString(manifest, "application/xml"));
 
         if(!(await fix3p.X3P.hasValidChecksum())) {
-            let error = new Popup(`<i class="fas fa-exclamation-triangle"></i> Warning: X3P file contains invalid checksum`);
-            error.display(2, true);
+            console.error("Found invalid checksum");
         }
     }
 
