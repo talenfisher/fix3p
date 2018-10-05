@@ -1,9 +1,8 @@
-import ZipHolder from "./zipholder";
 import XMLBuilder from "./xmlbuilder";
 import Uploader from "./uploader";
 import Editor from "./editor";
 import Popup from "./popup";
-import md5 from "md5";
+import md5 from "blueimp-md5";
 import axios from "axios";
 
 window.fix3p = {
