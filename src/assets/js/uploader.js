@@ -46,8 +46,8 @@ export default class Uploader {
         
         try {
             let zip = await jszip().loadAsync(file);
-            
             fix3p.X3P = new X3P(zip, file.name);
+
             if(!(await fix3p.X3P.hasRequiredFiles())) {
                 throw new X3PException();
             }
@@ -56,6 +56,8 @@ export default class Uploader {
             let error = new Popup(`<i class="fas fa-exclamation-triangle"></i> Please upload a valid X3P file.`);
             error.display(2, true);
             this.input.value = "";
+
+            console.error(x3pexception);
             return;
         }
 

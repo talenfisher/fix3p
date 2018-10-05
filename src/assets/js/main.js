@@ -113,11 +113,16 @@ window.prettyPrint = function(string) {
     return result;
 }
 
+/**
+ * Check if loaded in chrome extension
+ */
 try {
     if(typeof window.chrome.runtime.id !== "undefined") {
         fix3p.extLoaded = true;
     }
-} catch(e) {}
+} catch(e) {
+    console.log("Chrome Extension not detected");
+}
 
 /**
  * Convert manifest (main.xml) to a series of html inputs
@@ -131,10 +136,10 @@ window.addEventListener("load", async () => {
     fix3p.uploader.display();
 
     fix3p.editor = new Editor;
+    throw new Error("test");
 
     let popup = new Popup("");
     try {
-        
         let file = (new URLSearchParams(window.location.search)).get("file");
         
         if(file !== null) {
@@ -149,6 +154,7 @@ window.addEventListener("load", async () => {
     } catch(exception) {
         popup.update("Error reading X3P file.");
         popup.display(2, true);
+        console.error(exception);
     }
 
     // setup tabs
