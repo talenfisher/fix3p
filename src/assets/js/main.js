@@ -136,7 +136,6 @@ window.addEventListener("load", async () => {
     fix3p.uploader.display();
 
     fix3p.editor = new Editor;
-    throw new Error("test");
 
     let popup = new Popup("");
     try {
