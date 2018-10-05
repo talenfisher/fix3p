@@ -163,13 +163,13 @@ window.addEventListener("load", async () => {
 
             let builder = new XMLBuilder(document.querySelector(".view main"));
             let contents = builder.toString();
-            fix3p.ZipHolder.update("main.xml", contents);
-            fix3p.ZipHolder.update("md5checksum.hex", md5(contents)+" *main.xml");
+            fix3p.X3P.update("main.xml", contents);
+            fix3p.X3P.update("md5checksum.hex", md5(contents)+" *main.xml");
             
             let popup = new Popup("Compressing...");
             popup.display();
 
-            await fix3p.ZipHolder.download();
+            await fix3p.X3P.download();
             popup.update(`Continue editing this file? <div class="popup-btns"><div id="continue-yes" class="popup-btn">Yes</div><div id="continue-no" class="popup-btn">No</div></div>`);
             
             popup.el.querySelector("#continue-yes").addEventListener("click", e => {
