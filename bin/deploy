@@ -1,4 +1,5 @@
 #!/bin/bash
+cp CREDITS.md src
 cd src
 sed -i "s/{{version}}/$TRAVIS_BUILD_NUMBER/" index.html
 if [[ $TRAVIS_TAG != "" ]]; then sed -i "s/0\.0\.0/$TRAVIS_TAG/" manifest.json; fi
