@@ -42,9 +42,11 @@ export default class Uploader {
         this.label.classList.remove("hover");
 
         let file = (!byclick) ? e.dataTransfer.files[0] : this.input.files[0];
-        let zip = await jszip().loadAsync(file);
+        
         
         try {
+            let zip = await jszip().loadAsync(file);
+            
             fix3p.X3P = new X3P(zip, file.name);
             if(!(await fix3p.X3P.hasRequiredFiles())) {
                 throw new X3PException();
