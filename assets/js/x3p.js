@@ -1,5 +1,5 @@
 import saveAs from "file-saver";
-import md5 from "md5";
+import md5 from "blueimp-md5";
 
 const REQUIRED_FILES = [
     "main.xml",
@@ -9,10 +9,10 @@ const REQUIRED_FILES = [
 /**
  * Holds the x3p file
  */
-export default class ZipHolder {
+export default class X3P {
 
     /**
-     * Constructs a new ZipHolder
+     * Constructs a new X3P object
      * @param {ZipFile} zipfile the zip file to hold
      * @param {string} filename the filename of the zip file
      */

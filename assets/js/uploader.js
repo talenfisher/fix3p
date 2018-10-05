@@ -1,5 +1,5 @@
 import jszip from "jszip";
-import ZipHolder from "./zipholder";
+import X3P from "./x3p";
 import Editor from "./editor";
 import Popup from "./popup";
 
@@ -42,11 +42,13 @@ export default class Uploader {
         this.label.classList.remove("hover");
 
         let file = (!byclick) ? e.dataTransfer.files[0] : this.input.files[0];
-        let zip = await jszip().loadAsync(file);
+        
         
         try {
-            fix3p.ZipHolder = new ZipHolder(zip, file.name);
-            if(!(await fix3p.ZipHolder.hasRequiredFiles())) {
+            let zip = await jszip().loadAsync(file);
+            fix3p.X3P = new X3P(zip, file.name);
+
+            if(!(await fix3p.X3P.hasRequiredFiles())) {
                 throw new X3PException();
             }
 
@@ -54,13 +56,15 @@ export default class Uploader {
             let error = new Popup(`<i class="fas fa-exclamation-triangle"></i> Please upload a valid X3P file.`);
             error.display(2, true);
             this.input.value = "";
+
+            console.error(x3pexception);
             return;
         }
 
-        let manifest = await fix3p.ZipHolder.retrieve("main.xml");
+        let manifest = await fix3p.X3P.retrieve("main.xml");
         fix3p.editor.display(parser.parseFromString(manifest, "application/xml"));
 
-        if(!(await fix3p.ZipHolder.hasValidChecksum())) {
+        if(!(await fix3p.X3P.hasValidChecksum())) {
             let error = new Popup(`<i class="fas fa-exclamation-triangle"></i> Warning: X3P file contains invalid checksum`);
             error.display(2, true);
         }
