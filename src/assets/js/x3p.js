@@ -6,6 +6,7 @@ const REQUIRED_FILES = [
     "md5checksum.hex"
 ];
 
+const parser = new DOMParser();
 /**
  * Holds the x3p file
  */
@@ -20,6 +21,7 @@ export default class X3P {
         this.zipfile = zipfile;
         this.filename = filename;
         this.checkDirectory();
+        // requestAnimationFrame(this.render.bind(this));
     }
 
     /**
@@ -40,8 +42,8 @@ export default class X3P {
      * @param {string} filename name of the file to retrieve
      * @return {string} the contents of the file
      */
-    retrieve(filename) {
-        return this.zipfile.file(this.folder+filename).async("text");
+    retrieve(filename, type = "text") {
+        return this.zipfile.file(this.folder+filename).async(type);
     }
 
     /**
@@ -88,7 +90,7 @@ export default class X3P {
     async hasValidChecksum() {
         let hash = md5(await this.retrieve("main.xml"));
         let checksum = (await this.retrieve("md5checksum.hex")).trim();
-        
+
         if(checksum.match(/\*main\.xml$/)) hash += " *main.xml";
 
         if(hash !== checksum) return false;

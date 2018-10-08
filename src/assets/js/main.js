@@ -5,9 +5,13 @@ import Popup from "./popup";
 import md5 from "blueimp-md5";
 import axios from "axios";
 
+window.axios = axios;
+
 window.fix3p = {
     extLoaded: false
 };
+
+axios.defaults.paramsSerializer = function(params) { /* ... */ };
 
 /**
  * Queries only immediate children
@@ -113,6 +117,8 @@ window.prettyPrint = function(string) {
     return result;
 }
 
+console.log("test");
+
 /**
  * Check if loaded in chrome extension
  */
@@ -123,6 +129,11 @@ try {
 } catch(e) {
     console.log("Chrome Extension not detected");
 }
+
+
+function encode(string) {
+}
+
 
 /**
  * Convert manifest (main.xml) to a series of html inputs
@@ -139,13 +150,13 @@ window.addEventListener("load", async () => {
 
     let popup = new Popup("");
     try {
-        let file = (new URLSearchParams(window.location.search)).get("file");
-        
+        let file = localStorage.getItem("openfile");
+
         if(file !== null) {
+            localStorage.removeItem("openfile");
             popup.update("Reading file...");
             popup.display();
-
-            let contents = (await axios.get(file, { responseType: "blob" })).data;
+            let contents = (await axios.get(decodeURIComponent(file), { responseType: "blob" })).data;
             fix3p.uploader.read({ dataTransfer: { files: [ new File([contents], "file.x3p") ] } });
             popup.hide(true);
         }

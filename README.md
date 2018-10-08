@@ -1,7 +1,9 @@
 # FiX3P
-FiX3P is a web application and chrome extension for editing header information within X3P files.  A hosted version is located at https://talenfisher.github.io/fix3p/
+FiX3P is a web application and chrome extension for editing header information within X3P files.  A hosted version is located at https://talenfisher.github.io/fix3p/.  Developed for [@CSAFE-ISU](https://github.com/CSAFE-ISU)
 
 # Installation
+Note: you do not have to install both.  The chrome extension works independently.
+
 ## Web App
 ### From Docker
 ```bash
