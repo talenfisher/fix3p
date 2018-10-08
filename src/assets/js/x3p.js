@@ -1,5 +1,6 @@
 import saveAs from "file-saver";
 import md5 from "blueimp-md5";
+import { PlaneGeometry } from "three";
 
 const REQUIRED_FILES = [
     "main.xml",
@@ -21,7 +22,6 @@ export default class X3P {
         this.zipfile = zipfile;
         this.filename = filename;
         this.checkDirectory();
-        // requestAnimationFrame(this.render.bind(this));
     }
 
     /**

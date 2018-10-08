@@ -11,8 +11,6 @@ window.fix3p = {
     extLoaded: false
 };
 
-axios.defaults.paramsSerializer = function(params) { /* ... */ };
-
 /**
  * Queries only immediate children
  * @param {Node} query 
@@ -117,7 +115,6 @@ window.prettyPrint = function(string) {
     return result;
 }
 
-console.log("test");
 
 /**
  * Check if loaded in chrome extension
@@ -129,11 +126,6 @@ try {
 } catch(e) {
     console.log("Chrome Extension not detected");
 }
-
-
-function encode(string) {
-}
-
 
 /**
  * Convert manifest (main.xml) to a series of html inputs
@@ -156,6 +148,7 @@ window.addEventListener("load", async () => {
             localStorage.removeItem("openfile");
             popup.update("Reading file...");
             popup.display();
+            
             let contents = (await axios.get(decodeURIComponent(file), { responseType: "blob" })).data;
             fix3p.uploader.read({ dataTransfer: { files: [ new File([contents], "file.x3p") ] } });
             popup.hide(true);
