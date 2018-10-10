@@ -14,7 +14,10 @@ export default class Editor {
         this.main = this.el.querySelector("main");
         this.backbtn = this.el.querySelector(".back");
 
-        this.backbtn.addEventListener("click", e => window.fix3p.uploader.display());
+        this.backbtn.addEventListener("click", e => {
+            window.fix3p.X3P.destroy();
+            window.fix3p.uploader.display()
+        });
     }
 
     /**

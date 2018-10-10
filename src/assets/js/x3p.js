@@ -55,7 +55,7 @@ export default class X3P extends EventEmitter {
         this.extract();
         this.on("extracted", () => {
             if(!this.hasValidChecksum()) console.error("Found invalid checksum");
-            requestAnimationFrame(() => this.render());
+            setTimeout(() => this.render(), 1000);
         });
     }
 
@@ -147,23 +147,29 @@ export default class X3P extends EventEmitter {
         
         let sizeX = parseInt(this.manifest.querySelector("Record3 MatrixDimension SizeX").innerHTML);
         let sizeY = parseInt(this.manifest.querySelector("Record3 MatrixDimension SizeY").innerHTML);
+        let incrementX = parseFloat(this.manifest.querySelector("Record1 Axes CX Increment").innerHTML);
+        let incrementY = parseFloat(this.manifest.querySelector("Record1 Axes CY Increment").innerHTML);
+        let incrementZ = parseFloat(this.manifest.querySelector("Record1 Axes CZ Increment").innerHTML);
         let dataType = DATA_TYPES[this.manifest.querySelector("Record1 Axes CZ DataType").innerHTML];
         let matrix = new dataType(this.matrix);  
+        let maxZ = 0;
 
         for(let i = 0; i < matrix.length; i++) {
+            if(i == 0) maxZ = matrix[i] * incrementZ;
+            else if(maxZ < matrix[i]) maxZ = matrix[i] * 5;
+
             matrix[i] = matrix[i] * 5;
         }
 
         let field = ndarray(matrix, [sizeY, sizeX]);
+        
         let canvas = document.querySelector("#visual");
-        let gl = canvas.getContext("webgl");
-        gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
-
         canvas.setAttribute("width", canvas.offsetWidth);
         canvas.setAttribute("height", canvas.offsetHeight);
 
         this.scene = GlScene({
             canvas,
+
             glOptions: {
                 drawingBufferWidth: canvas.offsetWidth,
                 drawingBufferHeight: canvas.offsetHeight
@@ -171,10 +177,10 @@ export default class X3P extends EventEmitter {
             clearColor: [0,0,0,0],
             autoResize: false,
             camera: {
-                eye: [0, 0, 0.6],
+                eye: [0, 0, 1],
                 up: [-1, 0, 0],
-                zoomMin: 0.7,
-                zoomMax: 0.7
+                zoomMin: 1.7,
+                zoomMax: 1.7
             },
             axes: {
                 gridEnable: false,
@@ -182,20 +188,35 @@ export default class X3P extends EventEmitter {
                 tickEnable: false,
                 labelEnable: false,
                 zeroEnable: false
-            },
-            flipX: true
+            }
         });
 
         let surface = SurfacePlot({
             gl: this.scene.gl,
             field,
-            dynamicWidth: 0,
             colormap: [
                 {index: 0, rgb: [104,64,25]},
-                {index: 1, rgb: [217,158,99]}
+                {index: 1, rgb: [228,187,147]}
             ]
         }); 
 
-        this.scene.add(surface); 
+        surface.ambientLight = 0.5;
+        surface.diffuseLight = 0.3;
+        surface.specularLight = 0.2;
+        surface.roughness = 0.4;
+        surface.lightPosition = [ ((sizeY * incrementY) / 2) * -1, ((incrementY * 1) - ((sizeY * incrementY) - (1 * incrementY))) * -1, maxZ];
+
+        this.scene.add(surface);
+        this.surface = surface; 
+    }
+
+    /**
+     * Remove the render
+     */
+    destroy() {
+        let canvas = document.querySelector("#visual");
+        let gl = canvas.getContext("webgl");
+        requestAnimationFrame(() => gl.clear(gl.DEPTH_BUFFER_BIT));
+        this.scene.dispose();
     }
 }  
