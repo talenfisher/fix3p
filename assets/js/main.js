@@ -182,7 +182,7 @@ window.addEventListener("load", async () => {
 
             popup.el.querySelector("#continue-no").addEventListener("click", e => {
                 popup.hide(true);
-                fix3p.X3P.scene.dispose();
+                fix3p.X3P.destroy();
                 fix3p.uploader.display();
             });
 
