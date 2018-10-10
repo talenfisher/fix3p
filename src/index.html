@@ -24,7 +24,6 @@
                     <small>or drag one here</small>
                 </label>
             </div>
-
             <div class="view screen" data-view="1">
                 <div class="back"><i class="fas fa-times"></i> Close</div>
                 <nav>
@@ -34,162 +33,165 @@
                     <div class="tab">Record 3</div>
                     <div class="tab">Record 4</div>
                 </nav>
-                <div class="stage"></div>
-                <main>
-                    <div data-tag="Record1">
-                        <div data-tag="Revision">
-                            <label for="x3p$0">Revision:</label>
-                            <input type="text" id="x3p$0" disabled="disabled">
-                        </div>
-                        <div data-tag="FeatureType">
-                            <label for="x3p$1">Feature Type:</label>
-                            <input type="text" id="x3p$1" disabled="disabled">
-                        </div>
-                        <div data-tag="Axes">
-                            <h3>Axes</h3>
-                            <div data-tag="CX">
-                                <h3>CX</h3>
-                                <div data-tag="AxisType">
-                                    <label for="x3p$2">Axis Type:</label>
-                                    <input type="text" id="x3p$2" disabled="disabled">
-                                </div>
-                                <div data-tag="DataType">
-                                    <label for="x3p$3">Data Type:</label>
-                                    <input type="text" id="x3p$3" disabled="disabled">
-                                </div>
-                                <div data-tag="Increment">
-                                    <label for="x3p$4">Increment:</label>
-                                    <input type="text" id="x3p$4" disabled="disabled">
-                                </div>
-                                <div data-tag="Offset">
-                                    <label for="x3p$5">Offset:</label>
-                                    <input type="text" id="x3p$5" disabled="disabled">
-                                </div>
+
+                <div class="row">
+                    <div class="stage"><canvas id="visual" height="500" width="1200"></canvas></div>
+                    <main>
+                        <div data-tag="Record1">
+                            <div data-tag="Revision">
+                                <label for="x3p$0">Revision:</label>
+                                <input type="text" id="x3p$0" disabled="disabled">
                             </div>
-                            <div data-tag="CY">
-                                <h3>CY</h3>
-                                <div data-tag="AxisType">
-                                    <label for="x3p$6">Axis Type:</label>
-                                    <input type="text" id="x3p$6" disabled="disabled">
-                                </div>
-                                <div data-tag="DataType">
-                                    <label for="x3p$7">Data Type:</label>
-                                    <input type="text" id="x3p$7" disabled="disabled">
-                                </div>
-                                <div data-tag="Increment">
-                                    <label for="x3p$8">Increment:</label>
-                                    <input type="text" id="x3p$8" disabled="disabled">
-                                </div>
-                                <div data-tag="Offset">
-                                    <label for="x3p$9">Offset:</label>
-                                    <input type="text" id="x3p$9" disabled="disabled">
-                                </div>
+                            <div data-tag="FeatureType">
+                                <label for="x3p$1">Feature Type:</label>
+                                <input type="text" id="x3p$1" disabled="disabled">
                             </div>
-                            <div data-tag="CZ">
-                                <h3>CZ</h3>
-                                <div data-tag="AxisType">
-                                    <label for="x3p$10">Axis Type:</label>
-                                    <input type="text" id="x3p$10" disabled="disabled">
+                            <div data-tag="Axes">
+                                <h3>Axes</h3>
+                                <div data-tag="CX">
+                                    <h3>CX</h3>
+                                    <div data-tag="AxisType">
+                                        <label for="x3p$2">Axis Type:</label>
+                                        <input type="text" id="x3p$2" disabled="disabled">
+                                    </div>
+                                    <div data-tag="DataType">
+                                        <label for="x3p$3">Data Type:</label>
+                                        <input type="text" id="x3p$3" disabled="disabled">
+                                    </div>
+                                    <div data-tag="Increment">
+                                        <label for="x3p$4">Increment:</label>
+                                        <input type="text" id="x3p$4" disabled="disabled">
+                                    </div>
+                                    <div data-tag="Offset">
+                                        <label for="x3p$5">Offset:</label>
+                                        <input type="text" id="x3p$5" disabled="disabled">
+                                    </div>
                                 </div>
-                                <div data-tag="DataType">
-                                    <label for="x3p$11">Data Type:</label>
-                                    <input type="text" id="x3p$11" disabled="disabled">
+                                <div data-tag="CY">
+                                    <h3>CY</h3>
+                                    <div data-tag="AxisType">
+                                        <label for="x3p$6">Axis Type:</label>
+                                        <input type="text" id="x3p$6" disabled="disabled">
+                                    </div>
+                                    <div data-tag="DataType">
+                                        <label for="x3p$7">Data Type:</label>
+                                        <input type="text" id="x3p$7" disabled="disabled">
+                                    </div>
+                                    <div data-tag="Increment">
+                                        <label for="x3p$8">Increment:</label>
+                                        <input type="text" id="x3p$8" disabled="disabled">
+                                    </div>
+                                    <div data-tag="Offset">
+                                        <label for="x3p$9">Offset:</label>
+                                        <input type="text" id="x3p$9" disabled="disabled">
+                                    </div>
                                 </div>
-                                <div data-tag="Increment">
-                                    <label for="x3p$12">Increment:</label>
-                                    <input type="text" id="x3p$12" disabled="disabled">
+                                <div data-tag="CZ">
+                                    <h3>CZ</h3>
+                                    <div data-tag="AxisType">
+                                        <label for="x3p$10">Axis Type:</label>
+                                        <input type="text" id="x3p$10" disabled="disabled">
+                                    </div>
+                                    <div data-tag="DataType">
+                                        <label for="x3p$11">Data Type:</label>
+                                        <input type="text" id="x3p$11" disabled="disabled">
+                                    </div>
+                                    <div data-tag="Increment">
+                                        <label for="x3p$12">Increment:</label>
+                                        <input type="text" id="x3p$12" disabled="disabled">
+                                    </div>
+                                    <div data-tag="Offset">
+                                        <label for="x3p$13">Offset:</label>
+                                        <input type="text" id="x3p$13" disabled="disabled">
+                                    </div>
                                 </div>
-                                <div data-tag="Offset">
-                                    <label for="x3p$13">Offset:</label>
-                                    <input type="text" id="x3p$13" disabled="disabled">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div data-tag="Record2">
-                        <div data-tag="Date">
-                            <label for="x3p$14">Date:</label>
-                            <input type="datetime-local" id="x3p$14">
-                        </div>
-                        <div data-tag="Creator">
-                            <label for="x3p$15">Creator:</label>
-                            <input type="text" id="x3p$15">
-                        </div>
-                        <div data-tag="CalibrationDate">
-                            <label for="x3p$20">Calibration Date:</label>
-                            <input type="datetime-local" id="x3p$20">
-                        </div>
-                        <div data-tag="Comment">
-                            <label for="x3p$23">Comment:</label>
-                            <input type="text" id="x3p$23">
-                        </div>
-                        <div data-tag="Instrument">
-                            <h3>Instrument</h3>
-                            <div data-tag="Manufacturer">
-                                <label for="x3p$16">Manufacturer:</label>
-                                <input type="text" id="x3p$16">
-                            </div>
-                            <div data-tag="Model">
-                                <label for="x3p$17">Model:</label>
-                                <input type="text" id="x3p$17">
-                            </div>
-                            <div data-tag="Serial">
-                                <label for="x3p$18">Serial:</label>
-                                <input type="text" id="x3p$18">
-                            </div>
-                            <div data-tag="Version">
-                                <label for="x3p$19">Version:</label>
-                                <input type="text" id="x3p$19">
                             </div>
                         </div>
-                        <div data-tag="ProbingSystem">
-                            <h3>Probing System</h3>
-                            <div data-tag="Type">
-                                <label for="x3p$21">Type:</label>
-                                <input type="text" id="x3p$21">
+                        <div data-tag="Record2">
+                            <div data-tag="Date">
+                                <label for="x3p$14">Date:</label>
+                                <input type="datetime-local" id="x3p$14">
                             </div>
-                            <div data-tag="Identification">
-                                <label for="x3p$22">Identification:</label>
-                                <input type="text" id="x3p$22">
+                            <div data-tag="Creator">
+                                <label for="x3p$15">Creator:</label>
+                                <input type="text" id="x3p$15">
+                            </div>
+                            <div data-tag="CalibrationDate">
+                                <label for="x3p$20">Calibration Date:</label>
+                                <input type="datetime-local" id="x3p$20">
+                            </div>
+                            <div data-tag="Comment">
+                                <label for="x3p$23">Comment:</label>
+                                <input type="text" id="x3p$23">
+                            </div>
+                            <div data-tag="Instrument">
+                                <h3>Instrument</h3>
+                                <div data-tag="Manufacturer">
+                                    <label for="x3p$16">Manufacturer:</label>
+                                    <input type="text" id="x3p$16">
+                                </div>
+                                <div data-tag="Model">
+                                    <label for="x3p$17">Model:</label>
+                                    <input type="text" id="x3p$17">
+                                </div>
+                                <div data-tag="Serial">
+                                    <label for="x3p$18">Serial:</label>
+                                    <input type="text" id="x3p$18">
+                                </div>
+                                <div data-tag="Version">
+                                    <label for="x3p$19">Version:</label>
+                                    <input type="text" id="x3p$19">
+                                </div>
+                            </div>
+                            <div data-tag="ProbingSystem">
+                                <h3>Probing System</h3>
+                                <div data-tag="Type">
+                                    <label for="x3p$21">Type:</label>
+                                    <input type="text" id="x3p$21">
+                                </div>
+                                <div data-tag="Identification">
+                                    <label for="x3p$22">Identification:</label>
+                                    <input type="text" id="x3p$22">
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div data-tag="Record3">
+                            <div data-tag="MatrixDimension">
+                                <h3>Matrix Dimension</h3>
+                                <div data-tag="SizeX">
+                                    <label for="x3p$24">Size X:</label>
+                                    <input type="text" id="x3p$24" disabled="disabled">
+                                </div>
+                                <div data-tag="SizeY">
+                                    <label for="x3p$25">Size Y:</label>
+                                    <input type="text" id="x3p$25" disabled="disabled">
+                                </div>
+                                <div data-tag="SizeZ">
+                                    <label for="x3p$26">Size Z:</label>
+                                    <input type="text" id="x3p$26" disabled="disabled">
+                                </div>
+                            </div>
+                            <div data-tag="DataLink">
+                                <h3>Data Link</h3>
+                                <div data-tag="PointDataLink">
+                                    <label for="x3p$27">Point Data Link:</label>
+                                    <input type="text" id="x3p$27" disabled="disabled">
+                                </div>
+                                <div data-tag="MD5ChecksumPointData">
+                                    <label for="x3p$28">MD5 Checksum Point Data:</label>
+                                    <input type="text" id="x3p$28" disabled="disabled">
+                                </div>
                             </div>
                         </div>
-                        
-                    </div>
-                    <div data-tag="Record3">
-                        <div data-tag="MatrixDimension">
-                            <h3>Matrix Dimension</h3>
-                            <div data-tag="SizeX">
-                                <label for="x3p$24">Size X:</label>
-                                <input type="text" id="x3p$24" disabled="disabled">
-                            </div>
-                            <div data-tag="SizeY">
-                                <label for="x3p$25">Size Y:</label>
-                                <input type="text" id="x3p$25" disabled="disabled">
-                            </div>
-                            <div data-tag="SizeZ">
-                                <label for="x3p$26">Size Z:</label>
-                                <input type="text" id="x3p$26" disabled="disabled">
+                        <div data-tag="Record4">
+                            <div data-tag="ChecksumFile">
+                                <label for="x3p$29">Checksum File:</label>
+                                <input type="text" id="x3p$29" disabled="disabled">
                             </div>
                         </div>
-                        <div data-tag="DataLink">
-                            <h3>Data Link</h3>
-                            <div data-tag="PointDataLink">
-                                <label for="x3p$27">Point Data Link:</label>
-                                <input type="text" id="x3p$27" disabled="disabled">
-                            </div>
-                            <div data-tag="MD5ChecksumPointData">
-                                <label for="x3p$28">MD5 Checksum Point Data:</label>
-                                <input type="text" id="x3p$28" disabled="disabled">
-                            </div>
-                        </div>
-                    </div>
-                    <div data-tag="Record4">
-                        <div data-tag="ChecksumFile">
-                            <label for="x3p$29">Checksum File:</label>
-                            <input type="text" id="x3p$29" disabled="disabled">
-                        </div>
-                    </div>
-                </main>
+                    </main>
+                </div>
             </div>
         </form>
     </div>

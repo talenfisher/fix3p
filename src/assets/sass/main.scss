@@ -1,4 +1,5 @@
-$primaryColor: #0D47A1; 
+// $primaryColor: #0D47A1; 
+$primaryColor: #8A6447;
 
 * {
     padding: 0;
@@ -179,5 +180,25 @@ form {
         width: 100%;
         max-width: 1200px;
         margin: 30px 0;
+    }
+}
+
+.row {
+    display: flex;
+    position: relative;
+
+    .stage {
+        flex-basis: 40%;
+        flex-grow: 1;
+        padding: 5% 15px 15px 15px;
+
+        canvas {
+            width: 100%;
+        }
+    }
+
+    main {
+        flex-basis: 60%;
+        flex-grow: 1;
     }
 }

@@ -1,17 +1,41 @@
+import Popup from "./popup";
 import saveAs from "file-saver";
 import md5 from "blueimp-md5";
-import { PlaneGeometry } from "three";
+import { EventEmitter } from "events";
+// import Plotly from "plotly.js-gl3d-dist";
+import GlScene from "gl-plot3d";
+import OrbitCamera from "game-shell-orbit-camera";
+import SurfacePlot from "gl-surface3d";
+import ndarray from "ndarray";
 
 const REQUIRED_FILES = [
     "main.xml",
     "md5checksum.hex"
 ];
 
+const DATA_TYPES = { 
+    D: Float64Array, 
+    F: Float32Array, 
+    L: Int32Array,  
+    I: Int16Array   
+};  
+   
 const parser = new DOMParser();
+ 
+export class X3PException {
+    constructor(message) {
+        this.message = message;
+    }
+
+    toString() {
+        return this.message;
+    }
+};
+
 /**
  * Holds the x3p file
  */
-export default class X3P {
+export default class X3P extends EventEmitter {
 
     /**
      * Constructs a new X3P object
@@ -19,16 +43,36 @@ export default class X3P {
      * @param {string} filename the filename of the zip file
      */
     constructor(zipfile, filename) {
+        super();
         this.zipfile = zipfile;
         this.filename = filename;
-        this.checkDirectory();
+        this.setFolder();
+        
+        if(!this.hasRequiredFiles()) {
+            throw new X3PException("File does not conform to ISO5436-2");
+        }
+        
+        this.extract();
+        this.on("extracted", () => {
+            if(!this.hasValidChecksum()) console.error("Found invalid checksum");
+            requestAnimationFrame(() => this.render());
+        });
+    }
+
+    async extract() {
+        this.manifestSrc = await this.retrieve("main.xml");
+        this.manifest = parser.parseFromString(this.manifestSrc, "application/xml");
+        this.matrix = await this.retrieve("bindata/data.bin", "arraybuffer");
+        this.actualChecksum = md5(this.manifestSrc);
+        this.expectedChecksum = (await this.retrieve("md5checksum.hex")).trim();
+        this.emit("extracted");
     }
 
     /**
      * Checks to see if the manifest is located within a directory 
      * inside the archive, stores the directory name if there is one
      */
-    checkDirectory() {
+    setFolder() {
         this.folder = "";
 
         let result = this.zipfile.file(/main\.xml$/g);
@@ -83,17 +127,75 @@ export default class X3P {
         
         return true; 
     }
-
-    /**
+ 
+    /** 
      * Check to see if the checksum of the x3p file is correct
      */
-    async hasValidChecksum() {
-        let hash = md5(await this.retrieve("main.xml"));
-        let checksum = (await this.retrieve("md5checksum.hex")).trim();
-
-        if(checksum.match(/\*main\.xml$/)) hash += " *main.xml";
-
-        if(hash !== checksum) return false;
-        return true;
+    hasValidChecksum() {
+        if(typeof this.expectedChecksum === "undefined") return false;
+        if(this.expectedChecksum.match(/\*main\.xml$/)) this.actualChecksum += " *main.xml";
+        this.expectedChecksum === this.actualChecksum;
     }
-} 
+
+    /**
+     * Render a 3d model
+     */
+    async render() {
+        if(typeof this.manifest === "undefined") {
+            return this.on("extracted", this.render.bind(this));
+        }
+        
+        let sizeX = parseInt(this.manifest.querySelector("Record3 MatrixDimension SizeX").innerHTML);
+        let sizeY = parseInt(this.manifest.querySelector("Record3 MatrixDimension SizeY").innerHTML);
+        let dataType = DATA_TYPES[this.manifest.querySelector("Record1 Axes CZ DataType").innerHTML];
+        let matrix = new dataType(this.matrix);  
+
+        for(let i = 0; i < matrix.length; i++) {
+            matrix[i] = matrix[i] * 5;
+        }
+
+        let field = ndarray(matrix, [sizeY, sizeX]);
+        let canvas = document.querySelector("#visual");
+        let gl = canvas.getContext("webgl");
+        gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+
+        canvas.setAttribute("width", canvas.offsetWidth);
+        canvas.setAttribute("height", canvas.offsetHeight);
+
+        this.scene = GlScene({
+            canvas,
+            glOptions: {
+                drawingBufferWidth: canvas.offsetWidth,
+                drawingBufferHeight: canvas.offsetHeight
+            },
+            clearColor: [0,0,0,0],
+            autoResize: false,
+            camera: {
+                eye: [0, 0, 0.6],
+                up: [-1, 0, 0],
+                zoomMin: 0.7,
+                zoomMax: 0.7
+            },
+            axes: {
+                gridEnable: false,
+                lineEnable: false,
+                tickEnable: false,
+                labelEnable: false,
+                zeroEnable: false
+            },
+            flipX: true
+        });
+
+        let surface = SurfacePlot({
+            gl: this.scene.gl,
+            field,
+            dynamicWidth: 0,
+            colormap: [
+                {index: 0, rgb: [104,64,25]},
+                {index: 1, rgb: [217,158,99]}
+            ]
+        }); 
+
+        this.scene.add(surface); 
+    }
+}  

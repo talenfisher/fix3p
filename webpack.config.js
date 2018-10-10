@@ -7,8 +7,16 @@ module.exports = {
         path: path.resolve(__dirname, 'src/assets/dist/'),
         filename: 'fix3p.bundle.js'
     },
+    module: {
+        rules: [
+            { 
+                test: /node_modules/, 
+                use: 'ify-loader'
+            }
+        ]
+    },
     node: {
-        fs: 'empty'
+        fs: 'empty' 
     },
     externals: ["ws"]
 }
