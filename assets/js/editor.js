@@ -141,8 +141,10 @@ export default class Editor {
         if(node.children.length === 0) {
             let selector = pathArray2DTS(node.getPath());
             let el = document.querySelector(selector + " input");
-            el.value = node.innerHTML;
-
+            
+            if(el !== null) {
+                el.value = node.innerHTML;
+            }
         } else {
             for(let subchild of node.children) {
                 this.populate(subchild);

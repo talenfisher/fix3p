@@ -1,10 +1,10 @@
 import jszip from "jszip";
-import X3P from "./x3p";
+import { default as X3P, X3PException } from "./x3p";
 import Editor from "./editor";
 import Popup from "./popup";
 
 let parser = new DOMParser();
-class X3PException {};
+
 
 export default class Uploader {
 
@@ -48,10 +48,6 @@ export default class Uploader {
             let zip = await jszip().loadAsync(file);
             fix3p.X3P = new X3P(zip, file.name);
 
-            if(!(await fix3p.X3P.hasRequiredFiles())) {
-                throw new X3PException();
-            }
-
         } catch(x3pexception) {
             let error = new Popup(`<i class="fas fa-exclamation-triangle"></i> Please upload a valid X3P file.`);
             error.display(2, true);
@@ -63,10 +59,6 @@ export default class Uploader {
 
         let manifest = await fix3p.X3P.retrieve("main.xml");
         fix3p.editor.display(parser.parseFromString(manifest, "application/xml"));
-
-        if(!(await fix3p.X3P.hasValidChecksum())) {
-            console.error("Found invalid checksum");
-        }
     }
 
     /**

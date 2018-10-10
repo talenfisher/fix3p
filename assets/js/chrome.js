@@ -2,8 +2,8 @@ chrome.webRequest.onBeforeRequest.addListener(function(details) {
     var displayURL;
 
     if (/\.x3p$/i.test(details.url)) { // if the resource is a PDF file ends with ".pdf"
-        displayURL = chrome.runtime.getURL("index.html") + "?file="+details.url;
-
+        displayURL = chrome.runtime.getURL("index.html");
+        localStorage.setItem("openfile", details.url);
         return { redirectUrl: displayURL };
         // stop the request and proceed to your custom display page
     }   
