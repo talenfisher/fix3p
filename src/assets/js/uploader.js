@@ -5,7 +5,6 @@ import Popup from "./popup";
 
 let parser = new DOMParser();
 
-
 export default class Uploader {
 
     /**
@@ -42,7 +41,6 @@ export default class Uploader {
         this.label.classList.remove("hover");
 
         let file = (!byclick) ? e.dataTransfer.files[0] : this.input.files[0];
-        
         
         try {
             let zip = await jszip().loadAsync(file);

@@ -149,7 +149,7 @@ export default class X3P extends EventEmitter {
         let incrementY = parseFloat(this.manifest.querySelector("Record1 Axes CY Increment").innerHTML);
         let incrementZ = parseFloat(this.manifest.querySelector("Record1 Axes CZ Increment").innerHTML);
         let dataType = DATA_TYPES[this.manifest.querySelector("Record1 Axes CZ DataType").innerHTML];
-        let matrix = new dataType(this.matrix);  
+        let matrix = new Float64Array(this.matrix);  
         let maxZ = 0;
 
         for(let i = 0; i < matrix.length; i++) {
@@ -167,7 +167,6 @@ export default class X3P extends EventEmitter {
 
         this.scene = GlScene({
             canvas,
-
             glOptions: {
                 drawingBufferWidth: canvas.offsetWidth,
                 drawingBufferHeight: canvas.offsetHeight
@@ -199,7 +198,7 @@ export default class X3P extends EventEmitter {
         }); 
 
         surface.ambientLight = 0.5;
-        surface.diffuseLight = 0.3;
+        surface.diffuseLight = 0.4;
         surface.specularLight = 0.2;
         surface.roughness = 0.4;
         surface.lightPosition = [ ((sizeY * incrementY) / 2) * -1, ((incrementY * 1) - ((sizeY * incrementY) - (1 * incrementY))) * -1, maxZ];
