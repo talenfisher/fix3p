@@ -2,9 +2,7 @@ import Popup from "./popup";
 import saveAs from "file-saver";
 import md5 from "blueimp-md5";
 import { EventEmitter } from "events";
-// import Plotly from "plotly.js-gl3d-dist";
 import GlScene from "gl-plot3d";
-import OrbitCamera from "game-shell-orbit-camera";
 import SurfacePlot from "gl-surface3d";
 import ndarray from "ndarray";
 
