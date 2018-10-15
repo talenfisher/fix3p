@@ -2,9 +2,7 @@ import Popup from "./popup";
 import saveAs from "file-saver";
 import md5 from "blueimp-md5";
 import { EventEmitter } from "events";
-// import Plotly from "plotly.js-gl3d-dist";
 import GlScene from "gl-plot3d";
-import OrbitCamera from "game-shell-orbit-camera";
 import SurfacePlot from "gl-surface3d";
 import ndarray from "ndarray";
 
@@ -149,13 +147,12 @@ export default class X3P extends EventEmitter {
         let sizeY = parseInt(this.manifest.querySelector("Record3 MatrixDimension SizeY").innerHTML);
         let incrementX = parseFloat(this.manifest.querySelector("Record1 Axes CX Increment").innerHTML);
         let incrementY = parseFloat(this.manifest.querySelector("Record1 Axes CY Increment").innerHTML);
-        let incrementZ = parseFloat(this.manifest.querySelector("Record1 Axes CZ Increment").innerHTML);
-        let dataType = DATA_TYPES[this.manifest.querySelector("Record1 Axes CZ DataType").innerHTML];
-        let matrix = new dataType(this.matrix);  
+        let DataType = DATA_TYPES[this.manifest.querySelector("Record1 Axes CZ DataType").innerHTML];
+        let matrix = new DataType(this.matrix);  
         let maxZ = 0;
 
         for(let i = 0; i < matrix.length; i++) {
-            if(i == 0) maxZ = matrix[i] * incrementZ;
+            if(i == 0) maxZ = matrix[i] * 5;
             else if(maxZ < matrix[i]) maxZ = matrix[i] * 5;
 
             matrix[i] = matrix[i] * 5;
@@ -169,7 +166,6 @@ export default class X3P extends EventEmitter {
 
         this.scene = GlScene({
             canvas,
-
             glOptions: {
                 drawingBufferWidth: canvas.offsetWidth,
                 drawingBufferHeight: canvas.offsetHeight
@@ -177,9 +173,8 @@ export default class X3P extends EventEmitter {
             clearColor: [0,0,0,0],
             autoResize: false,
             camera: {
-                eye: [0, 0, 1],
+                eye: [0, 0, 1.7],
                 up: [-1, 0, 0],
-                zoomMin: 1.7,
                 zoomMax: 1.7
             },
             axes: {
@@ -200,11 +195,11 @@ export default class X3P extends EventEmitter {
             ]
         }); 
 
-        surface.ambientLight = 0.5;
-        surface.diffuseLight = 0.3;
-        surface.specularLight = 0.2;
-        surface.roughness = 0.4;
-        surface.lightPosition = [ ((sizeY * incrementY) / 2) * -1, ((incrementY * 1) - ((sizeY * incrementY) - (1 * incrementY))) * -1, maxZ];
+        surface.ambientLight = 0.6;
+        surface.diffuseLight = 0.7;
+        surface.specularLight = 0.3; 
+        surface.roughness = 0.7;
+        surface.lightPosition = [ (sizeY * incrementY) / 2, sizeX * incrementX * -2, maxZ * 2 ];
 
         this.scene.add(surface);
         this.surface = surface; 
