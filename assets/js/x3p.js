@@ -1,4 +1,3 @@
-import Popup from "./popup";
 import saveAs from "file-saver";
 import md5 from "blueimp-md5";
 import { EventEmitter } from "events";
@@ -147,33 +146,45 @@ export default class X3P extends EventEmitter {
         let sizeY = parseInt(this.manifest.querySelector("Record3 MatrixDimension SizeY").innerHTML);
         let incrementX = parseFloat(this.manifest.querySelector("Record1 Axes CX Increment").innerHTML);
         let incrementY = parseFloat(this.manifest.querySelector("Record1 Axes CY Increment").innerHTML);
-        let DataType = DATA_TYPES[this.manifest.querySelector("Record1 Axes CZ DataType").innerHTML];
-        let matrix = new DataType(this.matrix);  
-        let maxZ = 0;
+        let DataTypeX = DATA_TYPES[this.manifest.querySelector("Record1 Axes CX DataType").innerHTML];
+        let DataTypeY = DATA_TYPES[this.manifest.querySelector("Record1 Axes CY DataType").innerHTML];
+        let DataTypeZ = DATA_TYPES[this.manifest.querySelector("Record1 Axes CZ DataType").innerHTML];
+        let matrixX = [];
+        let matrixY = [];
+        let matrixZ = new DataTypeZ(this.matrix);
+        let maxZ = NaN;
+        let yCount = -1;
 
-        for(let i = 0; i < matrix.length; i++) {
-            if(i == 0) maxZ = matrix[i] * 5;
-            else if(maxZ < matrix[i]) maxZ = matrix[i] * 5;
+        for(let i = 0; i < matrixZ.length; i++) {
+            matrixX[i] = (i % sizeX) * (incrementX / 0.0001);
+            matrixY[i] = ((matrixX[i] === 0) ? ++yCount : yCount) * (incrementY / 0.0001);
 
-            matrix[i] = matrix[i] * 5;
+            if(isNaN(maxZ) && !isNaN(matrixZ[i])) maxZ = matrixZ[i] * 5;
+            else if(maxZ < matrixZ[i]) maxZ = matrixZ[i] * 5;
+            matrixZ[i] = (matrixZ[i] / 0.0001) * 5;
         }
 
-        let field = ndarray(matrix, [sizeY, sizeX]);
-        
+        let coords = [
+            ndarray(new DataTypeY(matrixY), [sizeY, sizeX]),
+            ndarray(new DataTypeX(matrixX), [sizeY, sizeX]),
+            ndarray(matrixZ, [sizeY, sizeX])
+        ];
+
         let canvas = document.querySelector("#visual");
+        let gl = canvas.getContext("webgl");
+
         canvas.setAttribute("width", canvas.offsetWidth);
         canvas.setAttribute("height", canvas.offsetHeight);
+        gl.depthFunc(gl.ALWAYS);
 
         this.scene = GlScene({
             canvas,
-            glOptions: {
-                drawingBufferWidth: canvas.offsetWidth,
-                drawingBufferHeight: canvas.offsetHeight
-            },
-            clearColor: [0,0,0,0],
+            gl,
+            pixelRatio: canvas.offsetWidth / canvas.offsetHeight,
+            // clearColor: [0,0,0,0],
             autoResize: false,
             camera: {
-                eye: [0, 0, 1.7],
+                eye: [0, 0, 1.4],
                 up: [-1, 0, 0],
                 zoomMax: 1.7
             },
@@ -188,17 +199,19 @@ export default class X3P extends EventEmitter {
 
         let surface = SurfacePlot({
             gl: this.scene.gl,
-            field,
+            field: coords[2],
+            coords: coords,
+            intensityBounds: [0, maxZ],
             colormap: [
-                {index: 0, rgb: [104,64,25]},
-                {index: 1, rgb: [228,187,147]}
+                {index: 0, rgb: [205,127,50]},
+                {index: 1, rgb: [205,127,50]}
             ]
         }); 
 
-        surface.ambientLight = 0.6;
-        surface.diffuseLight = 0.7;
+        surface.ambientLight = 0.1;
+        surface.diffuseLight = 0.4;
         surface.specularLight = 0.3; 
-        surface.roughness = 0.7;
+        surface.roughness = 0.5;
         surface.lightPosition = [ (sizeY * incrementY) / 2, sizeX * incrementX * -2, maxZ * 2 ];
 
         this.scene.add(surface);
