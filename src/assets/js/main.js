@@ -81,6 +81,31 @@ Document.prototype.createEasy = function(name, options = {}) {
     return el;
 }
 
+/**
+ * Gets the innerHTML value of a node by query selector
+ * @param {string} selector 
+ */
+Document.prototype.get = function(selector) {
+    return this.querySelector(selector).innerHTML;
+}
+
+
+/**
+ * Gets the innerHTML value of a node as an integer
+ * @param {string} selector 
+ */
+Document.prototype.getInt = function(selector) {
+    return parseInt(this.get(selector));
+}
+
+/**
+ * Gets the innerHTML value of a node as a float
+ * @param {string} selector 
+ */
+Document.prototype.getFloat = function(selector) {
+    return parseFloat(this.get(selector));
+}
+
 
 /**
  * Converts a path array to a data tag selector
@@ -162,7 +187,7 @@ window.addEventListener("load", async () => {
 
     // setup tabs
     document.addEventListener("click", async e => {
-        if(e.target.matches("a.tab")) {
+        if(e.target.matches("a.tab")) { 
             e.preventDefault();
 
             let builder = new XMLBuilder(document.querySelector(".view main"));
@@ -182,7 +207,7 @@ window.addEventListener("load", async () => {
 
             popup.el.querySelector("#continue-no").addEventListener("click", e => {
                 popup.hide(true);
-                fix3p.X3P.destroy();
+                fix3p.X3P.surface.unrender();
                 fix3p.uploader.display();
             });
 
