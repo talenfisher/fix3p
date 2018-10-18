@@ -156,12 +156,12 @@ export default class X3P extends EventEmitter {
         let yCount = -1;
 
         for(let i = 0; i < matrixZ.length; i++) {
-            matrixX[i] = (i % sizeX) * incrementX;
-            matrixY[i] = ((matrixX[i] === 0) ? ++yCount : yCount) * incrementY;
+            matrixX[i] = (i % sizeX) * (incrementX / 0.0001);
+            matrixY[i] = ((matrixX[i] === 0) ? ++yCount : yCount) * (incrementY / 0.0001);
 
             if(isNaN(maxZ) && !isNaN(matrixZ[i])) maxZ = matrixZ[i] * 5;
             else if(maxZ < matrixZ[i]) maxZ = matrixZ[i] * 5;
-            matrixZ[i] = matrixZ[i] * 5;
+            matrixZ[i] = (matrixZ[i] / 0.0001) * 5;
         }
 
         let coords = [
@@ -175,13 +175,13 @@ export default class X3P extends EventEmitter {
 
         canvas.setAttribute("width", canvas.offsetWidth);
         canvas.setAttribute("height", canvas.offsetHeight);
-        gl.depthFunc(gl.LEQUAL);
+        gl.depthFunc(gl.ALWAYS);
 
         this.scene = GlScene({
             canvas,
             gl,
             pixelRatio: canvas.offsetWidth / canvas.offsetHeight,
-            clearColor: [0,0,0,0],
+            // clearColor: [0,0,0,0],
             autoResize: false,
             camera: {
                 eye: [0, 0, 1.4],
@@ -201,6 +201,7 @@ export default class X3P extends EventEmitter {
             gl: this.scene.gl,
             field: coords[2],
             coords: coords,
+            intensityBounds: [0, maxZ],
             colormap: [
                 {index: 0, rgb: [205,127,50]},
                 {index: 1, rgb: [205,127,50]}
