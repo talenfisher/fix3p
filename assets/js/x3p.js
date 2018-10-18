@@ -1,10 +1,9 @@
 import saveAs from "file-saver";
 import md5 from "blueimp-md5";
 import { EventEmitter } from "events";
-import GlScene from "gl-plot3d";
-import SurfacePlot from "gl-surface3d";
-import ndarray from "ndarray";
+import Surface from "./surface";
 
+const ADJUST = 0.0001;
 const REQUIRED_FILES = [
     "main.xml",
     "md5checksum.hex"
@@ -16,7 +15,8 @@ const DATA_TYPES = {
     L: Int32Array,  
     I: Int16Array   
 };  
-   
+
+
 const parser = new DOMParser();
  
 export class X3PException {
@@ -52,16 +52,20 @@ export default class X3P extends EventEmitter {
         this.extract();
         this.on("extracted", () => {
             if(!this.hasValidChecksum()) console.error("Found invalid checksum");
-            setTimeout(() => this.render(), 1000);
+            setTimeout(() => this.surface.render(), 1000);
         });
     }
 
     async extract() {
         this.manifestSrc = await this.retrieve("main.xml");
         this.manifest = parser.parseFromString(this.manifestSrc, "application/xml");
-        this.matrix = await this.retrieve("bindata/data.bin", "arraybuffer");
         this.actualChecksum = md5(this.manifestSrc);
         this.expectedChecksum = (await this.retrieve("md5checksum.hex")).trim();
+        this.surface = new Surface({ 
+            manifest: this.manifest,
+            data: await this.retrieve("bindata/data.bin", "arraybuffer")
+        });
+
         this.emit("extracted");
     }
 
@@ -132,99 +136,5 @@ export default class X3P extends EventEmitter {
         if(typeof this.expectedChecksum === "undefined") return false;
         if(this.expectedChecksum.match(/\*main\.xml$/)) this.actualChecksum += " *main.xml";
         this.expectedChecksum === this.actualChecksum;
-    }
-
-    /**
-     * Render a 3d model
-     */
-    async render() {
-        if(typeof this.manifest === "undefined") {
-            return this.on("extracted", this.render.bind(this));
-        }
-        
-        let sizeX = parseInt(this.manifest.querySelector("Record3 MatrixDimension SizeX").innerHTML);
-        let sizeY = parseInt(this.manifest.querySelector("Record3 MatrixDimension SizeY").innerHTML);
-        let incrementX = parseFloat(this.manifest.querySelector("Record1 Axes CX Increment").innerHTML);
-        let incrementY = parseFloat(this.manifest.querySelector("Record1 Axes CY Increment").innerHTML);
-        let DataTypeX = DATA_TYPES[this.manifest.querySelector("Record1 Axes CX DataType").innerHTML];
-        let DataTypeY = DATA_TYPES[this.manifest.querySelector("Record1 Axes CY DataType").innerHTML];
-        let DataTypeZ = DATA_TYPES[this.manifest.querySelector("Record1 Axes CZ DataType").innerHTML];
-        let matrixX = [];
-        let matrixY = [];
-        let matrixZ = new DataTypeZ(this.matrix);
-        let maxZ = NaN;
-        let yCount = -1;
-
-        for(let i = 0; i < matrixZ.length; i++) {
-            matrixX[i] = (i % sizeX) * (incrementX / 0.0001);
-            matrixY[i] = ((matrixX[i] === 0) ? ++yCount : yCount) * (incrementY / 0.0001);
-
-            if(isNaN(maxZ) && !isNaN(matrixZ[i])) maxZ = matrixZ[i] * 5;
-            else if(maxZ < matrixZ[i]) maxZ = matrixZ[i] * 5;
-            matrixZ[i] = (matrixZ[i] / 0.0001) * 5;
-        }
-
-        let coords = [
-            ndarray(new DataTypeY(matrixY), [sizeY, sizeX]),
-            ndarray(new DataTypeX(matrixX), [sizeY, sizeX]),
-            ndarray(matrixZ, [sizeY, sizeX])
-        ];
-
-        let canvas = document.querySelector("#visual");
-        let gl = canvas.getContext("webgl");
-
-        canvas.setAttribute("width", canvas.offsetWidth);
-        canvas.setAttribute("height", canvas.offsetHeight);
-        gl.depthFunc(gl.ALWAYS);
-
-        this.scene = GlScene({
-            canvas,
-            gl,
-            pixelRatio: canvas.offsetWidth / canvas.offsetHeight,
-            // clearColor: [0,0,0,0],
-            autoResize: false,
-            camera: {
-                eye: [0, 0, 1.4],
-                up: [-1, 0, 0],
-                zoomMax: 1.7
-            },
-            axes: {
-                gridEnable: false,
-                lineEnable: false,
-                tickEnable: false,
-                labelEnable: false,
-                zeroEnable: false
-            }
-        });
-
-        let surface = SurfacePlot({
-            gl: this.scene.gl,
-            field: coords[2],
-            coords: coords,
-            intensityBounds: [0, maxZ],
-            colormap: [
-                {index: 0, rgb: [205,127,50]},
-                {index: 1, rgb: [205,127,50]}
-            ]
-        }); 
-
-        surface.ambientLight = 0.1;
-        surface.diffuseLight = 0.4;
-        surface.specularLight = 0.3; 
-        surface.roughness = 0.5;
-        surface.lightPosition = [ (sizeY * incrementY) / 2, sizeX * incrementX * -2, maxZ * 2 ];
-
-        this.scene.add(surface);
-        this.surface = surface; 
-    }
-
-    /**
-     * Remove the render
-     */
-    destroy() {
-        let canvas = document.querySelector("#visual");
-        let gl = canvas.getContext("webgl");
-        requestAnimationFrame(() => gl.clear(gl.DEPTH_BUFFER_BIT));
-        this.scene.dispose();
     }
 }  
