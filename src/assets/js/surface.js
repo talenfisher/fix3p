@@ -71,8 +71,8 @@ export default class Surface {
         }
 
         this.coords = [
-            ndarray(new this.dataTypeY(y), [ this.sizeY, this.sizeX ]),
             ndarray(new this.dataTypeX(x), [ this.sizeY, this.sizeX ]),
+            ndarray(new this.dataTypeY(y), [ this.sizeY, this.sizeX ]),
             ndarray(z, [ this.sizeY, this.sizeX ])
         ];
     }
@@ -90,7 +90,7 @@ export default class Surface {
             autoResize: false,
             camera: {
                 eye: [0, 0, 1.4],
-                up: [-1, 0, 0],
+                up: [0, 0, 0],
                 zoomMax: 1.7
             },
             axes: {
