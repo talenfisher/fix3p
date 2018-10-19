@@ -86,7 +86,8 @@ Document.prototype.createEasy = function(name, options = {}) {
  * @param {string} selector 
  */
 Document.prototype.get = function(selector) {
-    return this.querySelector(selector).innerHTML;
+    let node = this.querySelector(selector);
+    return typeof node !== "undefined" ? node.innerHTML : "";
 }
 
 
