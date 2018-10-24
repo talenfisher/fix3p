@@ -4,6 +4,7 @@ import Editor from "./editor";
 import Popup from "./popup";
 import md5 from "blueimp-md5";
 import axios from "axios";
+import "./fullscreen";
 
 // expose axios to the console
 window.axios = axios;
@@ -226,7 +227,9 @@ window.addEventListener("keydown", e => {
         document.querySelector("a.tab").click();
         return false;
 
-    } else if(e.which === 27 && document.querySelector("form").getAttribute("data-view") === "editor") {
+    } else if(e.which === 27 && 
+        document.querySelector("form").getAttribute("data-view") === "editor" &&
+        !document.fullscreenEnabled) {
         e.preventDefault();
         fix3p.editor.close();
         return true;
