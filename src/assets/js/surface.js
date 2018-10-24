@@ -13,20 +13,49 @@ const EPSILON = 0.0001;
 const MULTIPLY = 5;
 const AXES = ["X","Y","Z"];
  
-export default class Surface {
+export default class Surface { 
     constructor({ manifest, data }) {
         this.manifest = manifest;
         this.data = data;
         this.canvas = document.querySelector("#visual");
         this.fullscreenBtn = document.querySelector(".stage i");
-        this.fullscreenBtn.onclick = () => this.canvas.requestFullScreen;
 
+        this.setupFullscreen();
         this.setupSizes();
         this.setupIncrements();
         this.setupDataTypes();
         this.setupMaxes();
         this.setupCoords();
     }
+
+    /**
+     * Enters the canvas into fullscreen mode
+     */
+    setupFullscreen() {        
+        if(this.canvas.requestFullScreen === null)  {
+            this.fullscreenBtn.remove();
+            return;
+        }
+
+        this.fullscreenBtn.onclick = () => this.canvas.requestFullscreen();
+        this.canvas.addEventListener("fullscreenchange", this.fullscreenChangeHandler.bind(this));
+    }
+
+    fullscreenChangeHandler() {
+        if(document.fullscreenEnabled) {
+            this.canvas.setAttribute("data-height", this.canvas.getAttribute("height"));
+            this.canvas.setAttribute("data-width", this.canvas.getAttribute("width"));
+            this.canvas.setAttribute("height", this.canvas.offsetHeight);
+            this.canvas.setAttribute("width", this.canvas.offsetWidth);
+            this.scene.update({ pixelRatio: window.innerWidth / window.innerHeight });
+        } else {
+            this.canvas.setAttribute("height", this.canvas.getAttribute("data-height"));
+            this.canvas.setAttribute("width", this.canvas.getAttribute("data-width"));
+            this.scene.update({ pixelRatio: this.canvas.offsetWidth / this.canvas.offsetHeight });
+        }
+    }
+
+
 
     setupSizes() {
         for(let axis of AXES) {
@@ -127,5 +156,6 @@ export default class Surface {
         let gl = this.canvas.getContext("webgl");
         requestAnimationFrame(() => gl.clear(gl.DEPTH_BUFFER_BIT));
         this.scene.dispose();
+        this.canvas.removeEventListener(this.fullscreenChangeHandler.bind(this));
     }
 }

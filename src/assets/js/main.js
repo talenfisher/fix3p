@@ -4,7 +4,7 @@ import Editor from "./editor";
 import Popup from "./popup";
 import md5 from "blueimp-md5";
 import axios from "axios";
-import "./fullscreen";
+import "fullscreen-api-polyfill";
 
 // expose axios to the console
 window.axios = axios;
