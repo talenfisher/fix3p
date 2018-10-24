@@ -5,6 +5,7 @@ import Popup from "./popup";
 import md5 from "blueimp-md5";
 import axios from "axios";
 
+// expose axios to the console
 window.axios = axios;
 
 window.fix3p = {
