@@ -164,4 +164,12 @@ export default class Editor {
         else this.populate(manifest.children[0]);
         document.querySelector("form").setAttribute("data-view", "editor");
     }
+
+    /**
+     * Closes the editor
+     */
+    close() {
+        fix3p.X3P.unrender();
+        fix3p.uploader.display();
+    }
 }

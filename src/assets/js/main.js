@@ -208,15 +208,13 @@ window.addEventListener("load", async () => {
 
             popup.el.querySelector("#continue-no").addEventListener("click", e => {
                 popup.hide(true);
-                fix3p.X3P.surface.unrender();
-                fix3p.uploader.display();
+                fix3p.editor.close();
             });
 
         } else if(e.target.matches(".tab:not(a)")) {
             document.querySelector(".view").setAttribute("data-view", e.target.index());
         }
     });
-    
     
 });
 
@@ -226,5 +224,10 @@ window.addEventListener("keydown", e => {
         e.preventDefault();
         document.querySelector("a.tab").click();
         return false;
+
+    } else if(e.which === 27 && document.querySelector("form").getAttribute("data-view") === "editor") {
+        e.preventDefault();
+        fix3p.editor.close();
+        return true;
     }
 });
