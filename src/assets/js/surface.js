@@ -156,6 +156,6 @@ export default class Surface {
         let gl = this.canvas.getContext("webgl");
         requestAnimationFrame(() => gl.clear(gl.DEPTH_BUFFER_BIT));
         this.scene.dispose();
-        this.canvas.removeEventListener(this.fullscreenChangeHandler.bind(this));
+        this.canvas.removeEventListener("fullscreenchange", this.fullscreenChangeHandler.bind(this));
     }
 }

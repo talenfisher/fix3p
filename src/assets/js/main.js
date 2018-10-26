@@ -221,6 +221,7 @@ window.addEventListener("load", async () => {
 });
 
 window.addEventListener("keydown", e => {
+    console.log(e.which);
     if((e.ctrlKey || e.metaKey) && e.which === 83)  {
         if(document.querySelector("form").getAttribute("data-view") !== "editor") return true;
         e.preventDefault();
@@ -229,8 +230,9 @@ window.addEventListener("keydown", e => {
 
     } else if(e.which === 27 && 
         document.querySelector("form").getAttribute("data-view") === "editor" &&
-        !document.fullscreenEnabled) {
+        document.fullscreenElement === null) {
         e.preventDefault();
+        debugger;
         fix3p.editor.close();
         return true;
     }
