@@ -12,11 +12,10 @@ export default class Editor {
         this.el = el;
         this.nav = this.el.querySelector("nav");
         this.main = this.el.querySelector("main");
+        
         this.backbtn = this.el.querySelector(".back");
-
         this.backbtn.addEventListener("click", e => {
-            window.fix3p.X3P.surface.unrender();
-            window.fix3p.uploader.display()
+            this.close();
         });
     }
 
@@ -163,5 +162,14 @@ export default class Editor {
         if(window.fix3p.mode === "development") this.generate(manifest.children[0]);
         else this.populate(manifest.children[0]);
         document.querySelector("form").setAttribute("data-view", "editor");
+    }
+
+    /**
+     * Closes the editor
+     */
+    close() {
+        debugger;
+        fix3p.X3P.surface.unrender();
+        fix3p.uploader.display();
     }
 }

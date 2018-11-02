@@ -192,10 +192,40 @@ form {
         flex-grow: 1;
         padding: 15px;
         height: 90vh;
+        position: relative;
+
+        i {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            height: 60px;
+            width: 60px;
+            line-height: 40px;
+            font-size: 40px;
+            text-align: center;
+            padding: 10px;
+            box-sizing: border-box;
+            background: rgba(0,0,0,.8);
+            color: white;
+            transition: font-size .5s, opacity .5s;
+            opacity: 0;
+            cursor: pointer;
+
+            &:hover {
+                font-size: 45px;
+            }
+        }
+
+        &:hover {
+            i {
+                opacity: 1;
+            }
+        }
 
         canvas {
             width: 100%;
             height: 100%;
+            background: white;
         }
     }
  
