@@ -9,22 +9,53 @@ const DATA_TYPES = {
     I: Int16Array   
 };
 
-const ADJUST = 0.0001;
+const EPSILON = 0.0001;
 const MULTIPLY = 5;
 const AXES = ["X","Y","Z"];
-
-
-export default class Surface {
+ 
+export default class Surface { 
     constructor({ manifest, data }) {
         this.manifest = manifest;
         this.data = data;
+        this.canvas = document.querySelector("#visual");
+        this.fullscreenBtn = document.querySelector(".stage i");
 
+        this.setupFullscreen();
         this.setupSizes();
         this.setupIncrements();
         this.setupDataTypes();
         this.setupMaxes();
         this.setupCoords();
     }
+
+    /**
+     * Enters the canvas into fullscreen mode
+     */
+    setupFullscreen() {        
+        if(this.canvas.requestFullScreen === null)  {
+            this.fullscreenBtn.remove();
+            return;
+        }
+
+        this.fullscreenBtn.onclick = () => this.canvas.requestFullscreen();
+        this.canvas.addEventListener("fullscreenchange", this.fullscreenChangeHandler.bind(this));
+    }
+
+    fullscreenChangeHandler() {
+        if(document.fullscreenEnabled) {
+            this.canvas.setAttribute("data-height", this.canvas.getAttribute("height"));
+            this.canvas.setAttribute("data-width", this.canvas.getAttribute("width"));
+            this.canvas.setAttribute("height", this.canvas.offsetHeight);
+            this.canvas.setAttribute("width", this.canvas.offsetWidth);
+            this.scene.update({ pixelRatio: window.innerWidth / window.innerHeight });
+        } else {
+            this.canvas.setAttribute("height", this.canvas.getAttribute("data-height"));
+            this.canvas.setAttribute("width", this.canvas.getAttribute("data-width"));
+            this.scene.update({ pixelRatio: this.canvas.offsetWidth / this.canvas.offsetHeight });
+        }
+    }
+
+
 
     setupSizes() {
         for(let axis of AXES) {
@@ -34,14 +65,13 @@ export default class Surface {
 
     setupIncrements() {
         for(let axis of AXES) {
-            this["increment"+axis] = this.manifest.getFloat(`Record1 Axes C${axis} Increment`) / ADJUST;
+            this["increment"+axis] = this.manifest.getFloat(`Record1 Axes C${axis} Increment`) / EPSILON;
         }
     }
 
     setupDataTypes() {
         for(let axis of AXES) {
             let dataType = this.manifest.get(`Record1 Axes C${axis} DataType`);
-
             if(!dataType in DATA_TYPES) throw new Exception("X3P Manifest must include DataType");
             this["dataType"+axis] = DATA_TYPES[dataType];
         }
@@ -63,9 +93,9 @@ export default class Surface {
         for(let i = 0; i < z.length; i++) {
             x[i] = (i % this.sizeX) * this.incrementX;
             y[i] = ((x[i] === 0) ? ++yCount : yCount) * this.incrementY;
-            z[i] = (z[i] / ADJUST) * MULTIPLY;
+            z[i] = (z[i] / EPSILON) * MULTIPLY;
 
-            // adjust MaxZ
+            // EPSILON MaxZ
             if(isNaN(this.maxZ) && !isNaN(z[i])) this.maxZ = z[i];
             else if(this.maxZ < z[i]) this.maxZ = z[i];
         }
@@ -77,16 +107,17 @@ export default class Surface {
         ];
     }
 
-    render(canvas = document.querySelector("#visual")) {
-        let gl = canvas.getContext("webgl");
+    render() {
+        let gl = this.canvas.getContext("webgl");
         gl.depthFunc(gl.ALWAYS);
-        canvas.setAttribute("width", canvas.offsetWidth);
-        canvas.setAttribute("height", canvas.offsetHeight);
+
+        this.canvas.setAttribute("width", this.canvas.offsetWidth);
+        this.canvas.setAttribute("height", this.canvas.offsetHeight);
         
         this.scene = GlScene({
-            canvas,
+            canvas: this.canvas,
             gl,
-            pixelRatio: canvas.offsetWidth / canvas.offsetHeight,
+            pixelRatio: this.canvas.offsetWidth / this.canvas.offsetHeight,
             autoResize: false,
             camera: {
                 eye: [0, 0, 1.4],
@@ -121,9 +152,10 @@ export default class Surface {
         requestAnimationFrame(() => this.scene.add(surface));
     }
 
-    unrender(canvas = document.querySelector("#visual")) {
-        let gl = canvas.getContext("webgl");
+    unrender() {
+        let gl = this.canvas.getContext("webgl");
         requestAnimationFrame(() => gl.clear(gl.DEPTH_BUFFER_BIT));
         this.scene.dispose();
+        this.canvas.removeEventListener("fullscreenchange", this.fullscreenChangeHandler.bind(this));
     }
 }

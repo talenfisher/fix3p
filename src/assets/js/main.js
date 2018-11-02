@@ -4,7 +4,9 @@ import Editor from "./editor";
 import Popup from "./popup";
 import md5 from "blueimp-md5";
 import axios from "axios";
+import "fullscreen-api-polyfill";
 
+// expose axios to the console
 window.axios = axios;
 
 window.fix3p = {
@@ -208,8 +210,7 @@ window.addEventListener("load", async () => {
 
             popup.el.querySelector("#continue-no").addEventListener("click", e => {
                 popup.hide(true);
-                fix3p.X3P.surface.unrender();
-                fix3p.uploader.display();
+                fix3p.editor.close();
             });
 
         } else if(e.target.matches(".tab:not(a)")) {
@@ -217,14 +218,22 @@ window.addEventListener("load", async () => {
         }
     });
     
-    
 });
 
 window.addEventListener("keydown", e => {
+    console.log(e.which);
     if((e.ctrlKey || e.metaKey) && e.which === 83)  {
         if(document.querySelector("form").getAttribute("data-view") !== "editor") return true;
         e.preventDefault();
         document.querySelector("a.tab").click();
         return false;
+
+    } else if(e.which === 27 && 
+        document.querySelector("form").getAttribute("data-view") === "editor" &&
+        document.fullscreenElement === null) {
+        e.preventDefault();
+        debugger;
+        fix3p.editor.close();
+        return true;
     }
 });
