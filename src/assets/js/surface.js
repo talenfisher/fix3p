@@ -1,4 +1,8 @@
 import ndarray from "ndarray";
+import fill from "ndarray-fill";
+import pack from "ndarray-pack";
+import zeros from "zeros";
+import colorToVec4 from "color-to-vec4";
 import GlScene from "gl-plot3d";
 import SurfacePlot from "gl-surface3d";
 
@@ -105,6 +109,8 @@ export default class Surface {
             ndarray(new this.dataTypeY(y), [ this.sizeY, this.sizeX ]),
             ndarray(z, [ this.sizeY, this.sizeX ])
         ];
+
+        
     }
 
     render() {
@@ -133,15 +139,26 @@ export default class Surface {
             }
         });
 
+        let coords = zeros([ this.sizeY, this.sizeX ]);
+        fill(coords, (i, w) => {
+            if(i > this.sizeY / 2) {
+                return 1;
+            }
+        });
+
+        let map = pack([
+            [ colorToVec4("#cd7f32"), colorToVec4("#ff0000") ]
+        ]);
+        
+
+        this.texture = { map, coords };
+
         let surface = SurfacePlot({
             gl: this.scene.gl,
             field: this.coords[2],
             coords: this.coords,
-            colormap: [
-                {index: 0, rgb: [205,127,50]},
-                {index: 1, rgb: [205,127,50]}
-            ]
-        }); 
+            texture: this.texture
+        });
 
         surface.ambientLight = 0.1;
         surface.diffuseLight = 0.4;
@@ -149,7 +166,7 @@ export default class Surface {
         surface.roughness = 0.5;
         surface.lightPosition = [ (this.sizeY * this.incrementY) / 2, this.sizeX * this.incrementX * -2, this.maxZ * 2 ];
 
-        requestAnimationFrame(() => this.scene.add(surface));
+        this.scene.add(surface);
     }
 
     unrender() {

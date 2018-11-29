@@ -18,5 +18,8 @@ module.exports = {
     node: {
         fs: 'empty' 
     },
+    resolve: {
+        "symlinks": false
+    },
     externals: ["ws"]
 }

@@ -4,10 +4,14 @@ import Editor from "./editor";
 import Popup from "./popup";
 import md5 from "blueimp-md5";
 import axios from "axios";
+import colorToVec4 from "color-to-vec4";
+import ndarray from "ndarray";
 import "fullscreen-api-polyfill";
 
 // expose axios to the console
 window.axios = axios;
+window.colorToVec4 = colorToVec4;
+window.ndarray = ndarray;
 
 window.fix3p = {
     extLoaded: false
@@ -221,7 +225,6 @@ window.addEventListener("load", async () => {
 });
 
 window.addEventListener("keydown", e => {
-    console.log(e.which);
     if((e.ctrlKey || e.metaKey) && e.which === 83)  {
         if(document.querySelector("form").getAttribute("data-view") !== "editor") return true;
         e.preventDefault();
@@ -232,7 +235,6 @@ window.addEventListener("keydown", e => {
         document.querySelector("form").getAttribute("data-view") === "editor" &&
         document.fullscreenElement === null) {
         e.preventDefault();
-        debugger;
         fix3p.editor.close();
         return true;
     }
