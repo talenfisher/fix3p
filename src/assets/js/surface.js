@@ -24,13 +24,23 @@ export default class Surface {
         this.canvas = document.querySelector("#visual");
         this.stage = document.querySelector(".stage");
         this.fullscreenBtn = document.querySelector(".stage .fa-expand");
+        this.paintBtn = document.querySelector(".fa-paint-brush");
 
+        this.setupPaintbrush();
         this.setupFullscreen();
         this.setupSizes();
         this.setupIncrements();
         this.setupDataTypes();
         this.setupMaxes();
         this.setupCoords();
+    }
+
+    setupPaintbrush() {
+        this.paintBtn.onclick = () => {
+            let classList = this.paintBtn.classList;
+            classList.toggle("active");
+            this.scene.camera.rotateSpeed = classList.contains("active") ? 0 : 1;
+        };
     }
 
     /**
@@ -43,10 +53,13 @@ export default class Surface {
         }
 
         this.fullscreenBtn.onclick = () => {
-            if(document.fullscreenElement !== null) {
-                document.exitFullscreen();
-            } else {
+            let classList = this.fullscreenBtn.classList;
+            classList.toggle("active");
+
+            if(classList.contains("active")) {
                 this.stage.requestFullscreen();
+            } else {
+                document.exitFullscreen();
             }
         };
 
@@ -137,19 +150,17 @@ export default class Surface {
             }
         });
 
-        let coords = zeros([ this.sizeY, this.sizeX ]);
-        // fill(coords, (i, w) => {
-        //     if(i > this.sizeY / 2) {
-        //         return 1;
-        //     }
-        // });
+        let map = [];
 
-        let map = pack([
-            [ colorToVec4("#cd7f32"), colorToVec4("#ff0000") ]
-        ]);
-        
+        for(let y = 0; y < this.sizeY; y++) {
+            map[y] = [];
 
-        this.texture = { map, coords };
+            for(let x = 0; x < this.sizeX; x++) {
+                map[y][x] = colorToVec4("#cd7f32")
+            }
+        }
+
+        this.texture = pack(map);
 
         let surface = SurfacePlot({
             gl: this.scene.gl,
