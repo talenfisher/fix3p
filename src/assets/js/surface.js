@@ -22,7 +22,8 @@ export default class Surface {
         this.manifest = manifest;
         this.data = data;
         this.canvas = document.querySelector("#visual");
-        this.fullscreenBtn = document.querySelector(".stage i");
+        this.stage = document.querySelector(".stage");
+        this.fullscreenBtn = document.querySelector(".stage .fa-expand");
 
         this.setupFullscreen();
         this.setupSizes();
@@ -41,25 +42,22 @@ export default class Surface {
             return;
         }
 
-        this.fullscreenBtn.onclick = () => this.canvas.requestFullscreen();
-        this.canvas.addEventListener("fullscreenchange", this.fullscreenChangeHandler.bind(this));
+        this.fullscreenBtn.onclick = () => {
+            if(document.fullscreenElement !== null) {
+                document.exitFullscreen();
+            } else {
+                this.stage.requestFullscreen();
+            }
+        };
+
+        this.stage.addEventListener("fullscreenchange", this.fullscreenChangeHandler.bind(this));
     }
 
     fullscreenChangeHandler() {
-        if(document.fullscreenEnabled) {
-            this.canvas.setAttribute("data-height", this.canvas.getAttribute("height"));
-            this.canvas.setAttribute("data-width", this.canvas.getAttribute("width"));
-            this.canvas.setAttribute("height", this.canvas.offsetHeight);
-            this.canvas.setAttribute("width", this.canvas.offsetWidth);
-            this.scene.update({ pixelRatio: window.innerWidth / window.innerHeight });
-        } else {
-            this.canvas.setAttribute("height", this.canvas.getAttribute("data-height"));
-            this.canvas.setAttribute("width", this.canvas.getAttribute("data-width"));
-            this.scene.update({ pixelRatio: this.canvas.offsetWidth / this.canvas.offsetHeight });
-        }
+        this.canvas.setAttribute("height", this.canvas.offsetHeight);
+        this.canvas.setAttribute("width", this.canvas.offsetWidth);
+        this.scene.update({ pixelRatio: this.canvas.offsetWidth / this.canvas.offsetHeight });
     }
-
-
 
     setupSizes() {
         for(let axis of AXES) {
@@ -140,11 +138,11 @@ export default class Surface {
         });
 
         let coords = zeros([ this.sizeY, this.sizeX ]);
-        fill(coords, (i, w) => {
-            if(i > this.sizeY / 2) {
-                return 1;
-            }
-        });
+        // fill(coords, (i, w) => {
+        //     if(i > this.sizeY / 2) {
+        //         return 1;
+        //     }
+        // });
 
         let map = pack([
             [ colorToVec4("#cd7f32"), colorToVec4("#ff0000") ]
