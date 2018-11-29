@@ -54,12 +54,13 @@ export default class Surface {
 
         this.fullscreenBtn.onclick = () => {
             let classList = this.fullscreenBtn.classList;
-            classList.toggle("active");
 
-            if(classList.contains("active")) {
+            if(document.fullscreenElement == null) {
                 this.stage.requestFullscreen();
+                classList.add("active");
             } else {
                 document.exitFullscreen();
+                classList.remove("active");
             }
         };
 
@@ -70,6 +71,11 @@ export default class Surface {
         this.canvas.setAttribute("height", this.canvas.offsetHeight);
         this.canvas.setAttribute("width", this.canvas.offsetWidth);
         this.scene.update({ pixelRatio: this.canvas.offsetWidth / this.canvas.offsetHeight });
+
+        if(this.fullscreenBtn.classList.contains("active") &&
+            document.fullscreenElement == null) {
+            this.fullscreenBtn.classList.remove("active");
+        }
     }
 
     setupSizes() {
