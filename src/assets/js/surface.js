@@ -4,7 +4,7 @@ import pack from "ndarray-pack";
 import zeros from "zeros";
 import colorToVec4 from "color-to-vec4";
 import GlScene from "gl-plot3d";
-import SurfacePlot from "gl-surface3d";
+import SurfacePlot from "gl-textured-surface3d";
 
 const DATA_TYPES = { 
     D: Float64Array, 

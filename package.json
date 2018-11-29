@@ -11,7 +11,7 @@
     "fullscreen-api-polyfill": "^1.1.2",
     "gl-matrix": "^2.8.1",
     "gl-plot3d": "^1.5.5",
-    "gl-surface3d": "file:../gl-surface3d",
+    "gl-textured-surface3d": "^1.3.8",
     "glslify-loader": "^1.0.2",
     "ify-loader": "^1.1.0",
     "jszip": "^3.1.5",
