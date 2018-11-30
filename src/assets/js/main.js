@@ -6,12 +6,14 @@ import md5 from "blueimp-md5";
 import axios from "axios";
 import colorToVec4 from "color-to-vec4";
 import ndarray from "ndarray";
+import zeros from "zeros";
 import "fullscreen-api-polyfill";
 
 // expose axios to the console
 window.axios = axios;
 window.colorToVec4 = colorToVec4;
 window.ndarray = ndarray;
+window.zeros = zeros;
 
 window.fix3p = {
     extLoaded: false

@@ -5,6 +5,7 @@ import zeros from "zeros";
 import colorToVec4 from "color-to-vec4";
 import GlScene from "gl-plot3d";
 import SurfacePlot from "gl-textured-surface3d";
+import { Canvas } from "@talenfisher/canvas";
 
 const DATA_TYPES = { 
     D: Float64Array, 
@@ -16,6 +17,8 @@ const DATA_TYPES = {
 const EPSILON = 0.0001;
 const MULTIPLY = 5;
 const AXES = ["X","Y","Z"];
+const COLOR2 = colorToVec4("#000000");
+const BRUSH_SIZE = 10;
  
 export default class Surface { 
     constructor({ manifest, data }) {
@@ -156,23 +159,18 @@ export default class Surface {
             }
         });
 
-        let map = [];
+        this.texture = new Canvas({
+            height: this.sizeY,
+            width: this.sizeX
+        });
+        
+        this.texture.clear("#cd7f32");
 
-        for(let y = 0; y < this.sizeY; y++) {
-            map[y] = [];
-
-            for(let x = 0; x < this.sizeX; x++) {
-                map[y][x] = colorToVec4("#cd7f32")
-            }
-        }
-
-        this.texture = pack(map);
-
-        let surface = SurfacePlot({
+        let surface = this.surface = SurfacePlot({
             gl: this.scene.gl,
             field: this.coords[2],
             coords: this.coords,
-            texture: this.texture
+            texture: this.texture.el
         });
 
         surface.ambientLight = 0.1;
@@ -189,5 +187,6 @@ export default class Surface {
         requestAnimationFrame(() => gl.clear(gl.DEPTH_BUFFER_BIT));
         this.scene.dispose();
         this.canvas.removeEventListener("fullscreenchange", this.fullscreenChangeHandler.bind(this));
+        this.canvas.removeEventListener("mousedown")
     }
 }
