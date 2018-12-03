@@ -7,6 +7,7 @@ import axios from "axios";
 import colorToVec4 from "color-to-vec4";
 import ndarray from "ndarray";
 import zeros from "zeros";
+import { Brush } from "@talenfisher/canvas";
 import "fullscreen-api-polyfill";
 
 // expose axios to the console
@@ -14,6 +15,7 @@ window.axios = axios;
 window.colorToVec4 = colorToVec4;
 window.ndarray = ndarray;
 window.zeros = zeros;
+window.Brush = Brush;
 
 window.fix3p = {
     extLoaded: false
