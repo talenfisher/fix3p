@@ -4,9 +4,11 @@
         <meta charset="utf-8">
         <title>FiX3P</title>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-        <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
-        <link rel="stylesheet" href="assets/dist/fix3p.bundle.css?v=104">
+        <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+        
+        <link rel="stylesheet" href="assets/dist/fix3p.bundle.css?v=105">
         <link rel="icon" href="favicon.png">
+        
         <script>
             onload = async function() {
                 await import("./assets/dist/fix3p.bundle.js")
@@ -16,7 +18,13 @@
 <body>
     <div class="viewport">
         <header>
-            <h1>FiX3P</h1>
+            <div class="left">
+                <a href="https://forensicstats.org"><img src="assets/img/csafe-logo-inverted.svg" alt="CSAFE"></a>
+                <h1>FIX3P</h1>
+            </div>
+            <div class="right">
+                <a href="https://nist.gov"><img id="nist-logo" src="assets/img/nist-logo-inverted.svg" alt="National Institute of Standards and Technology"></a>
+            </div>
         </header>
 
         <form> 
@@ -189,7 +197,7 @@
                                     <input type="text" id="x3p$27" disabled="disabled">
                                 </div>
                                 <div data-tag="MD5ChecksumPointData">
-                                    <label for="x3p$28">MD5 Checksum Point Data:</label>
+                                    <label for="x3p$28">MD5 Checksum:</label>
                                     <input type="text" id="x3p$28" disabled="disabled">
                                 </div>
                             </div>
@@ -205,5 +213,7 @@
             </div>
         </form>
     </div>
+
+    <a id="report-a-bug" href="https://github.com/talenfisher/fix3p/issues/new">feedback/report a bug</a>
 </body>
 </html>
