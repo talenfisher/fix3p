@@ -140,6 +140,12 @@ window.prettyPrint = function(string) {
     return result;
 }
 
+function canvasToBlob(canvas) {
+    return new Promise((resolve, reject) => {
+        canvas.toBlob(blob => resolve(blob), "image/jpeg");
+    });
+}
+
 
 /**
  * Check if loaded in chrome extension
@@ -179,6 +185,7 @@ try {
     }
 })();
 
+
 // setup tabs
 document.addEventListener("click", async e => {
     if(e.target.matches("a.tab")) { 
@@ -186,6 +193,8 @@ document.addEventListener("click", async e => {
 
         let builder = new XMLBuilder(document.querySelector(".view main"));
         let contents = builder.toString();
+
+        fix3p.X3P.update("bindata/texture.jpeg", await canvasToBlob(fix3p.X3P.surface.texture.el));
         fix3p.X3P.update("main.xml", contents);
         fix3p.X3P.update("md5checksum.hex", md5(contents)+" *main.xml");
         

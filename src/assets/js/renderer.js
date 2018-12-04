@@ -14,7 +14,7 @@ const EPSILON = 0.0001;
 const MULTIPLY = 5;
 const AXES = ["X","Y","Z"];
 export default class Surface { 
-    constructor({ manifest, data }) {
+    constructor({ manifest, data, texture }) {
         this.manifest = manifest;
         this.data = data;
         this.canvas = document.querySelector("#visual");
@@ -29,6 +29,14 @@ export default class Surface {
         this.setupDataTypes();
         this.setupMaxes();
         this.setupCoords();
+
+        this.texture = new Canvas({ width: this.sizeY, height: this.sizeX });
+        
+        if(texture) {
+            this.texture.drawImage(texture);
+        } else {
+            this.texture.clear("#cd7f32");
+        }
     }
 
     setupPaintbrush() {
@@ -152,9 +160,6 @@ export default class Surface {
             }
         });
 
-        this.texture = new Canvas({ width: this.sizeY, height: this.sizeX });
-        this.texture.clear("#cd7f32");
-
         let surface = this.surface = SurfacePlot({
             gl: this.scene.gl,
             field: this.coords[2],
@@ -208,6 +213,10 @@ export default class Surface {
 
         this.brush.end(param);
         this.surface._colorMap.setPixels(this.texture.el);
+    }
+
+    setTexture() {
+
     }
 
     unrender() {
