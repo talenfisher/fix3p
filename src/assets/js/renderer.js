@@ -215,6 +215,8 @@ export default class Surface {
         requestAnimationFrame(() => gl.clear(gl.DEPTH_BUFFER_BIT));
         this.scene.dispose();
 
+        this.paintBtn.classList.remove("active");
+
         this.canvas.removeEventListener("fullscreenchange", this.fullscreenChangeHandler.bind(this));
         this.canvas.removeEventListener("mousedown", this.mouseDown.bind(this));
         this.canvas.removeEventListener("mouseup", this.mouseUp.bind(this));
