@@ -1,4 +1,4 @@
-import EditableFields from "./editable-fields.json";
+import EditableFields from "./dat/editable-fields.json";
 
 const DOWNLOAD_BUTTON = '<a href="#" class="tab"><i class="fas fa-download"></i> Download</a>';
 
