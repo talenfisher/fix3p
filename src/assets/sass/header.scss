@@ -7,9 +7,9 @@ header {
 
     > div {
         height: 100%;
-        flex-basis: 50%;
+        flex-basis: calc(100% / 3);
         text-align: center;
-        
+
         img {
             height: 100%;
             display: inline-block;
