@@ -3,7 +3,7 @@ import fill from "ndarray-fill";
 import pack from "ndarray-pack";
 import zeros from "zeros";
 import colorToVec4 from "color-to-vec4";
-import GlScene from "gl-plot3d";
+import Scene from "@talenfisher/gl-plot3d";
 import select from "gl-select-static";
 import SurfacePlot from "gl-textured-surface3d";
 import { Canvas, Brush } from "@talenfisher/canvas";
@@ -141,7 +141,7 @@ export default class Surface {
         this.canvas.setAttribute("width", this.canvas.offsetWidth);
         this.canvas.setAttribute("height", this.canvas.offsetHeight);
         
-        this.scene = GlScene({
+        this.scene = Scene({
             canvas: this.canvas,
             gl,
             pixelRatio: this.canvas.offsetWidth / this.canvas.offsetHeight,
@@ -160,20 +160,8 @@ export default class Surface {
             }
         });
 
-        this.texture = new Canvas({
-            width: this.sizeY,
-            height: this.sizeX
-        });
-        
-        let wrapper = document.createElement("div");
-        wrapper.style.display = "none";
-        wrapper.appendChild(this.texture.el);
-        document.body.appendChild(wrapper);
-        
+        this.texture = new Canvas({ width: this.sizeY, height: this.sizeX });
         this.texture.clear("#cd7f32");
-        this.texture.context.fillStyle = "red";
-        this.texture.context.fillRect(0, 0, this.texture.el.width / 2, this.texture.el.height);
-        this.texture.context.save();
 
         let surface = this.surface = SurfacePlot({
             gl: this.scene.gl,
@@ -189,7 +177,6 @@ export default class Surface {
         surface.lightPosition = [ (this.sizeY * this.incrementY) / 2, this.sizeX * this.incrementX * -2, this.maxZ * 2 ];
 
         this.scene.add(surface);
-        this.select = select(gl, [ gl.drawingBufferWidth, gl.drawingBufferHeight ]);
         this.setupBrush();
     }
 
@@ -224,11 +211,10 @@ export default class Surface {
             
             let coords = this.scene.selection.data.index;
             let param = { clientX: coords[0], clientY: coords[1] };
-            
+
             this.brush.end(param);
             this.surface._colorMap.setPixels(this.texture.el);
             this.surface._colorMap.bind(0);
-            this.select.end();
         });
     }
 

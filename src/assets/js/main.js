@@ -4,18 +4,7 @@ import Editor from "./editor";
 import Popup from "./popup";
 import md5 from "blueimp-md5";
 import axios from "axios";
-import colorToVec4 from "color-to-vec4";
-import ndarray from "ndarray";
-import zeros from "zeros";
-import { Brush } from "@talenfisher/canvas";
 import "fullscreen-api-polyfill";
-
-// expose axios to the console
-window.axios = axios;
-window.colorToVec4 = colorToVec4;
-window.ndarray = ndarray;
-window.zeros = zeros;
-window.Brush = Brush;
 
 window.fix3p = {
     extLoaded: false
@@ -163,14 +152,7 @@ try {
     console.log("Chrome Extension not detected");
 }
 
-/**
- * Convert manifest (main.xml) to a series of html inputs
- * 
- * @param {Manifest} manifest 
- * @param {Node} target 
- */
-
-window.addEventListener("load", async () => {
+(async function main() {
     fix3p.uploader = new Uploader;
     fix3p.uploader.display();
 
@@ -195,37 +177,36 @@ window.addEventListener("load", async () => {
         popup.display(2, true);
         console.error(exception);
     }
+})();
 
-    // setup tabs
-    document.addEventListener("click", async e => {
-        if(e.target.matches("a.tab")) { 
-            e.preventDefault();
+// setup tabs
+document.addEventListener("click", async e => {
+    if(e.target.matches("a.tab")) { 
+        e.preventDefault();
 
-            let builder = new XMLBuilder(document.querySelector(".view main"));
-            let contents = builder.toString();
-            fix3p.X3P.update("main.xml", contents);
-            fix3p.X3P.update("md5checksum.hex", md5(contents)+" *main.xml");
-            
-            let popup = new Popup("Compressing...");
-            popup.display();
+        let builder = new XMLBuilder(document.querySelector(".view main"));
+        let contents = builder.toString();
+        fix3p.X3P.update("main.xml", contents);
+        fix3p.X3P.update("md5checksum.hex", md5(contents)+" *main.xml");
+        
+        let popup = new Popup("Compressing...");
+        popup.display();
 
-            await fix3p.X3P.download();
-            popup.update(`Continue editing this file? <div class="popup-btns"><div id="continue-yes" class="popup-btn">Yes</div><div id="continue-no" class="popup-btn">No</div></div>`);
-            
-            popup.el.querySelector("#continue-yes").addEventListener("click", e => {
-                popup.hide(true);
-            });
+        await fix3p.X3P.download();
+        popup.update(`Continue editing this file? <div class="popup-btns"><div id="continue-yes" class="popup-btn">Yes</div><div id="continue-no" class="popup-btn">No</div></div>`);
+        
+        popup.el.querySelector("#continue-yes").addEventListener("click", e => {
+            popup.hide(true);
+        });
 
-            popup.el.querySelector("#continue-no").addEventListener("click", e => {
-                popup.hide(true);
-                fix3p.editor.close();
-            });
+        popup.el.querySelector("#continue-no").addEventListener("click", e => {
+            popup.hide(true);
+            fix3p.editor.close();
+        });
 
-        } else if(e.target.matches(".tab:not(a)")) {
-            document.querySelector(".view").setAttribute("data-view", e.target.index());
-        }
-    });
-    
+    } else if(e.target.matches(".tab:not(a)")) {
+        document.querySelector(".view").setAttribute("data-view", e.target.index());
+    }
 });
 
 window.addEventListener("keydown", e => {
