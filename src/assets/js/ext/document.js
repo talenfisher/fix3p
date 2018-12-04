@@ -34,7 +34,7 @@ Document.prototype.createEasy = function(name, options = {}) {
  */
 Document.prototype.get = function(selector) {
     let node = this.querySelector(selector);
-    return typeof node !== "undefined" ? node.innerHTML : "";
+    return node !== null ? node.innerHTML : "";
 }
 
 
