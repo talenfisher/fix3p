@@ -1,7 +1,7 @@
 import saveAs from "file-saver";
 import md5 from "blueimp-md5";
 import { EventEmitter } from "events";
-import Surface from "./surface";
+import Surface from "./renderer";
 
 const ADJUST = 0.0001;
 const REQUIRED_FILES = [
