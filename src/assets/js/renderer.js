@@ -13,6 +13,7 @@ const DATA_TYPES = {
 const EPSILON = 0.0001;
 const MULTIPLY = 5;
 const AXES = ["X","Y","Z"];
+
 export default class Surface { 
     constructor({ manifest, data, texture }) {
         this.manifest = manifest;
