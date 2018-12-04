@@ -37,3 +37,19 @@ Node.prototype.getPath = function() {
 
     return tagnames.reverse();
 }
+
+/**
+ * Shortcut for addEventListener
+ */
+Node.prototype.on = function(event, handler) {
+    this.addEventListener(event, handler);
+}
+
+/**
+ * Adds an event handler to every element of a node list
+ */
+NodeList.prototype.on = function(event, handler) {
+    for(let node of this) {
+        node.addEventListener(event, handler);
+    }
+}

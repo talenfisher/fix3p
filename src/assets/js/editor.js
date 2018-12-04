@@ -1,4 +1,5 @@
 import EditableFields from "./dat/editable-fields.json";
+import { pathArray2DTS, prettyPrint } from "./functions";
 
 const DOWNLOAD_BUTTON = '<a href="#" class="tab"><i class="fas fa-download"></i> Download</a>';
 
@@ -14,9 +15,7 @@ export default class Editor {
         this.main = this.el.querySelector("main");
         
         this.backbtn = this.el.querySelector(".back");
-        this.backbtn.addEventListener("click", e => {
-            this.close();
-        });
+        this.backbtn.onclick = e => this.close();
     }
 
     /**
@@ -159,8 +158,12 @@ export default class Editor {
      * @param {DOMDocument} manifest a parsed main.xml file from within an X3P
      */
     display(manifest) {
-        if(window.fix3p.mode === "development") this.generate(manifest.children[0]);
-        else this.populate(manifest.children[0]);
+        if(window.fix3p.mode === "development") {
+            this.generate(manifest.children[0]);
+        } else {
+            this.populate(manifest.children[0]);
+        }
+
         document.querySelector("form").setAttribute("data-view", "editor");
     }
 

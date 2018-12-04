@@ -24,8 +24,8 @@ export default class Uploader {
             this.label.addEventListener(event, listener);
         }
 
-        this.label.addEventListener("dragenter", () => this.label.classList.add("hover"));
-        this.label.addEventListener("dragleave", () => this.label.classList.remove("hover"));
+        this.label.addEventListener("dragenter", e => this.label.classList.add("hover"));
+        this.label.addEventListener("dragleave", e => this.label.classList.remove("hover"));
         this.label.addEventListener("drop", this.read.bind(this));
         this.input.addEventListener("change", e => this.read.apply(this, [e, true]));
     }
@@ -49,7 +49,6 @@ export default class Uploader {
             let error = new Popup(`<i class="fas fa-exclamation-triangle"></i> Please upload a valid X3P file.`);
             error.display(2, true);
             this.input.value = "";
-
             console.error(x3pexception);
             return;
         }
