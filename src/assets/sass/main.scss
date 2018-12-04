@@ -13,6 +13,27 @@ body {
     position: relative;
 }
 
+#report-a-bug {
+    position: fixed;
+    height: 50px;
+    background: transparent;
+    cursor: pointer;
+    bottom: 0;
+    right: 0;
+    line-height: 50px;
+    color: white;
+    text-align: center;
+    display: block;
+    font-size: 1.2em;
+    background: $primaryColor;
+    padding: 0 15px;
+    text-transform: uppercase;
+
+    &:hover {
+        background: lighten($primaryColor, 10%);
+    }
+}
+
 .container {
     padding: 15px;
 }
