@@ -174,43 +174,50 @@ export default class Surface {
 
     setupBrush() {
         this.brush = new Brush({ canvas: this.texture, size: 30, nolisteners: true });
+        this.canvas.addEventListener("mousedown", this.mouseDown.bind(this));
+        this.canvas.addEventListener("mousemove", this.mouseMove.bind(this));
+        this.canvas.addEventListener("mouseup", this.mouseUp.bind(this));
+    }
 
-        this.canvas.addEventListener("mousedown", e => {
-            if(!this.paintBtn.classList.contains("active") || 
-                !this.scene.selection.data) return;
+    mouseDown(e) {
+        if(!this.paintBtn.classList.contains("active") || 
+        !this.scene.selection.data) return;
 
-            let coords = this.scene.selection.data.index;
-            let param = { clientX: coords[0], clientY: coords[1] };
+        let coords = this.scene.selection.data.index;
+        let param = { clientX: coords[0], clientY: coords[1] };
 
-            this.brush.begin(param);
-            this.surface._colorMap.setPixels(this.texture.el);
-        });
+        this.brush.begin(param);
+        this.surface._colorMap.setPixels(this.texture.el);
+    }
 
-        this.canvas.addEventListener("mousemove", e => {
-            if(!this.paintBtn.classList.contains("active") || !this.brush._active) return;
+    mouseMove(e) {
+        if(!this.paintBtn.classList.contains("active") || !this.brush._active) return;
 
-            let coords = this.scene.selection.data.index;
-            let param = { clientX: coords[0], clientY: coords[1] };
+        let coords = this.scene.selection.data.index;
+        let param = { clientX: coords[0], clientY: coords[1] };
 
-            this.brush.move(param);
-            this.surface._colorMap.setPixels(this.texture.el);
-        });
+        this.brush.move(param);
+        this.surface._colorMap.setPixels(this.texture.el);
+    }
 
-        this.canvas.addEventListener("mouseup", e => {
-            if(!this.paintBtn.classList.contains("active") || !this.brush._active) return;
-            
-            let coords = this.scene.selection.data.index;
-            let param = { clientX: coords[0], clientY: coords[1] };
+    mouseUp(e) {
+        if(!this.paintBtn.classList.contains("active") || !this.brush._active) return;
+        
+        let coords = this.scene.selection.data.index;
+        let param = { clientX: coords[0], clientY: coords[1] };
 
-            this.brush.end(param);
-            this.surface._colorMap.setPixels(this.texture.el);
-        });
+        this.brush.end(param);
+        this.surface._colorMap.setPixels(this.texture.el);
     }
 
     unrender() {
         let gl = this.canvas.getContext("webgl");
         requestAnimationFrame(() => gl.clear(gl.DEPTH_BUFFER_BIT));
         this.scene.dispose();
+
         this.canvas.removeEventListener("fullscreenchange", this.fullscreenChangeHandler.bind(this));
+        this.canvas.removeEventListener("mousedown", this.mouseDown.bind(this));
+        this.canvas.removeEventListener("mouseup", this.mouseUp.bind(this));
+        this.canvas.removeEventListener("mousemove", this.mouseMove.bind(this));
     }
 }
