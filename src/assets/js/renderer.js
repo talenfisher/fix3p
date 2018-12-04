@@ -1,6 +1,7 @@
 import ndarray from "ndarray";
-import GlScene from "gl-plot3d";
-import SurfacePlot from "gl-surface3d";
+import Scene from "@talenfisher/gl-plot3d";
+import SurfacePlot from "gl-textured-surface3d";
+import { Canvas, Brush } from "@talenfisher/canvas";
 
 const DATA_TYPES = { 
     D: Float64Array, 
@@ -12,20 +13,38 @@ const DATA_TYPES = {
 const EPSILON = 0.0001;
 const MULTIPLY = 5;
 const AXES = ["X","Y","Z"];
- 
 export default class Surface { 
-    constructor({ manifest, data }) {
+    constructor({ manifest, data, texture }) {
         this.manifest = manifest;
         this.data = data;
         this.canvas = document.querySelector("#visual");
-        this.fullscreenBtn = document.querySelector(".stage i");
+        this.stage = document.querySelector(".stage");
+        this.fullscreenBtn = document.querySelector(".stage .fa-expand");
+        this.paintBtn = document.querySelector(".fa-paint-brush");
 
+        this.setupPaintbrush();
         this.setupFullscreen();
         this.setupSizes();
         this.setupIncrements();
         this.setupDataTypes();
         this.setupMaxes();
         this.setupCoords();
+
+        this.texture = new Canvas({ width: this.sizeY, height: this.sizeX });
+        
+        if(texture) {
+            this.texture.drawImage(texture);
+        } else {
+            this.texture.clear("#cd7f32");
+        }
+    }
+
+    setupPaintbrush() {
+        this.paintBtn.onclick = () => {
+            let classList = this.paintBtn.classList;
+            classList.toggle("active");
+            this.scene.camera.rotateSpeed = classList.contains("active") ? 0 : 1;
+        };
     }
 
     /**
@@ -37,25 +56,31 @@ export default class Surface {
             return;
         }
 
-        this.fullscreenBtn.onclick = () => this.canvas.requestFullscreen();
-        this.canvas.addEventListener("fullscreenchange", this.fullscreenChangeHandler.bind(this));
+        this.fullscreenBtn.onclick = () => {
+            let classList = this.fullscreenBtn.classList;
+
+            if(document.fullscreenElement == null) {
+                this.stage.requestFullscreen();
+                classList.add("active");
+            } else {
+                document.exitFullscreen();
+                classList.remove("active");
+            }
+        };
+
+        this.stage.addEventListener("fullscreenchange", this.fullscreenChangeHandler.bind(this));
     }
 
     fullscreenChangeHandler() {
-        if(document.fullscreenEnabled) {
-            this.canvas.setAttribute("data-height", this.canvas.getAttribute("height"));
-            this.canvas.setAttribute("data-width", this.canvas.getAttribute("width"));
-            this.canvas.setAttribute("height", this.canvas.offsetHeight);
-            this.canvas.setAttribute("width", this.canvas.offsetWidth);
-            this.scene.update({ pixelRatio: window.innerWidth / window.innerHeight });
-        } else {
-            this.canvas.setAttribute("height", this.canvas.getAttribute("data-height"));
-            this.canvas.setAttribute("width", this.canvas.getAttribute("data-width"));
-            this.scene.update({ pixelRatio: this.canvas.offsetWidth / this.canvas.offsetHeight });
+        this.canvas.setAttribute("height", this.canvas.offsetHeight);
+        this.canvas.setAttribute("width", this.canvas.offsetWidth);
+        this.scene.update({ pixelRatio: this.canvas.offsetWidth / this.canvas.offsetHeight });
+
+        if(this.fullscreenBtn.classList.contains("active") &&
+            document.fullscreenElement == null) {
+            this.fullscreenBtn.classList.remove("active");
         }
     }
-
-
 
     setupSizes() {
         for(let axis of AXES) {
@@ -105,16 +130,18 @@ export default class Surface {
             ndarray(new this.dataTypeY(y), [ this.sizeY, this.sizeX ]),
             ndarray(z, [ this.sizeY, this.sizeX ])
         ];
+
+        
     }
 
     render() {
-        let gl = this.canvas.getContext("webgl");
+        let gl = this.gl = this.canvas.getContext("webgl");
         gl.depthFunc(gl.ALWAYS);
 
         this.canvas.setAttribute("width", this.canvas.offsetWidth);
         this.canvas.setAttribute("height", this.canvas.offsetHeight);
         
-        this.scene = GlScene({
+        this.scene = Scene({
             canvas: this.canvas,
             gl,
             pixelRatio: this.canvas.offsetWidth / this.canvas.offsetHeight,
@@ -133,15 +160,12 @@ export default class Surface {
             }
         });
 
-        let surface = SurfacePlot({
+        let surface = this.surface = SurfacePlot({
             gl: this.scene.gl,
             field: this.coords[2],
             coords: this.coords,
-            colormap: [
-                {index: 0, rgb: [205,127,50]},
-                {index: 1, rgb: [205,127,50]}
-            ]
-        }); 
+            texture: this.texture.el
+        });
 
         surface.ambientLight = 0.1;
         surface.diffuseLight = 0.4;
@@ -149,13 +173,62 @@ export default class Surface {
         surface.roughness = 0.5;
         surface.lightPosition = [ (this.sizeY * this.incrementY) / 2, this.sizeX * this.incrementX * -2, this.maxZ * 2 ];
 
-        requestAnimationFrame(() => this.scene.add(surface));
+        this.scene.add(surface);
+        this.setupBrush();
+    }
+
+    setupBrush() {
+        this.brush = new Brush({ canvas: this.texture, size: 30, nolisteners: true });
+        this.canvas.addEventListener("mousedown", this.mouseDown.bind(this));
+        this.canvas.addEventListener("mousemove", this.mouseMove.bind(this));
+        this.canvas.addEventListener("mouseup", this.mouseUp.bind(this));
+    }
+
+    mouseDown(e) {
+        if(!this.paintBtn.classList.contains("active") || 
+        !this.scene.selection.data) return;
+
+        let coords = this.scene.selection.data.index;
+        let param = { clientX: coords[0], clientY: coords[1] };
+
+        this.brush.begin(param);
+        this.surface._colorMap.setPixels(this.texture.el);
+    }
+
+    mouseMove(e) {
+        if(!this.paintBtn.classList.contains("active") || !this.brush._active) return;
+
+        let coords = this.scene.selection.data.index;
+        let param = { clientX: coords[0], clientY: coords[1] };
+
+        this.brush.move(param);
+        this.surface._colorMap.setPixels(this.texture.el);
+    }
+
+    mouseUp(e) {
+        if(!this.paintBtn.classList.contains("active") || !this.brush._active) return;
+        
+        let coords = this.scene.selection.data.index;
+        let param = { clientX: coords[0], clientY: coords[1] };
+
+        this.brush.end(param);
+        this.surface._colorMap.setPixels(this.texture.el);
+    }
+
+    setTexture() {
+
     }
 
     unrender() {
         let gl = this.canvas.getContext("webgl");
         requestAnimationFrame(() => gl.clear(gl.DEPTH_BUFFER_BIT));
         this.scene.dispose();
+
+        this.paintBtn.classList.remove("active");
+
         this.canvas.removeEventListener("fullscreenchange", this.fullscreenChangeHandler.bind(this));
+        this.canvas.removeEventListener("mousedown", this.mouseDown.bind(this));
+        this.canvas.removeEventListener("mouseup", this.mouseUp.bind(this));
+        this.canvas.removeEventListener("mousemove", this.mouseMove.bind(this));
     }
 }

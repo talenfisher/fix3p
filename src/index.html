@@ -7,7 +7,11 @@
         <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
         <link rel="stylesheet" href="assets/dist/fix3p.bundle.css?v={{version}}">
         <link rel="icon" href="favicon.png">
-        <script src="assets/dist/fix3p.bundle.js?v={{version}}"></script>
+        <script>
+            onload = async function() {
+                await import("./assets/dist/fix3p.bundle.js")
+            };
+        </script>
 </head>
 <body>
     <div class="viewport">
@@ -36,7 +40,10 @@
 
                 <div class="row">
                     <div class="stage">
-                        <i class="fas fa-expand"></i>
+                        <div class="pane">
+                            <i class="fas fa-paint-brush"></i>
+                            <i class="fas fa-expand"></i>
+                        </div>
                         <canvas id="visual" height="500" width="1200"></canvas>
                     </div>
                     <main>

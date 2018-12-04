@@ -1,7 +1,7 @@
 const path = require("path");
 
 module.exports = {
-    mode: 'production',
+    mode: 'development',
     entry: path.resolve(__dirname, 'src/assets/js/main.js'),
     output: {
         path: path.resolve(__dirname, 'src/assets/dist/'),
@@ -17,6 +17,9 @@ module.exports = {
     },
     node: {
         fs: 'empty' 
+    },
+    resolve: {
+        symlinks: false
     },
     externals: ["ws"]
 }

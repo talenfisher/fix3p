@@ -1,6 +1,5 @@
 import jszip from "jszip";
-import { default as X3P, X3PException } from "./x3p";
-import Editor from "./editor";
+import X3P from "./x3p";
 import Popup from "./popup";
 
 let parser = new DOMParser();
