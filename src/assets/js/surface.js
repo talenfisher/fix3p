@@ -192,7 +192,6 @@ export default class Surface {
 
             this.brush.begin(param);
             this.surface._colorMap.setPixels(this.texture.el);
-            this.surface._colorMap.bind(0);
         });
 
         this.canvas.addEventListener("mousemove", e => {
@@ -203,7 +202,6 @@ export default class Surface {
 
             this.brush.move(param);
             this.surface._colorMap.setPixels(this.texture.el);
-            this.surface._colorMap.bind(0);
         });
 
         this.canvas.addEventListener("mouseup", e => {
@@ -214,7 +212,6 @@ export default class Surface {
 
             this.brush.end(param);
             this.surface._colorMap.setPixels(this.texture.el);
-            this.surface._colorMap.bind(0);
         });
     }
 
