@@ -1,10 +1,5 @@
 import ndarray from "ndarray";
-import fill from "ndarray-fill";
-import pack from "ndarray-pack";
-import zeros from "zeros";
-import colorToVec4 from "color-to-vec4";
 import Scene from "@talenfisher/gl-plot3d";
-import select from "gl-select-static";
 import SurfacePlot from "gl-textured-surface3d";
 import { Canvas, Brush } from "@talenfisher/canvas";
 
@@ -18,9 +13,6 @@ const DATA_TYPES = {
 const EPSILON = 0.0001;
 const MULTIPLY = 5;
 const AXES = ["X","Y","Z"];
-const COLOR2 = colorToVec4("#000000");
-const BRUSH_SIZE = 10;
- 
 export default class Surface { 
     constructor({ manifest, data }) {
         this.manifest = manifest;
@@ -220,6 +212,5 @@ export default class Surface {
         requestAnimationFrame(() => gl.clear(gl.DEPTH_BUFFER_BIT));
         this.scene.dispose();
         this.canvas.removeEventListener("fullscreenchange", this.fullscreenChangeHandler.bind(this));
-        this.canvas.removeEventListener("mousedown")
     }
 }
