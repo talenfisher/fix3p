@@ -4,6 +4,7 @@ import pack from "ndarray-pack";
 import zeros from "zeros";
 import colorToVec4 from "color-to-vec4";
 import GlScene from "gl-plot3d";
+import select from "gl-select-static";
 import SurfacePlot from "gl-textured-surface3d";
 import { Canvas, Brush } from "@talenfisher/canvas";
 
@@ -134,7 +135,7 @@ export default class Surface {
     }
 
     render() {
-        let gl = this.canvas.getContext("webgl");
+        let gl = this.gl = this.canvas.getContext("webgl");
         gl.depthFunc(gl.ALWAYS);
 
         this.canvas.setAttribute("width", this.canvas.offsetWidth);
@@ -188,7 +189,7 @@ export default class Surface {
         surface.lightPosition = [ (this.sizeY * this.incrementY) / 2, this.sizeX * this.incrementX * -2, this.maxZ * 2 ];
 
         this.scene.add(surface);
-        
+        this.select = select(gl, [ gl.drawingBufferWidth, gl.drawingBufferHeight ]);
         this.setupBrush();
     }
 
@@ -201,31 +202,33 @@ export default class Surface {
 
             let coords = this.scene.selection.data.index;
             let param = { clientX: coords[0], clientY: coords[1] };
+
             this.brush.begin(param);
             this.surface._colorMap.setPixels(this.texture.el);
             this.surface._colorMap.bind(0);
         });
 
         this.canvas.addEventListener("mousemove", e => {
-            if(!this.paintBtn.classList.contains("active") ||
-                !this.scene.selection.data) return;
-            
+            if(!this.paintBtn.classList.contains("active") || !this.brush._active) return;
+
             let coords = this.scene.selection.data.index;
             let param = { clientX: coords[0], clientY: coords[1] };
+
             this.brush.move(param);
             this.surface._colorMap.setPixels(this.texture.el);
             this.surface._colorMap.bind(0);
         });
 
-        this.canvas.addEventListener("mousemove", e => {
-            if(!this.paintBtn.classList.contains("active") ||
-                !this.scene.selection.data) return;
+        this.canvas.addEventListener("mouseup", e => {
+            if(!this.paintBtn.classList.contains("active") || !this.brush._active) return;
             
             let coords = this.scene.selection.data.index;
             let param = { clientX: coords[0], clientY: coords[1] };
+            
             this.brush.end(param);
             this.surface._colorMap.setPixels(this.texture.el);
             this.surface._colorMap.bind(0);
+            this.select.end();
         });
     }
 
