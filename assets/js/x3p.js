@@ -1,7 +1,7 @@
 import saveAs from "file-saver";
 import md5 from "blueimp-md5";
 import { EventEmitter } from "events";
-import Surface from "./surface";
+import Surface from "./renderer";
 
 const ADJUST = 0.0001;
 const REQUIRED_FILES = [
@@ -61,12 +61,30 @@ export default class X3P extends EventEmitter {
         this.manifest = parser.parseFromString(this.manifestSrc, "application/xml");
         this.actualChecksum = md5(this.manifestSrc);
         this.expectedChecksum = (await this.retrieve("md5checksum.hex")).trim();
-        this.surface = new Surface({ 
-            manifest: this.manifest,
-            data: await this.retrieve("bindata/data.bin", "arraybuffer")
-        });
 
-        this.emit("extracted");
+        let blob = await this.retrieve("bindata/texture.jpeg", "blob");
+        
+        if(blob) {
+
+            this.textureMap = new Image();
+            this.textureMap.onload = () => this.emit("extracted");
+            this.textureMap.src = URL.createObjectURL(blob);
+
+            this.surface = new Surface({ 
+                manifest: this.manifest,
+                data: await this.retrieve("bindata/data.bin", "arraybuffer"),
+                texture: this.textureMap
+            });
+
+        } else {
+
+            this.surface = new Surface({ 
+                manifest: this.manifest,
+                data: await this.retrieve("bindata/data.bin", "arraybuffer")
+            });
+
+            this.emit("extracted");
+        }
     }
 
     /**
@@ -88,7 +106,8 @@ export default class X3P extends EventEmitter {
      * @return {string} the contents of the file
      */
     retrieve(filename, type = "text") {
-        return this.zipfile.file(this.folder+filename).async(type);
+        let file = this.zipfile.file(this.folder+filename);
+        return file ? file.async(type) : null;
     }
 
     /**

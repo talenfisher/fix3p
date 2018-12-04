@@ -6,9 +6,6 @@ import md5 from "blueimp-md5";
 import axios from "axios";
 import "fullscreen-api-polyfill";
 
-// expose axios to the console
-window.axios = axios;
-
 window.fix3p = {
     extLoaded: false
 };
@@ -143,6 +140,12 @@ window.prettyPrint = function(string) {
     return result;
 }
 
+function canvasToBlob(canvas) {
+    return new Promise((resolve, reject) => {
+        canvas.toBlob(blob => resolve(blob), "image/jpeg");
+    });
+}
+
 
 /**
  * Check if loaded in chrome extension
@@ -155,14 +158,7 @@ try {
     console.log("Chrome Extension not detected");
 }
 
-/**
- * Convert manifest (main.xml) to a series of html inputs
- * 
- * @param {Manifest} manifest 
- * @param {Node} target 
- */
-
-window.addEventListener("load", async () => {
+(async function main() {
     fix3p.uploader = new Uploader;
     fix3p.uploader.display();
 
@@ -187,41 +183,42 @@ window.addEventListener("load", async () => {
         popup.display(2, true);
         console.error(exception);
     }
+})();
 
-    // setup tabs
-    document.addEventListener("click", async e => {
-        if(e.target.matches("a.tab")) { 
-            e.preventDefault();
 
-            let builder = new XMLBuilder(document.querySelector(".view main"));
-            let contents = builder.toString();
-            fix3p.X3P.update("main.xml", contents);
-            fix3p.X3P.update("md5checksum.hex", md5(contents)+" *main.xml");
-            
-            let popup = new Popup("Compressing...");
-            popup.display();
+// setup tabs
+document.addEventListener("click", async e => {
+    if(e.target.matches("a.tab")) { 
+        e.preventDefault();
 
-            await fix3p.X3P.download();
-            popup.update(`Continue editing this file? <div class="popup-btns"><div id="continue-yes" class="popup-btn">Yes</div><div id="continue-no" class="popup-btn">No</div></div>`);
-            
-            popup.el.querySelector("#continue-yes").addEventListener("click", e => {
-                popup.hide(true);
-            });
+        let builder = new XMLBuilder(document.querySelector(".view main"));
+        let contents = builder.toString();
 
-            popup.el.querySelector("#continue-no").addEventListener("click", e => {
-                popup.hide(true);
-                fix3p.editor.close();
-            });
+        fix3p.X3P.update("bindata/texture.jpeg", await canvasToBlob(fix3p.X3P.surface.texture.el));
+        fix3p.X3P.update("main.xml", contents);
+        fix3p.X3P.update("md5checksum.hex", md5(contents)+" *main.xml");
+        
+        let popup = new Popup("Compressing...");
+        popup.display();
 
-        } else if(e.target.matches(".tab:not(a)")) {
-            document.querySelector(".view").setAttribute("data-view", e.target.index());
-        }
-    });
-    
+        await fix3p.X3P.download();
+        popup.update(`Continue editing this file? <div class="popup-btns"><div id="continue-yes" class="popup-btn">Yes</div><div id="continue-no" class="popup-btn">No</div></div>`);
+        
+        popup.el.querySelector("#continue-yes").addEventListener("click", e => {
+            popup.hide(true);
+        });
+
+        popup.el.querySelector("#continue-no").addEventListener("click", e => {
+            popup.hide(true);
+            fix3p.editor.close();
+        });
+
+    } else if(e.target.matches(".tab:not(a)")) {
+        document.querySelector(".view").setAttribute("data-view", e.target.index());
+    }
 });
 
 window.addEventListener("keydown", e => {
-    console.log(e.which);
     if((e.ctrlKey || e.metaKey) && e.which === 83)  {
         if(document.querySelector("form").getAttribute("data-view") !== "editor") return true;
         e.preventDefault();
@@ -232,7 +229,6 @@ window.addEventListener("keydown", e => {
         document.querySelector("form").getAttribute("data-view") === "editor" &&
         document.fullscreenElement === null) {
         e.preventDefault();
-        debugger;
         fix3p.editor.close();
         return true;
     }

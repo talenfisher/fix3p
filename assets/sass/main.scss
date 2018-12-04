@@ -186,6 +186,7 @@ form {
 .row {
     display: flex;
     position: relative;
+    margin-top: 50px;
 
     .stage {
         flex-basis: 40%;
@@ -193,38 +194,43 @@ form {
         padding: 15px;
         height: 90vh;
         position: relative;
-
-        i {
+        padding-top: 60px;
+        background: white;
+        
+        .pane {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            height: 60px;
-            width: 60px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 5px;
             line-height: 40px;
-            font-size: 40px;
-            text-align: center;
-            padding: 10px;
-            box-sizing: border-box;
-            background: rgba(0,0,0,.8);
-            color: white;
-            transition: font-size .5s, opacity .5s;
-            opacity: 0;
-            cursor: pointer;
+            height: 60px;
+            font-size: 30px;
+            text-align: right;
+            color: $primaryColor;
+            border-bottom: 1px solid;
 
-            &:hover {
-                font-size: 45px;
-            }
-        }
-
-        &:hover {
             i {
-                opacity: 1;
+                margin: 0 10px;
+                cursor: pointer;
+                transition: transform .5s;
+                padding: 10px;
+                border-radius: 100%;
+
+                &:hover {
+                    transform: scale(1.3, 1.3);
+                }
+
+                &.active {
+                    background: $primaryColor;
+                    color: white;
+                }
             }
         }
 
         canvas {
-            width: 100%;
-            height: 100%;
+            width: 100% !important;
+            height: 100% !important;
             background: white;
         }
     }
