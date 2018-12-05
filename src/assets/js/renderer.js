@@ -75,7 +75,7 @@ export default class Surface {
     fullscreenChangeHandler() {
         this.canvas.setAttribute("height", this.canvas.offsetHeight);
         this.canvas.setAttribute("width", this.canvas.offsetWidth);
-        this.scene.update({ pixelRatio: this.canvas.offsetWidth / this.canvas.offsetHeight });
+        this.scene.update({ pixelRatio: this.canvas.width / this.canvas.height });
 
         if(this.fullscreenBtn.classList.contains("active") &&
             document.fullscreenElement == null) {
@@ -145,7 +145,7 @@ export default class Surface {
         this.scene = Scene({
             canvas: this.canvas,
             gl,
-            pixelRatio: 1,
+            pixelRatio: this.canvas.width / this.canvas.height,
             autoResize: false,
             camera: {
                 eye: [0, 0, 1.4],
@@ -176,6 +176,12 @@ export default class Surface {
 
         this.scene.add(surface);
         this.setupBrush();
+
+        window.addEventListener("resize", e => {
+            this.canvas.setAttribute("width", this.canvas.offsetWidth);
+            this.canvas.setAttribute("height", this.canvas.offsetHeight);
+            this.scene.update({ pixelRatio: this.canvas.width / this.canvas.height });
+        })
     }
 
     setupBrush() {
