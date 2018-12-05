@@ -141,11 +141,11 @@ export default class Surface {
 
         this.canvas.setAttribute("width", this.canvas.offsetWidth);
         this.canvas.setAttribute("height", this.canvas.offsetHeight);
-        
+
         this.scene = Scene({
             canvas: this.canvas,
             gl,
-            pixelRatio: this.canvas.offsetWidth / this.canvas.offsetHeight,
+            pixelRatio: 1,
             autoResize: false,
             camera: {
                 eye: [0, 0, 1.4],
@@ -176,6 +176,10 @@ export default class Surface {
 
         this.scene.add(surface);
         this.setupBrush();
+
+        window.addEventListener("resize", e => {
+            this.scene.camera.pixelRatio = Math.min(this.canvas.offsetWidth / this.canvas.offsetHeight, 1);
+        });
     }
 
     setupBrush() {
@@ -214,10 +218,6 @@ export default class Surface {
 
         this.brush.end(param);
         this.surface._colorMap.setPixels(this.texture.el);
-    }
-
-    setTexture() {
-
     }
 
     unrender() {
