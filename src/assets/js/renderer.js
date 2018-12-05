@@ -176,10 +176,6 @@ export default class Surface {
 
         this.scene.add(surface);
         this.setupBrush();
-
-        window.addEventListener("resize", e => {
-            this.scene.camera.pixelRatio = Math.min(this.canvas.offsetWidth / this.canvas.offsetHeight, 1);
-        });
     }
 
     setupBrush() {
