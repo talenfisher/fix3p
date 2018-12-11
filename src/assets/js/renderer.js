@@ -145,7 +145,7 @@ export default class Surface {
         this.scene = Scene({
             canvas: this.canvas,
             gl,
-            pixelRatio: this.canvas.width / this.canvas.height,
+            pixelRatio: 1,
             autoResize: false,
             camera: {
                 eye: [0, 0, 1.4],
@@ -196,29 +196,23 @@ export default class Surface {
         !this.scene.selection.data) return;
 
         let coords = this.scene.selection.data.index;
-        let param = { clientX: coords[0], clientY: coords[1] };
-
-        this.brush.begin(param);
+        this.brush.begin(coords[0], coords[1]);
         this.surface._colorMap.setPixels(this.texture.el);
     }
 
     mouseMove(e) {
-        if(!this.paintBtn.classList.contains("active") || !this.brush._active) return;
+        if(!this.paintBtn.classList.contains("active") || !this.brush.active) return;
 
         let coords = this.scene.selection.data.index;
-        let param = { clientX: coords[0], clientY: coords[1] };
-
-        this.brush.move(param);
+        this.brush.move(coords[0], coords[1]);
         this.surface._colorMap.setPixels(this.texture.el);
     }
 
     mouseUp(e) {
-        if(!this.paintBtn.classList.contains("active") || !this.brush._active) return;
+        if(!this.paintBtn.classList.contains("active") || !this.brush.active) return;
         
         let coords = this.scene.selection.data.index;
-        let param = { clientX: coords[0], clientY: coords[1] };
-
-        this.brush.end(param);
+        this.brush.end(coords[0], coords[1]);
         this.surface._colorMap.setPixels(this.texture.el);
     }
 
