@@ -38,7 +38,8 @@
     "watch:js": "watch 'npm run build:js' src/assets/js",
     "watch": "concurrently npm:watch:js npm:watch:sass",
     "release": "webstore upload --source extension.zip --extension-id $WS_EXT_ID --client-id $WS_CLIENT_ID --client-secret $WS_CLIENT_SECRET --refresh-token $WS_REFRESH_TOKEN --auto-publish",
-    "test": "http-server -c-2 src -o"
+    "test": "http-server -c-2 src -o",
+    "postversion": "git push --follow-tags"
   },
   "browser": {
     "ws": false
