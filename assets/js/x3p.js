@@ -3,19 +3,10 @@ import md5 from "blueimp-md5";
 import { EventEmitter } from "events";
 import Surface from "./renderer";
 
-const ADJUST = 0.0001;
 const REQUIRED_FILES = [
     "main.xml",
     "md5checksum.hex"
 ];
-
-const DATA_TYPES = { 
-    D: Float64Array, 
-    F: Float32Array, 
-    L: Int32Array,  
-    I: Int16Array   
-};  
-
 
 const parser = new DOMParser();
  

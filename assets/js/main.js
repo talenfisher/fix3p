@@ -4,148 +4,14 @@ import Editor from "./editor";
 import Popup from "./popup";
 import md5 from "blueimp-md5";
 import axios from "axios";
+import { canvasToBlob } from "./functions";
+
 import "fullscreen-api-polyfill";
+import "./ext";
 
 window.fix3p = {
     extLoaded: false
 };
-
-/**
- * Queries only immediate children
- * @param {Node} query 
- */
-Node.prototype.querySelectorImmediate = function(query) {
-    for(var node of this.children) {
-        if(node.matches(query)) return node;
-    }
-    
-    return undefined;
-}
-
-/**
- * Gets the node's position relative to its siblings
- */
-Node.prototype.index = function() {
-    let parent = this.parentElement;
-    let i = 0;
-
-    for(let node of parent.children) {
-        if(node === this) return i;
-        i++;
-    }
-}
-
-/**
- * Build fully qualified selector 
- */
-Node.prototype.getPath = function() {
-    let tagnames = [ this.tagName ];
-    let parent = this.parentElement;
-
-    while(parent !== this.ownerDocument.documentElement) {
-        tagnames.push(parent.tagName);
-        parent = parent.parentElement;
-    }
-
-    return tagnames.reverse();
-}
-
-/**
- * Easily create elements
- * 
- * @param {string} name 
- * @param {object} options 
- */
-Document.prototype.createEasy = function(name, options = {}) {
-    let el = this.createElement(name);
-
-    if(typeof options.props !== "undefined") {
-        for(let prop in options.props) {
-            el[prop] = options.props[prop];
-        }
-    }
-    
-    if(typeof options.attrs !== "undefined") {
-        for(let attr in options.attrs) {
-            el.setAttribute(attr, options.attrs[attr]);
-        }
-    }
-
-    if(typeof options.classes !== "undefined") {
-        for(let className of options.classes) {
-            el.classList.add(className);
-        }
-    }
-
-    return el;
-}
-
-/**
- * Gets the innerHTML value of a node by query selector
- * @param {string} selector 
- */
-Document.prototype.get = function(selector) {
-    let node = this.querySelector(selector);
-    return typeof node !== "undefined" ? node.innerHTML : "";
-}
-
-
-/**
- * Gets the innerHTML value of a node as an integer
- * @param {string} selector 
- */
-Document.prototype.getInt = function(selector) {
-    return parseInt(this.get(selector));
-}
-
-/**
- * Gets the innerHTML value of a node as a float
- * @param {string} selector 
- */
-Document.prototype.getFloat = function(selector) {
-    return parseFloat(this.get(selector));
-}
-
-
-/**
- * Converts a path array to a data tag selector
- * @param {string[]} path 
- */
-window.pathArray2DTS = function(path) {
-    let result = "main ";
-
-    for(let tagname of path) {
-        result += `[data-tag="${tagname}"] `
-    }
-
-    return result;
-}
-
-/**
- * Pretty print a string.. (CalibrationDate to Calibration Date)
- * @param {string} string 
- * @return {string} prettified version of the string parameter
- */
-window.prettyPrint = function(string) {
-    let result = "";
-
-    for(let i = 0; i < string.length; i++) {
-        if(i !== 0 && 
-            string[i] === string[i].toUpperCase() && 
-            string[i - 1] === string[i - 1].toLowerCase()) result += " "; // CX, CY don't get spaced
-
-        result += string[i];
-    }
-
-    return result;
-}
-
-function canvasToBlob(canvas) {
-    return new Promise((resolve, reject) => {
-        canvas.toBlob(blob => resolve(blob), "image/jpeg");
-    });
-}
-
 
 /**
  * Check if loaded in chrome extension
@@ -161,7 +27,6 @@ try {
 (async function main() {
     fix3p.uploader = new Uploader;
     fix3p.uploader.display();
-
     fix3p.editor = new Editor;
 
     let popup = new Popup("");
@@ -174,7 +39,12 @@ try {
             popup.display();
             
             let contents = (await axios.get(decodeURIComponent(file), { responseType: "blob" })).data;
-            fix3p.uploader.read({ dataTransfer: { files: [ new File([contents], "file.x3p") ] } });
+            fix3p.uploader.read({ 
+                dataTransfer: { 
+                    files: [ new File([contents], "file.x3p") ]
+                } 
+            });
+
             popup.hide(true);
         }
 

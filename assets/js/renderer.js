@@ -13,6 +13,7 @@ const DATA_TYPES = {
 const EPSILON = 0.0001;
 const MULTIPLY = 5;
 const AXES = ["X","Y","Z"];
+
 export default class Surface { 
     constructor({ manifest, data, texture }) {
         this.manifest = manifest;
@@ -74,7 +75,7 @@ export default class Surface {
     fullscreenChangeHandler() {
         this.canvas.setAttribute("height", this.canvas.offsetHeight);
         this.canvas.setAttribute("width", this.canvas.offsetWidth);
-        this.scene.update({ pixelRatio: this.canvas.offsetWidth / this.canvas.offsetHeight });
+        this.scene.update({ pixelRatio: this.canvas.width / this.canvas.height });
 
         if(this.fullscreenBtn.classList.contains("active") &&
             document.fullscreenElement == null) {
@@ -140,11 +141,11 @@ export default class Surface {
 
         this.canvas.setAttribute("width", this.canvas.offsetWidth);
         this.canvas.setAttribute("height", this.canvas.offsetHeight);
-        
+
         this.scene = Scene({
             canvas: this.canvas,
             gl,
-            pixelRatio: this.canvas.offsetWidth / this.canvas.offsetHeight,
+            pixelRatio: 1,
             autoResize: false,
             camera: {
                 eye: [0, 0, 1.4],
@@ -175,6 +176,12 @@ export default class Surface {
 
         this.scene.add(surface);
         this.setupBrush();
+
+        window.addEventListener("resize", e => {
+            this.canvas.setAttribute("width", this.canvas.offsetWidth);
+            this.canvas.setAttribute("height", this.canvas.offsetHeight);
+            this.scene.update({ pixelRatio: this.canvas.width / this.canvas.height });
+        })
     }
 
     setupBrush() {
@@ -189,34 +196,24 @@ export default class Surface {
         !this.scene.selection.data) return;
 
         let coords = this.scene.selection.data.index;
-        let param = { clientX: coords[0], clientY: coords[1] };
-
-        this.brush.begin(param);
+        this.brush.begin(coords[0], coords[1]);
         this.surface._colorMap.setPixels(this.texture.el);
     }
 
     mouseMove(e) {
-        if(!this.paintBtn.classList.contains("active") || !this.brush._active) return;
+        if(!this.paintBtn.classList.contains("active") || !this.brush.active) return;
 
         let coords = this.scene.selection.data.index;
-        let param = { clientX: coords[0], clientY: coords[1] };
-
-        this.brush.move(param);
+        this.brush.move(coords[0], coords[1]);
         this.surface._colorMap.setPixels(this.texture.el);
     }
 
     mouseUp(e) {
-        if(!this.paintBtn.classList.contains("active") || !this.brush._active) return;
+        if(!this.paintBtn.classList.contains("active") || !this.brush.active) return;
         
         let coords = this.scene.selection.data.index;
-        let param = { clientX: coords[0], clientY: coords[1] };
-
-        this.brush.end(param);
+        this.brush.end(coords[0], coords[1]);
         this.surface._colorMap.setPixels(this.texture.el);
-    }
-
-    setTexture() {
-
     }
 
     unrender() {
