@@ -3,8 +3,8 @@ export default class Popup {
     /**
      * Constructs a new popup
      */
-    constructor(message, classes = []) {
-        this.createElement(message, classes);
+    constructor(message, classes = [], id = "") {
+        this.createElement(message, classes, id);
     } 
 
     /**
@@ -12,8 +12,9 @@ export default class Popup {
      * @param {string} message the message to display in the popup
      * @param {string[]} classes optional list of classes to add to the popup
      */
-    createElement(message, classes = []) {
+    createElement(message, classes = [], id = "") {
         this.el = document.createEasy("div", {
+            id,
             props: { innerHTML: `<div class="popup-content">${message}</div>` },
             classes: [ "popup" ].concat(classes)
         })

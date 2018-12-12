@@ -23,10 +23,20 @@
     "zeros": "^1.0.0"
   },
   "devDependencies": {
+    "@types/expect-puppeteer": "^3.3.0",
+    "@types/jest": "^23.3.10",
+    "@types/jest-environment-puppeteer": "^2.2.1",
+    "@types/node": "^10.12.12",
+    "@types/puppeteer": "^1.11.1",
     "chrome-webstore-upload-cli": "^1.2.0",
     "concurrently": "^4.1.0",
+    "jest": "^23.6.0",
+    "jest-environment-puppeteer": "^3.7.0",
+    "jest-puppeteer": "^3.7.0",
     "node-sass": "^4.11.0",
-    "selenium-webdriver": "^4.0.0-alpha.1",
+    "puppeteer": "^1.11.0",
+    "ts-jest": "^23.10.5",
+    "typescript": "^3.2.2",
     "watch": "^1.0.2",
     "webpack": "^4.27.1",
     "webpack-cli": "^3.1.2"
@@ -39,7 +49,8 @@
     "watch:js": "watch 'npm run build:js' src/assets/js",
     "watch": "concurrently npm:watch:js npm:watch:sass",
     "release": "webstore upload --source extension.zip --extension-id $WS_EXT_ID --client-id $WS_CLIENT_ID --client-secret $WS_CLIENT_SECRET --refresh-token $WS_REFRESH_TOKEN --auto-publish",
-    "test": "http-server -c-2 src -o",
+    "serve": "http-server -c-2 -p 8080 src",
+    "test": "jest",
     "postversion": "git push --follow-tags"
   },
   "browser": {
