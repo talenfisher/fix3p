@@ -19,19 +19,17 @@ Visit the [chrome web store](https://chrome.google.com/webstore/detail/fix3p/ffo
 
 ## Docker
 ```bash
-PORT=80
 docker pull talenfisher/fix3p
-docker run -itd -p $PORT:80 --name fix3p talenfisher/fix3p
+docker run -itd -p $PORT:80 talenfisher/fix3p
 ```
 
 ## From Source
 ```bash
-port=80
-git clone git@github.com:talenfisher/fix3p.git
-bin/build
-bin/start $PORT
+git clone git@github.com:talenfisher/fix3p.git && cd fix3p
+npm install
 ```
-If the port number is omitted, it will default to 80.  The image will mount the current working directory as a volume.  Furthermore, it will watch for changes made to sass & javascript files and rebuild the bundles.
+
+After installing from source, run `npm run develop` to both start the server and watch for changes. 
 
 # Usage / Features
 

@@ -13,7 +13,7 @@
     "fullscreen-api-polyfill": "^1.1.2",
     "gl-matrix": "^2.8.1",
     "gl-textured-surface3d": "^1.3.9",
-    "glslify-loader": "^1.0.2",
+    "glslify-loader": "^2.0.0",
     "ify-loader": "^1.1.0",
     "jszip": "^3.1.5",
     "ndarray": "^1.0.18",
@@ -26,7 +26,7 @@
     "@types/expect-puppeteer": "^3.3.0",
     "@types/jest": "^23.3.10",
     "@types/jest-environment-puppeteer": "^2.2.1",
-    "@types/node": "^10.12.12",
+    "@types/node": "^10.12.14",
     "@types/puppeteer": "^1.11.1",
     "chrome-webstore-upload-cli": "^1.2.0",
     "concurrently": "^4.1.0",
@@ -51,7 +51,10 @@
     "watch": "concurrently npm:watch:js npm:watch:sass",
     "release": "webstore upload --source extension.zip --extension-id $WS_EXT_ID --client-id $WS_CLIENT_ID --client-secret $WS_CLIENT_SECRET --refresh-token $WS_REFRESH_TOKEN --auto-publish",
     "serve": "http-server -c-2 -p 8080 src > /dev/null",
+    "view": "npm run serve -- -o",
     "test": "jest --colors --silent",
+    "develop": "concurrently npm:view npm:watch",
+    "postinstall": "npm run build",
     "postversion": "git push --follow-tags"
   },
   "browser": {
@@ -59,7 +62,6 @@
   },
   "author": "Talen Fisher",
   "license": "UNLICENSED",
-  "private": true,
   "browserify": {
     "transform": [
       "glslify",
