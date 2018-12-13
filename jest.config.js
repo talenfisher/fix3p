@@ -6,11 +6,8 @@ module.exports = {
     testEnvironment: 'jest-environment-puppeteer',
     globalSetup: "jest-environment-puppeteer/setup",
     globalTeardown: "jest-environment-puppeteer/teardown",
-    globals: {
-        "ts-jest": {
-            tsConfig: {
-                lib: ["es2015", "dom"]
-            }
-        }
-    }
+    collectCoverage: true,
+    collectCoverageFrom: [
+        "src/assets/js/**/*.{js,ts}"
+    ]
 };

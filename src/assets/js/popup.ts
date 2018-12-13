@@ -1,4 +1,5 @@
 export default class Popup {
+    public el: Element;
 
     /**
      * Constructs a new popup

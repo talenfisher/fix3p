@@ -14,8 +14,37 @@ const EPSILON = 0.0001;
 const MULTIPLY = 5;
 const AXES = ["X","Y","Z"];
 
-export default class Surface { 
-    constructor({ manifest, data, texture }) {
+interface RendererParameters {
+    manifest: Document;
+    data: any;
+    texture?: HTMLImageElement;
+}
+
+export default class Renderer { 
+    private manifest: Document;
+    private data: any;
+    private canvas: HTMLCanvasElement;
+    private stage: HTMLElement;
+    private fullscreenBtn: HTMLElement;
+    private paintBtn: HTMLElement;
+    private texture: Canvas;
+    private gl: WebGLRenderingContext;
+    private scene: Scene;
+    private brush: Brush;
+    private surface: SurfacePlot;
+    private coords: Array<ndarray>;
+    private sizeY: number;
+    private sizeX: number;
+    private maxX: number;
+    private maxY: number;
+    private maxZ: number;
+    private incrementX: number;
+    private incrementY: number;
+    private dataTypeX: any;
+    private dataTypeY: any;
+    private dataTypeZ: any;
+
+    constructor({ manifest, data, texture }: RendererParameters) {
         this.manifest = manifest;
         this.data = data;
         this.canvas = document.querySelector("#visual");
@@ -41,7 +70,7 @@ export default class Surface {
     }
 
     setupPaintbrush() {
-        this.paintBtn.onclick = () => {
+        (<HTMLElement>this.paintBtn).onclick = () => {
             let classList = this.paintBtn.classList;
             classList.toggle("active");
             this.scene.camera.rotateSpeed = classList.contains("active") ? 0 : 1;
@@ -52,6 +81,7 @@ export default class Surface {
      * Enters the canvas into fullscreen mode
      */
     setupFullscreen() {        
+        //@ts-ignore
         if(this.canvas.requestFullScreen === null)  {
             this.fullscreenBtn.remove();
             return;
@@ -60,6 +90,7 @@ export default class Surface {
         this.fullscreenBtn.onclick = () => {
             let classList = this.fullscreenBtn.classList;
 
+            //@ts-ignore
             if(document.fullscreenElement == null) {
                 this.stage.requestFullscreen();
                 classList.add("active");
@@ -73,12 +104,12 @@ export default class Surface {
     }
 
     fullscreenChangeHandler() {
-        this.canvas.setAttribute("height", this.canvas.offsetHeight);
-        this.canvas.setAttribute("width", this.canvas.offsetWidth);
+        this.canvas.setAttribute("height", this.canvas.offsetHeight.toString());
+        this.canvas.setAttribute("width", this.canvas.offsetWidth.toString());
         this.scene.update({ pixelRatio: this.canvas.width / this.canvas.height });
 
-        if(this.fullscreenBtn.classList.contains("active") &&
-            document.fullscreenElement == null) {
+        //@ts-ignore
+        if(this.fullscreenBtn.classList.contains("active") && document.fullscreenElement == null) {
             this.fullscreenBtn.classList.remove("active");
         }
     }
@@ -98,7 +129,7 @@ export default class Surface {
     setupDataTypes() {
         for(let axis of AXES) {
             let dataType = this.manifest.get(`Record1 Axes C${axis} DataType`);
-            if(!dataType in DATA_TYPES) throw new Exception("X3P Manifest must include DataType");
+            if(!((<string> dataType) in DATA_TYPES)) throw new Error("X3P Manifest must include DataType");
             this["dataType"+axis] = DATA_TYPES[dataType];
         }
     }
@@ -139,8 +170,8 @@ export default class Surface {
         let gl = this.gl = this.canvas.getContext("webgl");
         gl.depthFunc(gl.ALWAYS);
 
-        this.canvas.setAttribute("width", this.canvas.offsetWidth);
-        this.canvas.setAttribute("height", this.canvas.offsetHeight);
+        this.canvas.setAttribute("width", this.canvas.offsetWidth.toString());
+        this.canvas.setAttribute("height", this.canvas.offsetHeight.toString());
 
         this.scene = Scene({
             canvas: this.canvas,
@@ -178,8 +209,8 @@ export default class Surface {
         this.setupBrush();
 
         window.addEventListener("resize", e => {
-            this.canvas.setAttribute("width", this.canvas.offsetWidth);
-            this.canvas.setAttribute("height", this.canvas.offsetHeight);
+            this.canvas.setAttribute("width", this.canvas.offsetWidth.toString());
+            this.canvas.setAttribute("height", this.canvas.offsetHeight.toString());
             this.scene.update({ pixelRatio: this.canvas.width / this.canvas.height });
         })
     }
@@ -201,6 +232,7 @@ export default class Surface {
     }
 
     mouseMove(e) {
+        //@ts-ignore
         if(!this.paintBtn.classList.contains("active") || !this.brush.active) return;
 
         let coords = this.scene.selection.data.index;
@@ -209,6 +241,7 @@ export default class Surface {
     }
 
     mouseUp(e) {
+        //@ts-ignore
         if(!this.paintBtn.classList.contains("active") || !this.brush.active) return;
         
         let coords = this.scene.selection.data.index;

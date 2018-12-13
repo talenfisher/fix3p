@@ -1,9 +1,18 @@
-import EditableFields from "./dat/editable-fields.json";
+import * as EditableFields from "./dat/editable-fields.json";
 import { pathArray2DTS, prettyPrint } from "./functions";
+
+declare var window: any;
+declare var fix3p: any;
 
 const DOWNLOAD_BUTTON = '<a href="#" class="tab"><i class="fas fa-download"></i> Download</a>';
 
 export default class Editor {
+    private el: Element;
+    private nav: Element;
+    private main: Element;
+    private stage: Element;
+    private backbtn: Element;
+    private count: number;
 
     /**
      * Constructs a new editor
@@ -16,7 +25,7 @@ export default class Editor {
         this.stage = this.el.querySelector(".stage");
         
         this.backbtn = this.el.querySelector(".back");
-        this.backbtn.onclick = e => this.close();
+        this.backbtn.addEventListener("click", e => this.close());
     }
 
     /**
@@ -32,6 +41,7 @@ export default class Editor {
      */
     reset() {
         for(let node in this.main.querySelectorAll("input")) {
+            //@ts-ignore
             node.value = "";
         }
     }
@@ -139,15 +149,16 @@ export default class Editor {
      * Populate editor fields rather than generating them (this is better suited for production)
      * @param {Node} node the root element of the main.xml file
      */
-    populate(node) {
+    populate(node: Element) {
         if(node.children.length === 0) {
             let selector = pathArray2DTS(node.getPath());
             let el = document.querySelector(selector + " input");
             
             if(el !== null) {
-                el.value = node.innerHTML;
+                (<HTMLInputElement> el).value = node.innerHTML;
             }
         } else {
+            //@ts-ignore
             for(let subchild of node.children) {
                 this.populate(subchild);
             }

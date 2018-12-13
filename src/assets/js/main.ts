@@ -4,15 +4,21 @@ import Editor from "./editor";
 import Popup from "./popup";
 import md5 from "blueimp-md5";
 import axios from "axios";
+import X3P from "./x3p";
 import { canvasToBlob } from "./functions";
 
 import "fullscreen-api-polyfill";
 import "./ext";
 
+declare var window: any;
+declare var document: any;
+declare var fix3p: any;
+
 window.fix3p = {
-    render: true,
-    extLoaded: false
+    extLoaded: false,
+    render: true
 };
+
 
 /**
  * Check if loaded in chrome extension
@@ -59,7 +65,7 @@ try {
 
 // setup tabs
 document.addEventListener("click", async e => {
-    if(e.target.matches("a.tab")) { 
+    if((<Element>e.target).matches("a.tab")) { 
         e.preventDefault();
 
         let builder = new XMLBuilder(document.querySelector(".view main"));
@@ -84,8 +90,8 @@ document.addEventListener("click", async e => {
             fix3p.editor.close();
         });
 
-    } else if(e.target.matches(".tab:not(a)")) {
-        document.querySelector(".view").setAttribute("data-view", e.target.index());
+    } else if((<Element>e.target).matches(".tab:not(a)")) {
+        document.querySelector(".view").setAttribute("data-view", (<Element>e.target).index().toString());
     }
 });
 

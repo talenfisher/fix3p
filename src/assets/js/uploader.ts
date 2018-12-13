@@ -4,7 +4,11 @@ import Popup from "./popup";
 
 let parser = new DOMParser();
 
+declare var fix3p;
+
 export default class Uploader {
+    private label: HTMLElement;
+    private input: HTMLInputElement;
 
     /**
      * Constructs a new uploader view

@@ -1,3 +1,14 @@
+interface Node {
+    querySelectorImmediate(query: string): Node;
+    index(): number;
+    getPath(): Array<string>;
+    on(event: string, handler: (e) => any);
+}
+
+interface NodeList {
+    on(event: string, handler: (e) => any);
+}
+
 /**
  * Queries only immediate children
  * @param {Node} query 
