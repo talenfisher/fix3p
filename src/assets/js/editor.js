@@ -171,8 +171,7 @@ export default class Editor {
      * Closes the editor
      */
     close() {
-        debugger;
-        fix3p.X3P.surface.unrender();
+        if(fix3p.render) fix3p.X3P.surface.unrender();
         fix3p.uploader.display();
     }
 }

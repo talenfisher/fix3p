@@ -43,7 +43,10 @@ export default class X3P extends EventEmitter {
         this.extract();
         this.on("extracted", () => {
             if(!this.hasValidChecksum()) console.error("Found invalid checksum");
-            setTimeout(() => this.surface.render(), 1000);
+            
+            if(fix3p.render) {
+                setTimeout(() => this.surface.render(), 1000);
+            }
         });
     }
 

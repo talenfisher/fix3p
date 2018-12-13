@@ -10,6 +10,7 @@ import "fullscreen-api-polyfill";
 import "./ext";
 
 window.fix3p = {
+    render: true,
     extLoaded: false
 };
 
