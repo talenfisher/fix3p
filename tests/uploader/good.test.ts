@@ -4,6 +4,7 @@ import { readdirSync } from "fs";
 
 const sleep = promisify(setTimeout);
 
+
 for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
     describe(`Uploader <${file}> (good)`, () => {
         var input;
