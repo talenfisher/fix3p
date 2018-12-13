@@ -10,6 +10,7 @@ FiX3P is a web application for editing X3P files, provided by [CSAFE](https://fo
 2. [Usage](#usage)
     1. [General Usage](#general-usage)
     2. [Chrome Extension](#chrome-extension)
+3. [Future](#future)
 
 # Installation
 Note: if you install the chrome extension, you do not have to install the web application.  They both work independently.  
@@ -42,3 +43,7 @@ After installing from source, run `npm run develop` to both start the server and
 ## Chrome Extension
 - Use your operating system's file explorer or equivalent, use the "open with/open in" option to open X3P files in Google Chrome.
 - Quickly access FiX3P via an icon labelled "X3P" next to the omnibar/search bar.  
+
+# Future
+- Add and display additional fields / records not in the ISO5436-2 spec
+- Vertex painting / selection **[In progress]**
