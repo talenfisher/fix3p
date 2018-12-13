@@ -11,21 +11,28 @@
     "color-to-vec4": "^0.1.1",
     "file-saver": "^2.0.0",
     "fullscreen-api-polyfill": "^1.1.2",
-    "gl-matrix": "^2.8.1",
     "gl-textured-surface3d": "^1.3.9",
-    "glslify-loader": "^1.0.2",
     "ify-loader": "^1.1.0",
     "jszip": "^3.1.5",
-    "ndarray": "^1.0.18",
-    "ndarray-fill": "^1.0.2",
-    "ndarray-pack": "^1.2.1",
-    "raw-loader": "^0.5.1",
-    "zeros": "^1.0.0"
+    "ndarray": "^1.0.18"
   },
   "devDependencies": {
+    "@types/expect-puppeteer": "^3.3.0",
+    "@types/jest": "^23.3.10",
+    "@types/jest-environment-puppeteer": "^2.2.1",
+    "@types/node": "^10.12.14",
+    "@types/puppeteer": "^1.11.1",
     "chrome-webstore-upload-cli": "^1.2.0",
     "concurrently": "^4.1.0",
+    "http-server": "^0.11.1",
+    "jest": "^23.6.0",
+    "jest-environment-puppeteer": "^3.7.0",
+    "jest-puppeteer": "^3.7.0",
     "node-sass": "^4.11.0",
+    "puppeteer": "^1.11.0",
+    "ts-jest": "^23.10.5",
+    "ts-loader": "^5.3.1",
+    "typescript": "^3.2.2",
     "watch": "^1.0.2",
     "webpack": "^4.27.1",
     "webpack-cli": "^3.1.2"
@@ -38,7 +45,10 @@
     "watch:js": "watch 'npm run build:js' src/assets/js",
     "watch": "concurrently npm:watch:js npm:watch:sass",
     "release": "webstore upload --source extension.zip --extension-id $WS_EXT_ID --client-id $WS_CLIENT_ID --client-secret $WS_CLIENT_SECRET --refresh-token $WS_REFRESH_TOKEN --auto-publish",
-    "test": "http-server -c-2 src -o",
+    "start": "http-server -c-2 -p 8080 src -o > /dev/null",
+    "test": "jest --colors --silent",
+    "develop": "concurrently npm:start npm:watch",
+    "postinstall": "npm run build",
     "postversion": "git push --follow-tags"
   },
   "browser": {
@@ -46,7 +56,6 @@
   },
   "author": "Talen Fisher",
   "license": "UNLICENSED",
-  "private": true,
   "browserify": {
     "transform": [
       "glslify",

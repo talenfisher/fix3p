@@ -2,15 +2,21 @@ import saveAs from "file-saver";
 import md5 from "blueimp-md5";
 import { EventEmitter } from "events";
 import Surface from "./renderer";
+import { ZipFile } from "jszip";
 
-const REQUIRED_FILES = [
-    "main.xml",
-    "md5checksum.hex"
-];
+declare var fix3p;
 
-const parser = new DOMParser();
+const 
+    parser = new DOMParser(),
+    REQUIRED_FILES = [
+        "main.xml",
+        "md5checksum.hex"
+    ];
+
  
 export class X3PException {
+    public message: string;
+
     constructor(message) {
         this.message = message;
     }
@@ -24,6 +30,15 @@ export class X3PException {
  * Holds the x3p file
  */
 export default class X3P extends EventEmitter {
+    private zipfile: ZipFile;
+    private filename: string;
+    private surface: Surface;
+    private folder?: string;
+    private manifestSrc: string;
+    private manifest: Document;
+    private actualChecksum: string;
+    private expectedChecksum: string;
+    private textureMap: HTMLImageElement;
 
     /**
      * Constructs a new X3P object
@@ -43,7 +58,10 @@ export default class X3P extends EventEmitter {
         this.extract();
         this.on("extracted", () => {
             if(!this.hasValidChecksum()) console.error("Found invalid checksum");
-            setTimeout(() => this.surface.render(), 1000);
+            
+            if(fix3p.render) {
+                setTimeout(() => this.surface.render(), 1000);
+            }
         });
     }
 

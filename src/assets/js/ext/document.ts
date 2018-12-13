@@ -1,10 +1,23 @@
+interface Document {
+    createEasy(name: string, options?: object): Element;
+    get(selector: string): any;
+    getInt(selector: string): number;
+    getFloat(selector: string): number;
+}
+
+interface CreateEasyOptions {
+    props?: { [name: string]: any };
+    attrs?: { [name: string]: any };
+    classes?: Array<string>;
+}
+
 /**
  * Easily create elements
  * 
  * @param {string} name 
  * @param {object} options 
  */
-Document.prototype.createEasy = function(name, options = {}) {
+Document.prototype.createEasy = function(name: string, options: CreateEasyOptions = {}) {
     let el = this.createElement(name);
 
     if(typeof options.props !== "undefined") {

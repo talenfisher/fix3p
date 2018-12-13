@@ -6,16 +6,16 @@ const DOCTYPE = '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>';
  * Build XML document from HTML Inputs
  */
 export default class XMLBuilder {
-     
+    private xml: Document;
+
     /**
      * Constructs a new XMLBuilder
      * 
      * @param {Node} node the node to iterate through
      */
     constructor(node) {
-        this.xml = document.implementation.createDocument("http://www.opengps.eu/2008/ISO5436_2", "p:ISO5436_2");
-        this.xml.documentElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-        this.xml.documentElement.setAttribute("xsi:schemaLocation", "http://www.opengps.eu/2008/ISO5436_2 http://www.opengps.eu/2008/ISO5436_2/ISO5436_2.xsd");
+        //@ts-ignore
+        this.xml = document.implementation.createDocument("", "p:ISO5436_2");
         this.iterator(node);
     }
 
@@ -25,7 +25,7 @@ export default class XMLBuilder {
      * @param {Node} parent node to traverse
      * @param {XMLDocument} result node to append results to
      */
-    iterator(parent, result = this.xml.documentElement) {
+    iterator(parent, result: Element = this.xml.documentElement) {
         for(let node of parent.children) {
 
             if(typeof node.querySelectorImmediate("input") !== "undefined") {

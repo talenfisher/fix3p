@@ -3,3 +3,5 @@ node_modules/
 src/assets/dist/
 extension.zip
 .cache/
+tests/data/
+coverage/
