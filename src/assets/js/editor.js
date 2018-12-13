@@ -13,6 +13,7 @@ export default class Editor {
         this.el = el;
         this.nav = this.el.querySelector("nav");
         this.main = this.el.querySelector("main");
+        this.stage = this.el.querySelector(".stage");
         
         this.backbtn = this.el.querySelector(".back");
         this.backbtn.onclick = e => this.close();
@@ -165,6 +166,9 @@ export default class Editor {
         }
 
         document.querySelector("form").setAttribute("data-view", "editor");
+
+        if(!fix3p.render) this.stage.setAttribute("disabled", "disabled");
+        else this.stage.removeAttribute("disabled");
     }
 
     /**

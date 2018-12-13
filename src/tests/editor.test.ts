@@ -104,4 +104,8 @@ describe("Editor (after upload, no rendering)", () => {
 
         expect(visible).toBe(false);
     });
+
+    it("Should disable the stage/render area", () => {
+        return page.waitForSelector(".stage[disabled]");
+    });
 });
