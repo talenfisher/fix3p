@@ -1,10 +1,15 @@
 import { resolve } from "path";
 import { promisify } from "util";
-
+import { readdirSync, fstat } from "fs";
 const sleep = promisify(setTimeout);
 
+
+for(let file of readdirSync(resolve(ROOT, "testfiles"))) {
+    console.log(file);
+} 
+
 // before upload
-describe("Editor (before upload)", () => {
+describe("Editor (good, before upload)", () => {
     beforeEach(async () => {
         await page.goto("http://localhost:8080/index.html");
     });
@@ -18,7 +23,7 @@ describe("Editor (before upload)", () => {
 });
 
 // after upload
-describe("Editor (after upload, no rendering)", () => {
+describe("Editor (good, after upload, no rendering)", () => {
     beforeEach(async () => {
         await page.goto("http://localhost:8080/index.html");
 

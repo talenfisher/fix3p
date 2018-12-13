@@ -1,3 +1,5 @@
+const resolve = require("path").resolve;
+global.ROOT = "test";
 module.exports = {
     preset: './jest-preset.js',
     testEnvironment: 'jest-environment-puppeteer',

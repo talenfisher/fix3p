@@ -1,1 +1,0 @@
-This file is used during the uploader test to make sure fix3p does not accept non-x3p files
