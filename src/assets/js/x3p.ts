@@ -1,8 +1,7 @@
-import saveAs from "file-saver";
+import { saveAs } from "file-saver";
 import md5 from "blueimp-md5";
 import { EventEmitter } from "events";
-import Surface from "./renderer";
-import { ZipFile } from "jszip";
+import Renderer from "./renderer";
 
 declare var fix3p;
 
@@ -30,9 +29,9 @@ export class X3PException {
  * Holds the x3p file
  */
 export default class X3P extends EventEmitter {
-    private zipfile: ZipFile;
+    private zipfile: any;
     private filename: string;
-    private surface: Surface;
+    private surface: Renderer;
     private folder?: string;
     private manifestSrc: string;
     private manifest: Document;
@@ -79,15 +78,14 @@ export default class X3P extends EventEmitter {
             this.textureMap.onload = () => this.emit("extracted");
             this.textureMap.src = URL.createObjectURL(blob);
 
-            this.surface = new Surface({ 
+            this.surface = new Renderer({ 
                 manifest: this.manifest,
                 data: await this.retrieve("bindata/data.bin", "arraybuffer"),
                 texture: this.textureMap
             });
 
         } else {
-
-            this.surface = new Surface({ 
+            this.surface = new Renderer({ 
                 manifest: this.manifest,
                 data: await this.retrieve("bindata/data.bin", "arraybuffer")
             });

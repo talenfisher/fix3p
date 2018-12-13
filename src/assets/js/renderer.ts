@@ -1,4 +1,4 @@
-import ndarray from "ndarray";
+import * as ndarray from "ndarray";
 import Scene from "@talenfisher/gl-plot3d";
 import SurfacePlot from "gl-textured-surface3d";
 import { Canvas, Brush } from "@talenfisher/canvas";
@@ -14,7 +14,7 @@ const EPSILON = 0.0001;
 const MULTIPLY = 5;
 const AXES = ["X","Y","Z"];
 
-interface RendererParameters {
+export interface RendererParameters {
     manifest: Document;
     data: any;
     texture?: HTMLImageElement;
@@ -29,9 +29,9 @@ export default class Renderer {
     private paintBtn: HTMLElement;
     private texture: Canvas;
     private gl: WebGLRenderingContext;
-    private scene: Scene;
+    private scene: any;
     private brush: Brush;
-    private surface: SurfacePlot;
+    private surface: any;
     private coords: Array<ndarray>;
     private sizeY: number;
     private sizeX: number;
@@ -44,9 +44,9 @@ export default class Renderer {
     private dataTypeY: any;
     private dataTypeZ: any;
 
-    constructor({ manifest, data, texture }: RendererParameters) {
-        this.manifest = manifest;
-        this.data = data;
+    constructor(options: RendererParameters) {
+        this.manifest = options.manifest;
+        this.data = options.data;
         this.canvas = document.querySelector("#visual");
         this.stage = document.querySelector(".stage");
         this.fullscreenBtn = document.querySelector(".stage .fa-expand");
@@ -62,8 +62,8 @@ export default class Renderer {
 
         this.texture = new Canvas({ width: this.sizeY, height: this.sizeX });
         
-        if(texture) {
-            this.texture.drawImage(texture);
+        if(options.texture) {
+            this.texture.drawImage(options.texture);
         } else {
             this.texture.clear("#cd7f32");
         }
