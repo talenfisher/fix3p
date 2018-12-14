@@ -34,3 +34,6 @@ deploy:
     skip_cleanup: true
     on:
       tags: true
+
+notifications:
+  slack: csafe-isu:$SLACK_TOKEN
