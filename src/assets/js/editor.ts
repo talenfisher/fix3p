@@ -1,5 +1,4 @@
 // @ts-ignore
-import EditableFields from "./dat/editable-fields.json";
 import { pathArray2DTS, prettyPrint } from "./functions";
 
 declare var window: any;
