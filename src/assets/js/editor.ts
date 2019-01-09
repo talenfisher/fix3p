@@ -179,13 +179,6 @@ export default class Editor {
 
         this.generate(manifest.children[0]);
 
-        /*
-        if(window.fix3p.mode === "development") {
-            this.generate(manifest.children[0]);
-        } else {
-            this.populate(manifest.children[0]);
-        }*/
-
         document.querySelector("form").setAttribute("data-view", "editor");
 
         if(!fix3p.render) this.stage.setAttribute("disabled", "disabled");
