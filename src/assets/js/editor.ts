@@ -77,14 +77,14 @@ export default class Editor {
     
             } else {
                 el.appendChild(this.createLabel(child.tagName, "x3p$"+this.count));
-                el.appendChild(this.createInput("x3p$"+this.count, child.innerHTML, !EditableFields.includes(this.count)));
+                el.appendChild(this.createInput("x3p$"+this.count, child.innerHTML, child.hasAttribute("disabled")));
                 this.count++;
             }
     
-            target.appendChild(el);
+            target.appendChild(el); 
         }
     
-        return target;
+        return target; 
     }
 
     /**
@@ -173,11 +173,11 @@ export default class Editor {
     display(x3p) {
         let manifest = x3p.manifest.getTree();
         
+        // remove parser error if present
         let body = manifest.querySelector("body");
-        body.parentElement.removeChild(body);
+        if(body) body.parentElement.removeChild(body);
 
         this.generate(manifest.children[0]);
-
         document.querySelector("form").setAttribute("data-view", "editor");
 
         if(!fix3p.render) this.stage.setAttribute("disabled", "disabled");
