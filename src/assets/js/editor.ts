@@ -1,6 +1,8 @@
-import * as EditableFields from "./dat/editable-fields.json";
+// @ts-ignore
+import EditableFields from "./dat/editable-fields.json";
 import { pathArray2DTS, prettyPrint } from "./functions";
 
+console.log(EditableFields);
 declare var window: any;
 declare var fix3p: any;
 
@@ -169,12 +171,20 @@ export default class Editor {
      * Displays the editor
      * @param {DOMDocument} manifest a parsed main.xml file from within an X3P
      */
-    display(manifest) {
+    display(x3p) {
+        let manifest = x3p.manifest.getTree();
+        
+        let body = manifest.querySelector("body");
+        body.parentElement.removeChild(body);
+
+        this.generate(manifest.children[0]);
+
+        /*
         if(window.fix3p.mode === "development") {
             this.generate(manifest.children[0]);
         } else {
             this.populate(manifest.children[0]);
-        }
+        }*/
 
         document.querySelector("form").setAttribute("data-view", "editor");
 

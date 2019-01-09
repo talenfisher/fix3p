@@ -23,8 +23,7 @@ module.exports = {
         fs: 'empty' 
     },
     resolve: {
-        extensions: [".ts", ".js", ".json"],
-        symlinks: false
+        extensions: [".ts", ".js", ".json"]
     },
     externals: ["ws"]
 }

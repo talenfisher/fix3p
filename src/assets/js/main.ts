@@ -6,6 +6,7 @@ import md5 from "blueimp-md5";
 import axios from "axios";
 import X3P from "./x3p";
 import { canvasToBlob } from "./functions";
+import show from "ndarray-show";
 
 import "fullscreen-api-polyfill";
 import "./ext";
@@ -19,11 +20,12 @@ window.fix3p = {
     render: true
 };
 
+window.show = show;
 
 /**
  * Check if loaded in chrome extension
  */
-try {
+try { 
     if(typeof window.chrome.runtime.id !== "undefined") {
         fix3p.extLoaded = true;
     }
