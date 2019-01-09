@@ -2,7 +2,6 @@
 import EditableFields from "./dat/editable-fields.json";
 import { pathArray2DTS, prettyPrint } from "./functions";
 
-console.log(EditableFields);
 declare var window: any;
 declare var fix3p: any;
 
