@@ -1,6 +1,8 @@
 // @ts-ignore
 import { pathArray2DTS, prettyPrint } from "./functions";
 
+// TODO: Add label transforms, make longer labels shorter (like MD5 Checksum)
+
 declare var window: any;
 declare var fix3p: any;
 
