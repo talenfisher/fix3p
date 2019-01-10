@@ -182,14 +182,17 @@ export default class Editor {
         document.querySelector("form").setAttribute("data-view", "editor");
 
         if(!fix3p.render) this.stage.setAttribute("disabled", "disabled");
-        else this.stage.removeAttribute("disabled");
+        else {
+            this.stage.removeAttribute("disabled");
+            
+        }
     }
 
     /**
      * Closes the editor
      */
     close() {
-        if(fix3p.render) fix3p.X3P.surface.unrender();
+        if(fix3p.render && fix3p.X3P.surface) fix3p.X3P.surface.unrender();
         fix3p.uploader.display();
     }
 }
