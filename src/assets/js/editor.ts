@@ -1,9 +1,6 @@
 // @ts-ignore
 import { pathArray2DTS, prettyPrint } from "./functions";
 
-// TODO: Add label transforms, make longer labels shorter (like MD5 Checksum)
-
-declare var window: any;
 declare var fix3p: any;
 
 const DOWNLOAD_BUTTON = '<a href="#" class="tab"><i class="fas fa-download"></i> Download</a>';
@@ -155,26 +152,6 @@ export default class Editor {
 
         if(disabled) input.setAttribute("disabled", "disabled");
         return input;
-    }
-
-    /**
-     * Populate editor fields rather than generating them (this is better suited for production)
-     * @param {Node} node the root element of the main.xml file
-     */
-    populate(node: Element) {
-        if(node.children.length === 0) {
-            let selector = pathArray2DTS(node.getPath());
-            let el = document.querySelector(selector + " input");
-            
-            if(el !== null) {
-                (<HTMLInputElement> el).value = node.innerHTML;
-            }
-        } else {
-            //@ts-ignore
-            for(let subchild of node.children) {
-                this.populate(subchild);
-            }
-        }
     }
 
     /**
