@@ -16,20 +16,6 @@ export function query(query) {
 }
 
 /**
- * Converts a path array to a data tag selector
- * @param {string[]} path 
- */
-export function pathArray2DTS(path) {
-    let result = "main ";
-
-    for(let tagname of path) {
-        result += `[data-tag="${tagname}"] `
-    }
-
-    return result;
-}
-
-/**
  * Pretty print a string.. (CalibrationDate to Calibration Date)
  * @param {string} string 
  * @return {string} prettified version of the string parameter

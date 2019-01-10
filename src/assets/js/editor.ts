@@ -1,5 +1,5 @@
 // @ts-ignore
-import { pathArray2DTS, prettyPrint } from "./functions";
+import { prettyPrint } from "./functions";
 
 declare var fix3p: any;
 
