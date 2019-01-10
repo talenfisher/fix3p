@@ -78,7 +78,7 @@ export default class Editor {
     
             } else {
                 el.appendChild(this.createLabel(child.tagName, "x3p$"+this.count));
-                el.appendChild(this.createInput("x3p$"+this.count, child.innerHTML, child.hasAttribute("disabled")));
+                el.appendChild(this.createInput("x3p$"+this.count, child, child.hasAttribute("disabled")));
                 this.count++;
             }
     
@@ -130,18 +130,23 @@ export default class Editor {
     /**
      * Creates a new input
      * @param {string} id the id of the input
-     * @param {string} value the value of the input
+     * @param {Node} node the node to proxy
      * @param {boolean} disabled whether the input should be disabled or not
      * @return {Node} the resulting input
      */
-    createInput(id, value, disabled = false) {
+    createInput(id, node, disabled = false) {
         let input = document.createEasy("input", {
             props: {
                 type: "text",
-                value: value,
+                value: node.innerHTML,
                 id: id
             }
         });    
+
+        input.addEventListener("keyup", function(e) {
+            node.innerHTML = this.value;
+            console.log("test");
+        });
 
         if(disabled) input.setAttribute("disabled", "disabled");
         return input;
@@ -184,7 +189,6 @@ export default class Editor {
         if(!fix3p.render) this.stage.setAttribute("disabled", "disabled");
         else {
             this.stage.removeAttribute("disabled");
-            
         }
     }
 

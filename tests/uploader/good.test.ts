@@ -10,13 +10,13 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
         var input;
 
         beforeEach(async () => {
-            await page.goto("http://localhost:8080/index.html");
+            await page.goto("http://localhost:1432/index.html");
             page.evaluate(`fix3p.render = false;`);
             input = await page.$(".upload input");
             input.uploadFile(resolve(__dirname, "../data/good/"+file));
             await sleep(1000);
         });
-
+ 
         it("Should shift to editor view when supplied a valid X3P file", async () => {
             let editor = await page.$(".view");
             let visible = await editor.isIntersectingViewport();

@@ -1,6 +1,6 @@
 describe("Editor (before upload)", () => {
     beforeEach(async () => {
-        await page.goto("http://localhost:8080/index.html");
+        await page.goto("http://localhost:1432/index.html");
     });
 
     it("Should initially be invisible", async () => {

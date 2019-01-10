@@ -6,8 +6,8 @@ module.exports = {
     },
 
     server: {
-        command: 'npm start',
-        port: 8080,
+        command: 'npx http-server -c-2 -p 1432 src > /dev/null',
+        port: 1432,
         launchTimeout: 10000,
         debug: true
     }

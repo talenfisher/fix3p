@@ -69,13 +69,8 @@ try {
 document.addEventListener("click", async e => {
     if((<Element>e.target).matches("a.tab")) { 
         e.preventDefault();
-
-        let builder = new XMLBuilder(document.querySelector(".view main"));
-        let contents = builder.toString();
-
-        fix3p.X3P.update("bindata/texture.jpeg", await canvasToBlob(fix3p.X3P.surface.texture.el));
-        fix3p.X3P.update("main.xml", contents);
-        fix3p.X3P.update("md5checksum.hex", md5(contents)+" *main.xml");
+        
+        fix3p.X3P.save();
         
         let popup = new Popup("Compressing...");
         popup.display();
