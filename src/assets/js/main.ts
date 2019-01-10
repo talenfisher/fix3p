@@ -1,11 +1,7 @@
-import XMLBuilder from "./xmlbuilder";
 import Uploader from "./uploader";
 import Editor from "./editor";
 import Popup from "./popup";
-import md5 from "blueimp-md5";
 import axios from "axios";
-import X3P from "./x3p";
-import { canvasToBlob } from "./functions";
 import show from "ndarray-show";
 
 import "fullscreen-api-polyfill";

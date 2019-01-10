@@ -1,8 +1,5 @@
-import jszip from "jszip";
 import X3P from "x3p.js";
 import Popup from "./popup";
-
-let parser = new DOMParser();
 
 declare var fix3p;
 

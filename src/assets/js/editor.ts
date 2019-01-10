@@ -1,5 +1,6 @@
 // @ts-ignore
 import { prettyPrint } from "./functions";
+import Renderer from "./renderer";
 
 declare var fix3p: any;
 
@@ -16,6 +17,7 @@ export default class Editor {
     private stage: Element;
     private backbtn: Element;
     private count: number;
+    private renderer?: Renderer;
 
     /**
      * Constructs a new editor
@@ -171,6 +173,12 @@ export default class Editor {
         if(!fix3p.render) this.stage.setAttribute("disabled", "disabled");
         else {
             this.stage.removeAttribute("disabled");
+            this.renderer = new Renderer({
+                manifest: x3p.manifest.getTree(),
+                data: x3p.pointBuffer
+            });
+
+            this.renderer.render();
         }
     }
 
@@ -178,7 +186,7 @@ export default class Editor {
      * Closes the editor
      */
     close() {
-        if(fix3p.render && fix3p.X3P.surface) fix3p.X3P.surface.unrender();
+        if(fix3p.render && this.renderer) this.renderer.unrender();
         fix3p.uploader.display();
     }
 }
