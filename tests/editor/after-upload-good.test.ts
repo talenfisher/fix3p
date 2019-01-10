@@ -27,7 +27,7 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
         });
 
         it("Record1 should be visible", async () => {
-            await sleep(1000);
+            await sleep(2000);
 
             let el = await page.$(`[data-tag="Record1"]`);
             let visible = await el.isIntersectingViewport();

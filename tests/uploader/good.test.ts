@@ -20,7 +20,7 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
         it("Should shift to editor view when supplied a valid X3P file", async () => {
             let editor = await page.$(".view");
             let visible = await editor.isIntersectingViewport();
-
+            
             expect(visible).toBe(true);
         });
 
