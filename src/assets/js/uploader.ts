@@ -45,17 +45,24 @@ export default class Uploader {
 
         let file = (!byclick) ? e.dataTransfer.files[0] : this.input.files[0];
         
+        let loading = new Popup(`Loading...`, ["loading"]);
+        loading.display();
+
         try {
             fix3p.X3P = await new X3P({ file });
 
         } catch(x3pexception) {
+            loading.hide(true);
+
             let error = new Popup(`<i class="fas fa-exclamation-triangle"></i> Please upload a valid X3P file.`, ["upload-error"]);
             error.display(2, true);
+
             this.input.value = "";
             console.error(x3pexception);
             return;
         }
 
+        loading.hide(true);
         fix3p.editor.display(fix3p.X3P);
     }
   

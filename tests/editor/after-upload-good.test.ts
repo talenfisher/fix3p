@@ -105,6 +105,14 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
                 let manifestValue = await page.evaluate(`fix3p.X3P.manifest.get("Creator")`);
                 expect(manifestValue).toBe(name);
             });
+
+            it("Fields that represent a date should be datetime-local inputs", async () => {
+                const selector = `[data-tag="Date"] input`;
+
+                await page.waitForSelector(selector);
+                let type = await page.evaluate(`document.querySelector('${selector}').getAttribute("type")`);
+                expect(type).toBe("datetime-local");
+            });
         });
     });
 }
