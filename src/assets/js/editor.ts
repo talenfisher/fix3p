@@ -7,6 +7,7 @@ declare var window: any;
 declare var fix3p: any;
 
 const DOWNLOAD_BUTTON = '<a href="#" class="tab"><i class="fas fa-download"></i> Download</a>';
+const INPUT_TYPES = { date: "datetime-local" };
 
 export default class Editor {
     private el: Element;
@@ -135,9 +136,10 @@ export default class Editor {
      * @return {Node} the resulting input
      */
     createInput(id, node, disabled = false) {
+        let type = INPUT_TYPES[node.getAttribute("type")] || "text";
         let input = document.createEasy("input", {
             props: {
-                type: "text",
+                type: type,
                 value: node.innerHTML,
                 id: id
             }
@@ -145,7 +147,6 @@ export default class Editor {
 
         input.addEventListener("keyup", function(e) {
             node.innerHTML = this.value;
-            console.log("test");
         });
 
         if(disabled) input.setAttribute("disabled", "disabled");
