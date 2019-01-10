@@ -8,6 +8,9 @@ declare var fix3p: any;
 
 const DOWNLOAD_BUTTON = '<a href="#" class="tab"><i class="fas fa-download"></i> Download</a>';
 const INPUT_TYPES = { date: "datetime-local" };
+const LABEL_TRANSFORMS = {
+    MD5ChecksumPointData: "MD5 Checksum"
+};
 
 export default class Editor {
     private el: Element;
@@ -122,8 +125,9 @@ export default class Editor {
      * @return {Node} the resulting label
      */
     createLabel(labelName, id) {
+        let name = labelName in LABEL_TRANSFORMS ? LABEL_TRANSFORMS[labelName] : prettyPrint(labelName);
         return document.createEasy("label", {
-            props: { innerHTML: prettyPrint(labelName) + ":" },
+            props: { innerHTML: name + ":" },
             attrs: { for: id }
         });
     }

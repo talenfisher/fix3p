@@ -89,7 +89,7 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
             return page.waitForSelector(".stage[disabled]");
         });
 
-        describe("Inputs", () => {
+        describe("Labels/Inputs", () => {
             it("Typing in them should update the corresponding manifest node", async () => {
                 (await page.$(`div.tab:nth-of-type(2)`)).click();
 
@@ -112,6 +112,14 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
                 await page.waitForSelector(selector);
                 let type = await page.evaluate(`document.querySelector('${selector}').getAttribute("type")`);
                 expect(type).toBe("datetime-local");
+            });
+
+            it("MD5ChecksumPointData label should be transformed to MD5 Checksum:", async () => {
+                const selector = `[data-tag="MD5ChecksumPointData"] label`;
+                await page.waitForSelector(selector);
+                
+                let value = await page.evaluate(`document.querySelector('${selector}').innerHTML`);
+                expect(value).toBe("MD5 Checksum:");
             });
         });
     });
