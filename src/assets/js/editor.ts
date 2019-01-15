@@ -1,6 +1,5 @@
 // @ts-ignore
 import { prettyPrint } from "./functions";
-import Renderer from "./renderer";
 import { X3P } from "x3p.js";
 
 declare var fix3p: any;
@@ -19,7 +18,6 @@ export default class Editor {
     private canvas: Element;
     private backbtn: Element;
     private count: number;
-    private renderer?: Renderer;
 
     /**
      * Constructs a new editor
@@ -184,7 +182,6 @@ export default class Editor {
      * Closes the editor
      */
     close() {
-        if(fix3p.render && this.renderer) this.renderer.unrender();
         fix3p.uploader.display();
     }
 }
