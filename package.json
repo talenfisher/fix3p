@@ -16,7 +16,7 @@
     "jszip": "^3.1.5",
     "ndarray": "^1.0.18",
     "ndarray-show": "^2.0.0",
-    "x3p.js": "^0.2.3"
+    "x3p.js": "^0.2.4"
   },
   "devDependencies": {
     "@types/expect-puppeteer": "^3.3.0",

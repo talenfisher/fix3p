@@ -1,14 +1,4 @@
 /**
- * This file contains miscellaneous functions
- */
-
-export function canvasToBlob(canvas) {
-    return new Promise((resolve, reject) => {
-        canvas.toBlob(blob => resolve(blob), "image/jpeg");
-    });
-}
-
-/**
  * Shortcut for document.querySelectorAll
  */
 export function query(query) {
