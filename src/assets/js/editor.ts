@@ -4,7 +4,7 @@ declare var fix3p: any;
 
 const DOWNLOAD_BUTTON = '<a href="#" class="tab"><i class="fas fa-download"></i> Download</a>';
 
-const INPUT_TYPES = { 
+const INPUT_TRANSFORMS = { 
     date: "datetime-local" 
 };
 
@@ -141,7 +141,8 @@ export default class Editor {
      * @return {Node} the resulting input
      */
     createInput(id, node, disabled = false) {
-        let type = INPUT_TYPES[node.getAttribute("type")] || "text";
+        let typeName = node.getAttribute("type");
+        let type = typeName in INPUT_TRANSFORMS ? INPUT_TRANSFORMS[node.getAttribute("type")] : "text";
         let input = document.createEasy("input", {
             props: {
                 type: type,
