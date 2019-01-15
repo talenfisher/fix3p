@@ -47,5 +47,4 @@ After installing from source, run `npm run develop` to both start the server and
 - Quickly access FiX3P via an icon labelled "X3P" next to the omnibar/search bar.  
 
 # Future
-- Add and display additional fields / records not in the ISO5436-2 spec
 - Vertex painting / selection **[In progress]**
