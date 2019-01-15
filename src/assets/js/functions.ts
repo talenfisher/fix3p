@@ -1,9 +1,3 @@
-/**
- * Shortcut for document.querySelectorAll
- */
-export function query(query) {
-    return document.querySelectorAll(query);
-}
 
 /**
  * Pretty print a string.. (CalibrationDate to Calibration Date)

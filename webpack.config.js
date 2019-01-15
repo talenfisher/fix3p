@@ -10,6 +10,13 @@ for(let file of fs.readdirSync(X3PJS_PATH)) {
     }
 }
 
+const SRC_ROOT = path.resolve(__dirname, "src");
+for(let file of fs.readdirSync(SRC_ROOT)) {
+    if(file.match(/worker/)) {
+        fs.unlinkSync(`${SRC_ROOT}/${file}`);
+    }
+}
+
 module.exports = {
     mode: 'production',
     entry: {

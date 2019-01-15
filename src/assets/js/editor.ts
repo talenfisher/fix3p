@@ -1,11 +1,13 @@
-// @ts-ignore
-import { prettyPrint } from "./functions";
 import { X3P } from "x3p.js";
 
 declare var fix3p: any;
 
 const DOWNLOAD_BUTTON = '<a href="#" class="tab"><i class="fas fa-download"></i> Download</a>';
-const INPUT_TYPES = { date: "datetime-local" };
+
+const INPUT_TYPES = { 
+    date: "datetime-local" 
+};
+
 const LABEL_TRANSFORMS = {
     MD5ChecksumPointData: "MD5 Checksum"
 };
@@ -86,7 +88,7 @@ export default class Editor {
                 this.count++;
             }
     
-            target.appendChild(el); 
+            target.appendChild(el);
         }
     
         return target; 
@@ -99,7 +101,7 @@ export default class Editor {
      */
     createTab(tabName) {
         return document.createEasy("div", {
-            props: { "innerHTML": prettyPrint(tabName) },
+            props: { "innerHTML": this.prettify(tabName) },
             attrs: { "data-target": tabName },
             classes: [ "tab" ]
         });
@@ -113,7 +115,7 @@ export default class Editor {
     createHeading(headingName) {
         return document.createEasy("h3", { 
             props: { 
-                innerHTML: prettyPrint(headingName) 
+                innerHTML: this.prettify(headingName) 
             } 
         });
     }
@@ -125,9 +127,8 @@ export default class Editor {
      * @return {Node} the resulting label
      */
     createLabel(labelName, id) {
-        let name = labelName in LABEL_TRANSFORMS ? LABEL_TRANSFORMS[labelName] : prettyPrint(labelName);
         return document.createEasy("label", {
-            props: { innerHTML: name + ":" },
+            props: { innerHTML: this.prettify(labelName) + ":" },
             attrs: { for: id }
         });
     }
@@ -176,6 +177,28 @@ export default class Editor {
             this.stage.removeAttribute("disabled");
             x3p.render(this.canvas);
         }
+    }
+
+    /**
+     * Prettifies a label.  By default, this simply adds spaces between
+     * words and capitalizes them.  If a manual transform exists (see LABEL_TRANSFORMS),
+     * the transform value is used instead
+     */
+    prettify(label: string) {
+        if(label in LABEL_TRANSFORMS) {
+            return LABEL_TRANSFORMS[label];
+        }
+
+        let result = "";
+        for(let i = 0; i < label.length; i++) {
+            if(i !== 0 && 
+                label[i] === label[i].toUpperCase() && 
+                label[i - 1] === label[i - 1].toLowerCase()) result += " "; // CX, CY don't get spaced
+    
+            result += label[i];
+        }
+    
+        return result;
     }
 
     /**
