@@ -1,16 +1,29 @@
 const path = require("path");
+const fs = require("fs");
+
+const X3PJS_PATH = path.resolve(__dirname, "node_modules/x3p.js/dist");
+
+let workerName;
+for(let file of fs.readdirSync(X3PJS_PATH)) {
+    if(file.match(/worker/) && !file.match(/\.map$/)) {
+        workerName = file.replace(".js", "");
+    }
+}
 
 module.exports = {
     mode: 'production',
-    entry: path.resolve(__dirname, 'src/assets/js/main.ts'),
+    entry: {
+        [workerName]: `${X3PJS_PATH}/${workerName}.js`,
+        "fix3p.bundle": path.resolve(__dirname, 'src/assets/js/main.ts'),
+    },
     output: {
         path: path.resolve(__dirname, 'src/assets/dist/'),
-        filename: 'fix3p.bundle.js'
+        filename: '[name].js'
     },
     module: {
         rules: [
             {
-                test: /.ts$/,
+                test: /\.ts$/,
                 use: 'ts-loader'
             },
             { 

@@ -5,7 +5,7 @@
   "main": "",
   "dependencies": {
     "@talenfisher/canvas": "^0.2.0",
-    "@talenfisher/gl-plot3d": "^0.1.6",
+    "@talenfisher/gl-plot3d": "^0.1.9",
     "axios": "^0.18.0",
     "blueimp-md5": "^2.10.0",
     "color-to-vec4": "^0.1.1",
@@ -16,7 +16,7 @@
     "jszip": "^3.1.5",
     "ndarray": "^1.0.18",
     "ndarray-show": "^2.0.0",
-    "x3p.js": "^0.2.1"
+    "x3p.js": "^0.2.3"
   },
   "devDependencies": {
     "@types/expect-puppeteer": "^3.3.0",
@@ -30,9 +30,10 @@
     "concurrently": "^4.1.0",
     "http-server": "^0.11.1",
     "jest": "^23.6.0",
-    "jest-environment-puppeteer": "^3.7.0",
-    "jest-puppeteer": "^3.7.0",
+    "jest-environment-puppeteer": "^3.8.0",
+    "jest-puppeteer": "^3.8.0",
     "node-sass": "^4.11.0",
+    "parcel-bundler": "^1.11.0",
     "puppeteer": "^1.11.0",
     "tmp": "0.0.33",
     "ts-jest": "^23.10.5",
@@ -43,8 +44,9 @@
     "webpack-cli": "^3.2.1"
   },
   "scripts": {
+    "clean": "rm -rf src/assets/dist/ src/worker* .cache",
     "build:sass": "node-sass --output-style compressed src/assets/sass/main.scss src/assets/dist/fix3p.bundle.css",
-    "build:js": "webpack",
+    "build:js": "webpack && mv src/assets/dist/worker* src",
     "build": "npm run build:sass && webpack",
     "watch:sass": "watch 'npm run build:sass' src/assets/sass",
     "watch:js": "watch 'npm run build:js' src/assets/js",

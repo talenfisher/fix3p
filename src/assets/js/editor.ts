@@ -1,6 +1,7 @@
 // @ts-ignore
 import { prettyPrint } from "./functions";
 import Renderer from "./renderer";
+import { X3P } from "x3p.js";
 
 declare var fix3p: any;
 
@@ -15,6 +16,7 @@ export default class Editor {
     private nav: Element;
     private main: Element;
     private stage: Element;
+    private canvas: Element;
     private backbtn: Element;
     private count: number;
     private renderer?: Renderer;
@@ -28,6 +30,7 @@ export default class Editor {
         this.nav = this.el.querySelector("nav");
         this.main = this.el.querySelector("main");
         this.stage = this.el.querySelector(".stage");
+        this.canvas = this.el.querySelector("canvas");
         
         this.backbtn = this.el.querySelector(".back");
         this.backbtn.addEventListener("click", e => this.close());
@@ -160,7 +163,7 @@ export default class Editor {
      * Displays the editor
      * @param {DOMDocument} manifest a parsed main.xml file from within an X3P
      */
-    display(x3p) {
+    display(x3p: X3P) {
         let manifest = x3p.manifest.getTree();
         
         // remove parser error if present
@@ -173,12 +176,7 @@ export default class Editor {
         if(!fix3p.render) this.stage.setAttribute("disabled", "disabled");
         else {
             this.stage.removeAttribute("disabled");
-            this.renderer = new Renderer({
-                manifest: x3p.manifest.getTree(),
-                data: x3p.pointBuffer
-            });
-
-            this.renderer.render();
+            x3p.render(this.canvas);
         }
     }
 
