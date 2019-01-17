@@ -3,6 +3,7 @@ interface Document {
     get(selector: string): any;
     getInt(selector: string): number;
     getFloat(selector: string): number;
+    fullscreenElement: Element | null;
 }
 
 interface CreateEasyOptions {

@@ -1,4 +1,5 @@
 import { X3P } from "x3p.js";
+import Stage from "./stage";
 
 declare var fix3p: any;
 
@@ -16,7 +17,7 @@ export default class Editor {
     private el: Element;
     private nav: Element;
     private main: Element;
-    private stage: Element;
+    private stage: Stage;
     private canvas: Element;
     private backbtn: Element;
     private count: number;
@@ -29,7 +30,7 @@ export default class Editor {
         this.el = el;
         this.nav = this.el.querySelector("nav");
         this.main = this.el.querySelector("main");
-        this.stage = this.el.querySelector(".stage");
+        this.stage = new Stage({ el: this.el.querySelector(".stage") });
         this.canvas = this.el.querySelector("canvas");
         
         this.backbtn = this.el.querySelector(".back");
@@ -139,10 +140,11 @@ export default class Editor {
      * @param {Node} node the node to proxy
      * @param {boolean} disabled whether the input should be disabled or not
      * @return {Node} the resulting input
-     */
+     *///@ts-ignore
     createInput(id, node, disabled = false) {
         let typeName = node.getAttribute("type");
         let type = typeName in INPUT_TRANSFORMS ? INPUT_TRANSFORMS[node.getAttribute("type")] : "text";
+
         let input = document.createEasy("input", {
             props: {
                 type: type,
@@ -171,12 +173,14 @@ export default class Editor {
         if(body) body.parentElement.removeChild(body);
 
         this.generate(manifest.children[0]);
-        document.querySelector("form").setAttribute("data-view", "editor");
+        
+        let form = document.querySelector("form");
+        form.setAttribute("data-view", "editor");
 
-        if(!fix3p.render) this.stage.setAttribute("disabled", "disabled");
+        if(!fix3p.render) this.stage.enabled = false;
         else {
-            this.stage.removeAttribute("disabled");
-            x3p.render(this.canvas);
+            this.stage.enabled = true;
+            this.stage.file = x3p;
         }
     }
 
