@@ -18,7 +18,7 @@ interface CreateEasyOptions {
  * @param {string} name 
  * @param {object} options 
  */
-Document.prototype.createEasy = function(name: string, options: CreateEasyOptions = {}) {
+Document.prototype.createEasy = function(name: string, options: CreateEasyOptions = {}): HTMLElement {
     let el = this.createElement(name);
 
     if(typeof options.props !== "undefined") {

@@ -83,8 +83,6 @@ document.addEventListener("click", async e => {
             fix3p.editor.close();
         });
 
-    } else if((<Element>e.target).matches(".tab:not(a)")) {
-        document.querySelector(".view").setAttribute("data-view", (<Element>e.target).index().toString());
     }
 });
 

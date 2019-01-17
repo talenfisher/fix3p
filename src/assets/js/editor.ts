@@ -101,11 +101,18 @@ export default class Editor {
      * @return {Node} the resulting tab
      */
     createTab(tabName) {
-        return document.createEasy("div", {
+        let tab = document.createEasy("div", {
             props: { "innerHTML": this.prettify(tabName) },
             attrs: { "data-target": tabName },
             classes: [ "tab" ]
-        });
+        }) as HTMLElement;
+
+        tab.onclick = (e) => {
+            let view = document.querySelector(".view");
+            view.setAttribute("data-view", tab.index().toString());
+        };
+
+        return tab;
     }
 
     /**
@@ -140,7 +147,7 @@ export default class Editor {
      * @param {Node} node the node to proxy
      * @param {boolean} disabled whether the input should be disabled or not
      * @return {Node} the resulting input
-     *///@ts-ignore
+     */
     createInput(id, node, disabled = false) {
         let typeName = node.getAttribute("type");
         let type = typeName in INPUT_TRANSFORMS ? INPUT_TRANSFORMS[node.getAttribute("type")] : "text";
@@ -210,6 +217,9 @@ export default class Editor {
      * Closes the editor
      */
     close() {
+        this.stage.clear();
+        fix3p.X3P = null;
+        this.clear();
         fix3p.uploader.display();
     }
 }

@@ -41,10 +41,22 @@ export default class Stage {
         this.renderer = x3p.render(this.canvas);
     }
 
+    public clear() {
+        if(this.renderer) {
+            this.renderer.dispose();
+            this.renderer = null;
+        }
+        
+        if(this[$file]) {
+            this[$file] = null;
+        }
+    }
+
     private setupFullscreenBtn() {
         let btn = this.fullscreenBtn = this.el.querySelector(".fa-expand");
         
         btn.onclick = (e) => {
+            if(!this.enabled) return;
             document.fullscreenElement === null ? this.el.requestFullscreen() : document.exitFullscreen();
         };
 
