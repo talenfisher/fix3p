@@ -15,7 +15,8 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
 
             let input = await page.$(".upload input");
             await input.uploadFile(resolve(__dirname, "../data/good/"+file));
-            await sleep(1500);
+            await page.waitForSelector(`[data-view="editor"]`);
+            await sleep(1000);
         });
 
         it("Should be visible", async () => {
@@ -26,7 +27,7 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
         });
 
         it("Record1 should be visible", async () => {
-            let el = await page.$(`[data-tag="Record1"]`);
+            let el = await page.waitForSelector(`[data-tag="Record1"]`);
             let visible = await el.isIntersectingViewport();
             
             expect(visible).toBe(true);
@@ -35,8 +36,7 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
         it("Clicking the Record2 tab should make Record2 visible", async () => {
             (await page.$(`div.tab:nth-of-type(2)`)).click();
             
-            await sleep(1000);
-            let el = await page.$(`[data-tag="Record2"]`);
+            let el = await page.waitForSelector(`[data-tag="Record2"]`);
             let visible = await el.isIntersectingViewport();
             
             expect(visible).toBe(true);
@@ -45,8 +45,7 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
         it("Clicking the Record3 tab should make Record3 visible", async () => {
             (await page.$(`div.tab:nth-of-type(3)`)).click();
 
-            await sleep(1000);
-            let el = await page.$(`[data-tag="Record3"]`);
+            let el = await page.waitForSelector(`[data-tag="Record3"]`);
             let visible = await el.isIntersectingViewport();
 
             expect(visible).toBe(true);
