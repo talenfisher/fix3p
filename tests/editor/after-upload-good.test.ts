@@ -103,6 +103,7 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
                 let input = await page.waitForSelector(selector);
                 await input.type(name, { delay: 200 });
 
+                await sleep(200);
                 let manifestValue = await page.evaluate(`
                     (function() {
                         let manifest = fix3p.editor.file.manifest;
