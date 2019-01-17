@@ -34,8 +34,9 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
         });
 
         it("Clicking the Record2 tab should make Record2 visible", async () => {
-            (await page.$(`div.tab:nth-of-type(2)`)).click();
+            (await page.waitForSelector(`div.tab:nth-of-type(2)`)).click();
             
+            await sleep(200);
             let el = await page.waitForSelector(`[data-tag="Record2"]`);
             let visible = await el.isIntersectingViewport();
             
@@ -43,8 +44,9 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
         });
 
         it("Clicking the Record3 tab should make Record3 visible", async () => {
-            (await page.$(`div.tab:nth-of-type(3)`)).click();
+            (await page.waitForSelector(`div.tab:nth-of-type(3)`)).click();
 
+            await sleep(200);
             let el = await page.waitForSelector(`[data-tag="Record3"]`);
             let visible = await el.isIntersectingViewport();
 
@@ -52,9 +54,9 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
         });
 
         it("Clicking the Record4 tab should make Record4 visible", async () => {
-            (await page.$(`div.tab:nth-of-type(4)`)).click();
+            (await page.waitForSelector(`div.tab:nth-of-type(4)`)).click();
 
-            await sleep(1000);
+            await sleep(200);
             let el = await page.$(`[data-tag="Record4"]`);
             let visible = await el.isIntersectingViewport();
 
@@ -62,12 +64,12 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
         });
 
         it("Clicking back to the Record1 tab should make Record1 visible again", async () => {
-            (await page.$(`div.tab:nth-of-type(4)`)).click();
+            (await page.waitForSelector(`div.tab:nth-of-type(4)`)).click();
 
-            await sleep(1000);
-            (await page.$(`div.tab:nth-of-type(1)`)).click();
+            await sleep(200);
+            (await page.waitForSelector(`div.tab:nth-of-type(1)`)).click();
 
-            await sleep(1000);
+            await sleep(200);
             let el = await page.$(`[data-tag="Record1"]`);
             let visible = await el.isIntersectingViewport();
 
