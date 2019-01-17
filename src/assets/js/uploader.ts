@@ -44,9 +44,11 @@ export default class Uploader {
         
         let loading = new Popup(`Loading...`, ["loading"]);
         loading.display();
-
+        
         try {
-            fix3p.X3P = await new X3P({ file });
+            let x3p = await new X3P({ file });
+            loading.hide(true);
+            fix3p.editor.display(x3p);
 
         } catch(x3pexception) {
             loading.hide(true);
@@ -54,13 +56,10 @@ export default class Uploader {
             let error = new Popup(`<i class="fas fa-exclamation-triangle"></i> Please upload a valid X3P file.`, ["upload-error"]);
             error.display(2, true);
 
-            this.input.value = "";
             console.error(x3pexception);
-            return;
+        } finally {
+            this.input.value = "";
         }
-
-        loading.hide(true);
-        fix3p.editor.display(fix3p.X3P);
     }
   
     /**

@@ -15,7 +15,6 @@
     "ify-loader": "^1.1.0",
     "jszip": "^3.1.5",
     "ndarray": "^1.0.18",
-    "ndarray-show": "^2.0.0",
     "x3p.js": "^0.2.5"
   },
   "devDependencies": {

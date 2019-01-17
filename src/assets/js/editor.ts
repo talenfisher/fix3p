@@ -1,9 +1,9 @@
 import { X3P } from "x3p.js";
 import Stage from "./stage";
+import Popup from "./popup";
+import { clearCache } from "typedarray-pool";
 
 declare var fix3p: any;
-
-const DOWNLOAD_BUTTON = '<a href="#" class="tab"><i class="fas fa-download"></i> Download</a>';
 
 const INPUT_TRANSFORMS = { 
     date: "datetime-local" 
@@ -21,6 +21,7 @@ export default class Editor {
     private canvas: Element;
     private backbtn: Element;
     private count: number;
+    private file?: X3P;
 
     /**
      * Constructs a new editor
@@ -41,7 +42,7 @@ export default class Editor {
      * Clears the contents of the <nav> and <main> elements
      */
     clear() {
-        this.nav.innerHTML = DOWNLOAD_BUTTON;
+        this.nav.innerHTML = '';
         this.main.innerHTML = '';
     }
 
@@ -63,6 +64,7 @@ export default class Editor {
     generate(manifest) {
         this.count = 0;
         this.clear();
+        this.setupDownloadButton();
         this.generateIterator(manifest, this.main);
     }
 
@@ -173,6 +175,7 @@ export default class Editor {
      * @param {DOMDocument} manifest a parsed main.xml file from within an X3P
      */
     display(x3p: X3P) {
+        this.file = x3p;
         let manifest = x3p.manifest.getTree();
         
         // remove parser error if present
@@ -218,8 +221,48 @@ export default class Editor {
      */
     close() {
         this.stage.clear();
-        fix3p.X3P = null;
+        this.file = null;
         this.clear();
+        
         fix3p.uploader.display();
+        clearCache(); // buffer allocation fails next time, unless the typedarray-pool cache is cleared
+    }
+
+    async download(e) {
+        e.preventDefault();
+
+        this.file.save();
+        
+        let popup = new Popup("Compressing...");
+        popup.display();
+
+        await this.file.download();
+        popup.update(`
+            Continue editing this file? 
+            <div class="popup-btns">
+                <div id="continue-yes" class="popup-btn">Yes</div>
+                <div id="continue-no" class="popup-btn">No</div>
+            </div>
+        `);
+        
+        let yes = popup.el.querySelector("#continue-yes") as HTMLElement;
+        yes.onclick = e => popup.hide(true);
+
+        let no = popup.el.querySelector("#continue-no") as HTMLElement;
+        no.onclick = e => { 
+            popup.hide(true);
+            this.close();
+        };
+    }
+
+    private setupDownloadButton() {
+        let link = document.createEasy("a", {
+            props: { href: "#" },
+            classes: [ "tab" ]
+        }) as HTMLElement;
+
+        link.innerHTML = `<i class="fas fa-download"></i> Download</a>`;
+        link.onclick = this.download.bind(this);
+        this.nav.appendChild(link);
     }
 }
