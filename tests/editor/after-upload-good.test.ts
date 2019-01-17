@@ -95,14 +95,20 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
 
                 const name = "John Doe";
                 const selector = `[data-tag="Creator"] input`;
-                await sleep(1000);
-
+                
+                await page.waitForSelector(selector);
                 await page.evaluate(`document.querySelector('${selector}').value = ""`);
 
                 let input = await page.waitForSelector(selector);
                 await input.type(name, { delay: 200 });
 
-                let manifestValue = await page.evaluate(`fix3p.X3P.manifest.get("Creator")`);
+                let manifestValue = await page.evaluate(`
+                    (function() {
+                        let manifest = fix3p.editor.file.manifest;
+                        return manifest.get("Creator");
+                    })();
+                `);
+
                 expect(manifestValue).toBe(name);
             });
 
