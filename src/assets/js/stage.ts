@@ -10,26 +10,26 @@ export default class Stage {
     private el: HTMLElement;
     private canvas: HTMLCanvasElement;
     private fullscreenBtn: HTMLElement;
+    private paintBtn: HTMLElement;
     private renderer: Renderer;
     private [$file]?: X3P;
 
     constructor(options: StageOptions) {
         this.el = options.el;
         this.canvas = this.el.querySelector("canvas");
+
         this.setupFullscreenBtn();
+        this.setupPaintBtn();
+
         window.onresize = (e) => this.adjust();
     }
 
     public get enabled() {
-        return this.el.hasAttribute("disabled");
+        return !this.el.hasAttribute("disabled");
     }
 
     public set enabled(enabled: boolean) {
-        if(enabled) {
-            this.el.removeAttribute("disabled");
-        } else {
-            this.el.setAttribute("disabled", "disabled");
-        }
+        enabled ? this.el.removeAttribute("disabled") : this.el.setAttribute("disabled", "disabled");
     }
 
     public get file() {
@@ -63,6 +63,20 @@ export default class Stage {
         document.onfullscreenchange = (e) => {
             document.fullscreenElement === null ? btn.classList.remove("active") : btn.classList.add("active");
             this.adjust();
+        }
+    }
+
+    private setupPaintBtn() {
+        let btn = this.paintBtn = this.el.querySelector(".fa-paint-brush");
+
+        btn.onclick = (e) => {
+            if(!this.enabled || !this.renderer) return;
+            
+            let classList = btn.classList;
+            let renderer = this.renderer;
+
+            classList.toggle("active");
+            renderer.mode = classList.contains("active") ? "still" : "normal";
         }
     }
 
