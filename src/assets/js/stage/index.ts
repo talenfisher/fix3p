@@ -1,4 +1,5 @@
 import { X3P, Renderer } from "x3p.js";
+import Paint from "./paint";
 
 const $file = Symbol();
 
@@ -7,20 +8,21 @@ interface StageOptions {
 }
 
 export default class Stage {
-    private el: HTMLElement;
-    private canvas: HTMLCanvasElement;
+    public el: HTMLElement;
+    public canvas: HTMLCanvasElement;
+    public renderer: Renderer;
+
     private fullscreenBtn: HTMLElement;
     private paintBtn: HTMLElement;
-    private renderer: Renderer;
+    private paint: Paint;
     private [$file]?: X3P;
 
     constructor(options: StageOptions) {
         this.el = options.el;
         this.canvas = this.el.querySelector("canvas");
+        this.paint = new Paint({ stage: this });
 
         this.setupFullscreenBtn();
-        this.setupPaintBtn();
-
         window.onresize = (e) => this.adjust();
     }
 
@@ -39,6 +41,7 @@ export default class Stage {
     public set file(x3p: X3P) {
         this[$file] = x3p;
         this.renderer = x3p.render(this.canvas);
+        this.paint.update();
     }
 
     public clear() {
@@ -50,6 +53,9 @@ export default class Stage {
         if(this[$file]) {
             this[$file] = null;
         }
+
+        let paintBtn = this.paint.btn;
+        paintBtn.classList.remove("active");
     }
 
     private setupFullscreenBtn() {
@@ -63,20 +69,6 @@ export default class Stage {
         document.onfullscreenchange = (e) => {
             document.fullscreenElement === null ? btn.classList.remove("active") : btn.classList.add("active");
             this.adjust();
-        }
-    }
-
-    private setupPaintBtn() {
-        let btn = this.paintBtn = this.el.querySelector(".fa-paint-brush");
-
-        btn.onclick = (e) => {
-            if(!this.enabled || !this.renderer) return;
-            
-            let classList = btn.classList;
-            let renderer = this.renderer;
-
-            classList.toggle("active");
-            renderer.mode = classList.contains("active") ? "still" : "normal";
         }
     }
 

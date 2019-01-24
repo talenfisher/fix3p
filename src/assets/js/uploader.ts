@@ -4,7 +4,7 @@ import Popup from "./popup";
 declare var fix3p;
 
 export default class Uploader {
-    private label: HTMLElement;
+    private label: HTMLElement; 
     private input: HTMLInputElement;
 
     /**

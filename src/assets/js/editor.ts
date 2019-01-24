@@ -231,7 +231,7 @@ export default class Editor {
     async download(e) {
         e.preventDefault();
 
-        this.file.save();
+        await this.file.save();
         
         let popup = new Popup("Compressing...");
         popup.display();
