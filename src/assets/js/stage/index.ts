@@ -23,7 +23,7 @@ export default class Stage {
         this.paint = new Paint({ stage: this });
 
         this.setupFullscreenBtn();
-        window.onresize = (e) => this.adjust();
+        window.onresize = (e) => this.adjustCanvasSize();
     }
 
     public get enabled() {
@@ -68,26 +68,12 @@ export default class Stage {
 
         document.onfullscreenchange = (e) => {
             document.fullscreenElement === null ? btn.classList.remove("active") : btn.classList.add("active");
-            this.adjust();
+            this.adjustCanvasSize();
         }
-    }
-
-    private adjust() {
-        this.adjustCanvasSize();
-        this.adjustPixelRatio();
     }
 
     private adjustCanvasSize() {
         this.canvas.setAttribute("width", this.canvas.offsetWidth.toString());
         this.canvas.setAttribute("height", this.canvas.offsetHeight.toString());
-    }
-
-    private adjustPixelRatio() {
-        if(!this.renderer) return;
-
-        let scene = this.renderer.scene;
-        let pixelRatio = this.canvas.width / this.canvas.height;
-
-        scene.update({ pixelRatio });
     }
 }
