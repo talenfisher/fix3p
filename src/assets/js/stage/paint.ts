@@ -6,6 +6,7 @@ interface PaintOptions {
 }
 
 const DEFAULT_COLOR = "#1f376c";
+const DEFAULT_COLOR_RGB = "rgb(31, 55, 108)";
 
 export default class Paint {
     public btn: HTMLElement;
@@ -67,9 +68,14 @@ export default class Paint {
     public update() {
         let canvas = this.canvas;
         this.brush = canvas ? new Brush({ canvas, size: 50, color: DEFAULT_COLOR, nolisteners: true }) : undefined;
-        
+        this.color.input = DEFAULT_COLOR;
+
         let overlay = this.color.overlay as HTMLElement;
         overlay.style.backgroundColor = DEFAULT_COLOR;
+        
+        let annotation = this.annotation;
+        annotation.value = (this.file) ? this.file.mask.annotations[DEFAULT_COLOR] : "";
+        annotation.style.backgroundColor = DEFAULT_COLOR_RGB;
     }
 
     private setupListeners() {
@@ -82,6 +88,7 @@ export default class Paint {
             active ? this.attachListeners() : this.detachListeners();
         }
 
+        // color picker
         let input = this.color.input;
         let overlay = this.color.overlay;
         input.value = DEFAULT_COLOR;
@@ -92,6 +99,28 @@ export default class Paint {
             this.annotation.style.backgroundColor = input.value;
             this.annotation.value = this.file.mask.annotations[input.value] || "";
         }
+
+        this.annotation.onkeyup = e => {
+            let annotations = this.file.mask.annotations;
+        
+            let color = this.rgbToHex(this.annotation.style.backgroundColor);
+            let value = this.annotation.value;    
+            
+            annotations[color] = value;
+        }
+    }
+
+    private rgbToHex(rgb) {
+        let color = "#";
+        rgb = rgb.replace("rgb(", "");
+        rgb = rgb.replace(")", "");
+        
+        for(let component of rgb.split(",")) {
+            component = component.trim();
+            color += Number(component).toString(16);
+        }
+
+        return color;
     }
 
     private attachListeners() {
