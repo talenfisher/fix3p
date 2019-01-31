@@ -1,0 +1,29 @@
+.input-color {
+    position: relative;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    vertical-align: middle;
+
+    .input-overlay { 
+        pointer-events: none;
+        cursor: pointer;
+        z-index: 1;
+        border-radius: 100%;
+        border: 2px solid $primaryColor;
+    }
+
+    input { 
+        z-index: 0; 
+        opacity: 0.1;
+    }
+
+    .input-overlay, &:before, input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        cursor: pointer;
+    }
+}

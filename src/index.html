@@ -44,14 +44,24 @@
                     </nav>
 
                     <div class="row">
-                        <div class="stage">
+                        <div class="stage" data-mode="normal">
                             <div class="pane">
                                 <div class="pane-main-tray">
-                                    <i class="fas fa-paint-brush"></i>
-                                    <i class="fas fa-expand fullscreen-btn"></i>
+                                    <i class="fas fa-paint-brush pane-paint-btn"></i>
+                                    <i class="fas fa-expand fullscreen-btn pane-fs-btn"></i>
+                                </div>
+                                <div class="pane-paint-tray">
+                                    <span>
+                                        <label for="pane-paint-color">Color: </label>
+                                        <span class="input input-color">
+                                            <span class="input-overlay"></span>
+                                            <input type="color" id="pane-paint-color">
+                                        </span>
+                                    </span>
                                 </div>
                             </div>
                             <canvas id="visual" height="500" width="1200"></canvas>
+                            <input id="annotation" placeholder="Type Annotation Here">
                         </div>
                         <main></main>
                     </div>

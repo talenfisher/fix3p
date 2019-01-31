@@ -3,9 +3,11 @@ import Paint from "./paint";
 
 const $file = Symbol();
 
-interface StageOptions {
+export interface StageOptions {
     el: HTMLElement;
 }
+
+export type MODES = "normal" | "paint";
 
 export default class Stage {
     public el: HTMLElement;
@@ -23,7 +25,6 @@ export default class Stage {
         this.paint = new Paint({ stage: this });
 
         this.setupFullscreenBtn();
-        window.onresize = (e) => this.adjustCanvasSize();
     }
 
     public get enabled() {
@@ -34,6 +35,14 @@ export default class Stage {
         enabled ? this.el.removeAttribute("disabled") : this.el.setAttribute("disabled", "disabled");
     }
 
+    public get mode() {
+        return this.el.getAttribute("data-mode");
+    }
+
+    public set mode(value: string) {
+        this.el.setAttribute("data-mode", value);
+    }
+
     public get file() {
         return this[$file];
     }
@@ -42,6 +51,13 @@ export default class Stage {
         this[$file] = x3p;
         this.renderer = x3p.render(this.canvas);
         this.paint.update();
+    }
+
+    public toggleMode(mode: MODES) {
+        let currentMode = this.mode;
+        let newMode = currentMode === mode ? "normal" : mode;
+        this.mode = newMode;
+        return newMode === mode;
     }
 
     public clear() {
@@ -68,12 +84,6 @@ export default class Stage {
 
         document.onfullscreenchange = (e) => {
             document.fullscreenElement === null ? btn.classList.remove("active") : btn.classList.add("active");
-            this.adjustCanvasSize();
         }
-    }
-
-    private adjustCanvasSize() {
-        this.canvas.setAttribute("width", this.canvas.offsetWidth.toString());
-        this.canvas.setAttribute("height", this.canvas.offsetHeight.toString());
     }
 }
