@@ -25,6 +25,8 @@
             </header>
 
             <form> 
+
+                <!-- Uploader -->
                 <div class="upload screen">
                     <input type="file" name="file" id="file">
                     <label for="file">
@@ -33,6 +35,8 @@
                         <small>or drag one here</small>
                     </label>
                 </div>
+
+                <!-- Editor -->
                 <div class="view screen" data-view="1">
                     <div class="back"><i class="fas fa-times"></i> Close</div>
                     <nav>
@@ -44,11 +48,19 @@
                     </nav>
 
                     <div class="row">
+
+                        <!-- Stage Section -->
                         <div class="stage" data-mode="normal">
+
+                            <!-- Stage Pane / Header -->
                             <div class="pane">
                                 <div class="pane-main-tray">
-                                    <i class="fas fa-paint-brush pane-paint-btn"></i>
-                                    <i class="fas fa-expand fullscreen-btn pane-fs-btn"></i>
+                                    <i class="fas fa-paint-brush pane-paint-btn">
+                                        <span class="tooltip">Annotate</span>
+                                    </i>
+                                    <i class="fas fa-expand fullscreen-btn pane-fs-btn">
+                                        <span class="tooltip">Fullscreen</span>
+                                    </i>
                                 </div>
                                 <div class="pane-paint-tray">
                                     <span>
@@ -60,9 +72,13 @@
                                     </span>
                                 </div>
                             </div>
+
+                            <!-- Drawing Area -->
                             <canvas id="visual" height="500" width="1200"></canvas>
                             <input id="annotation" placeholder="Type Annotation Here">
                         </div>
+
+                        <!-- Main Editing Section -->
                         <main></main>
                     </div>
                 </div>

@@ -70,8 +70,7 @@ export default class Stage {
             this[$file] = null;
         }
 
-        let paintBtn = this.paint.btn;
-        paintBtn.classList.remove("active");
+        this.mode = "normal";
     }
 
     private setupFullscreenBtn() {

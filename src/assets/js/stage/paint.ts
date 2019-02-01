@@ -74,7 +74,7 @@ export default class Paint {
         overlay.style.backgroundColor = DEFAULT_COLOR;
         
         let annotation = this.annotation;
-        annotation.value = (this.file) ? this.file.mask.annotations[DEFAULT_COLOR] : "";
+        annotation.value = (this.file && this.file.mask.annotations[DEFAULT_COLOR]) ? this.file.mask.annotations[DEFAULT_COLOR] : "";
         annotation.style.backgroundColor = DEFAULT_COLOR_RGB;
     }
 

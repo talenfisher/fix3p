@@ -78,7 +78,7 @@ export default class Editor {
         for(let child of manifest.children) {
             let el = document.createEasy("div", { attrs: { "data-tag": child.tagName } });
             
-            if(child.children.length > 0) {
+            if(child.children.length > 0 || child.getAttribute("type") === "section") {
                 el = this.generateIterator(child, el);
 
                 // record headings should be tabs instead
@@ -86,7 +86,9 @@ export default class Editor {
                 else el.insertBefore(this.createHeading(child.tagName), el.children[0]);
     
             } else {
-                el.appendChild(this.createLabel(child.tagName, "x3p$"+this.count));
+                let label = child.tagName === "Annotation" ? child.getAttribute("color") : child.tagName;
+
+                el.appendChild(this.createLabel(label, "x3p$"+this.count));
                 el.appendChild(this.createInput("x3p$"+this.count, child, child.hasAttribute("disabled")));
                 this.count++;
             }
@@ -207,6 +209,7 @@ export default class Editor {
         let result = "";
         for(let i = 0; i < label.length; i++) {
             if(i !== 0 && 
+                isNaN(label[i] as unknown as number) && 
                 label[i] === label[i].toUpperCase() && 
                 label[i - 1] === label[i - 1].toLowerCase()) result += " "; // CX, CY don't get spaced
     
