@@ -1,11 +1,7 @@
-import XMLBuilder from "./xmlbuilder";
 import Uploader from "./uploader";
 import Editor from "./editor";
 import Popup from "./popup";
-import md5 from "blueimp-md5";
 import axios from "axios";
-import X3P from "./x3p";
-import { canvasToBlob } from "./functions";
 
 import "fullscreen-api-polyfill";
 import "./ext";
@@ -19,11 +15,10 @@ window.fix3p = {
     render: true
 };
 
-
 /**
  * Check if loaded in chrome extension
  */
-try {
+try { 
     if(typeof window.chrome.runtime.id !== "undefined") {
         fix3p.extLoaded = true;
     }
@@ -32,9 +27,9 @@ try {
 }
 
 (async function main() {
-    fix3p.uploader = new Uploader;
+    fix3p.uploader = new Uploader();
     fix3p.uploader.display();
-    fix3p.editor = new Editor;
+    fix3p.editor = new Editor();
 
     let popup = new Popup("");
     try {
@@ -45,55 +40,22 @@ try {
             popup.update("Reading file...");
             popup.display();
             
-            let contents = (await axios.get(decodeURIComponent(file), { responseType: "blob" })).data;
+            file = decodeURIComponent(file);
+            let contents = (await axios.get(file, { responseType: "blob" })).data;
             fix3p.uploader.read({ 
                 dataTransfer: { 
-                    files: [ new File([contents], "file.x3p") ]
+                    files: [ new File([ contents ], "file.x3p") ]
                 } 
             });
-
-            popup.hide(true);
         }
 
+        popup.hide(true);
     } catch(exception) {
         popup.update("Error reading X3P file.");
         popup.display(2, true);
         console.error(exception);
     }
 })();
-
-
-// setup tabs
-document.addEventListener("click", async e => {
-    if((<Element>e.target).matches("a.tab")) { 
-        e.preventDefault();
-
-        let builder = new XMLBuilder(document.querySelector(".view main"));
-        let contents = builder.toString();
-
-        fix3p.X3P.update("bindata/texture.jpeg", await canvasToBlob(fix3p.X3P.surface.texture.el));
-        fix3p.X3P.update("main.xml", contents);
-        fix3p.X3P.update("md5checksum.hex", md5(contents)+" *main.xml");
-        
-        let popup = new Popup("Compressing...");
-        popup.display();
-
-        await fix3p.X3P.download();
-        popup.update(`Continue editing this file? <div class="popup-btns"><div id="continue-yes" class="popup-btn">Yes</div><div id="continue-no" class="popup-btn">No</div></div>`);
-        
-        popup.el.querySelector("#continue-yes").addEventListener("click", e => {
-            popup.hide(true);
-        });
-
-        popup.el.querySelector("#continue-no").addEventListener("click", e => {
-            popup.hide(true);
-            fix3p.editor.close();
-        });
-
-    } else if((<Element>e.target).matches(".tab:not(a)")) {
-        document.querySelector(".view").setAttribute("data-view", (<Element>e.target).index().toString());
-    }
-});
 
 window.addEventListener("keydown", e => {
     if((e.ctrlKey || e.metaKey) && e.which === 83)  {

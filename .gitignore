@@ -1,6 +1,7 @@
 node_modules/
 .vscode/
 src/assets/dist/
+src/worker*
 extension.zip
 .cache/
 tests/data/

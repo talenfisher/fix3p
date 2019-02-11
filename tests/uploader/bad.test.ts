@@ -6,7 +6,7 @@ for(let file of readdirSync(resolve(__dirname, "../data/bad/"))) {
         var input;
 
         beforeEach(async () => {
-            await page.goto("http://localhost:8080/index.html");
+            await page.goto("http://localhost:1432/index.html");
             page.evaluate(`fix3p.render = false;`);
             input = await page.$(".upload input");
         });
