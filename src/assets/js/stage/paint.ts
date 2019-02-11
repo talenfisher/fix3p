@@ -75,7 +75,7 @@ export default class Paint {
         
         let annotation = this.annotation;
         annotation.value = (this.file && this.file.mask.annotations[DEFAULT_COLOR]) ? this.file.mask.annotations[DEFAULT_COLOR] : "";
-        annotation.style.backgroundColor = DEFAULT_COLOR_RGB;
+        annotation.style.color = DEFAULT_COLOR_RGB;
     }
 
     private setupListeners() {
@@ -96,14 +96,13 @@ export default class Paint {
             this.brush.color = input.value;
             overlay.style.backgroundColor = input.value;
             
-            this.annotation.style.backgroundColor = input.value;
+            this.annotation.style.color = input.value;
             this.annotation.value = this.file.mask.annotations[input.value] || "";
         }
 
         this.annotation.onkeyup = e => {
             let annotations = this.file.mask.annotations;
-        
-            let color = this.rgbToHex(this.annotation.style.backgroundColor);
+            let color = this.rgbToHex(this.annotation.style.color);
             let value = this.annotation.value;    
             
             annotations[color] = value;

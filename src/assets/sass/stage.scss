@@ -108,6 +108,7 @@
         -webkit-appearance: none;
         appearance: none;
         border: none;
+        border-bottom: 5px solid;
         position: absolute;
         z-index: 2;
         left: 50%;
@@ -115,12 +116,12 @@
         bottom: 5%;
         min-width: 20%;
         font-size: 18pt;
+        font-weight: bold;
         padding: 0 15px;
-        border-radius: 25px;
         line-height: 50px;
         text-align: center;
-        background-color: $primaryColor;
-        color: white;
+        color: $primaryColor;
+        background: none;
         opacity: 0;
         pointer-events: none;
         transition: opacity .5s;

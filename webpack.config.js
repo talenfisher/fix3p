@@ -18,7 +18,7 @@ for(let file of fs.readdirSync(SRC_ROOT)) {
 }
 
 module.exports = {
-    mode: 'production',
+    mode: process.env.NODE_ENV !== "development" ? "production" : "development",
     entry: {
         [workerName]: `${X3PJS_PATH}/${workerName}.js`,
         "fix3p.bundle": path.resolve(__dirname, 'src/assets/js/main.ts'),

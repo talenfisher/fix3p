@@ -76,7 +76,13 @@ export default class Editor {
      */
     generateIterator(manifest, target) {
         for(let child of manifest.children) {
-            let el = document.createEasy("div", { attrs: { "data-tag": child.tagName } });
+
+            let attrs = { "data-tag": child.tagName };
+            for(let name of child.getAttributeNames()) {
+                attrs[`data-${name}`] = child.getAttribute(name);
+            }
+
+            let el = document.createEasy("div", { attrs });
             
             if(child.children.length > 0 || child.getAttribute("type") === "section") {
                 el = this.generateIterator(child, el);
@@ -152,7 +158,7 @@ export default class Editor {
      * @param {boolean} disabled whether the input should be disabled or not
      * @return {Node} the resulting input
      */
-    createInput(id, node, disabled = false) {
+    createInput(id, node: HTMLElement, disabled = false) {
         let typeName = node.getAttribute("type");
         let type = typeName in INPUT_TRANSFORMS ? INPUT_TRANSFORMS[node.getAttribute("type")] : "text";
 
