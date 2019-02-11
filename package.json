@@ -46,7 +46,7 @@
     "clean": "rm -rf src/assets/dist/ src/worker* .cache",
     "build:sass": "node-sass --output-style compressed src/assets/sass/main.scss src/assets/dist/fix3p.bundle.css",
     "build:js": "webpack && mv src/assets/dist/worker* src",
-    "build": "npm run build:sass && webpack",
+    "build": "npm run build:sass && npm run build:js",
     "watch:sass": "watch 'npm run build:sass' src/assets/sass",
     "watch:js": "watch 'npm run build:js' src/assets/js",
     "watch": "concurrently npm:watch:js npm:watch:sass",
