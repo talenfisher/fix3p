@@ -1,10 +1,11 @@
-import jszip from "jszip";
-import X3P from "./x3p";
+import X3P from "x3p.js";
 import Popup from "./popup";
 
-let parser = new DOMParser();
+declare var fix3p;
 
 export default class Uploader {
+    private label: HTMLElement; 
+    private input: HTMLInputElement;
 
     /**
      * Constructs a new uploader view
@@ -41,22 +42,26 @@ export default class Uploader {
 
         let file = (!byclick) ? e.dataTransfer.files[0] : this.input.files[0];
         
+        let loading = new Popup(`Loading...`, ["loading"]);
+        loading.display();
+        
         try {
-            let zip = await jszip().loadAsync(file);
-            fix3p.X3P = new X3P(zip, file.name);
+            let x3p = await new X3P({ file });
+            loading.hide(true);
+            fix3p.editor.display(x3p);
 
         } catch(x3pexception) {
-            let error = new Popup(`<i class="fas fa-exclamation-triangle"></i> Please upload a valid X3P file.`);
+            loading.hide(true);
+
+            let error = new Popup(`<i class="fas fa-exclamation-triangle"></i> Please upload a valid X3P file.`, ["upload-error"]);
             error.display(2, true);
-            this.input.value = "";
+
             console.error(x3pexception);
-            return;
+        } finally {
+            this.input.value = "";
         }
-
-        let manifest = await fix3p.X3P.retrieve("main.xml");
-        fix3p.editor.display(parser.parseFromString(manifest, "application/xml"));
     }
-
+  
     /**
      * Displays the uploader screen
      */
