@@ -142,7 +142,9 @@ export default class Paint {
         
         for(let component of rgb.split(",")) {
             component = component.trim();
-            color += Number(component).toString(16);
+            let hex = Number(component).toString(16);
+
+            color += hex.length === 1 ? `0${hex}` : hex;
         }
 
         return color;
