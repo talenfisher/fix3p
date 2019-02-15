@@ -74,7 +74,7 @@ export default class Editor {
      * @param {Node} manifest root element of the main.xml file
      * @param {Node} target the target element to attach inputs to
      */
-    generateIterator(manifest, target) {
+    generateIterator(manifest, target) { 
         for(let child of manifest.children) {
 
             let attrs = { "data-tag": child.tagName };

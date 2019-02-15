@@ -121,13 +121,13 @@ export default class Paint {
             editorEl.value = value;
         } else {
             let parent = document.querySelector(`[data-tag="Annotations"]`);
-            let child = this.file.manifest.getNode(`Annotation[color="${color}"]`);
+            let child = { children: [ this.file.manifest.getNode(`Annotation[color="${color}"]`) ] };
 
             if(!parent) {
                 let maskEl = document.querySelector(`[data-tag="Mask"]`);
                 if(!maskEl) return;
 
-                child = this.file.manifest.getNode("Record3 Mask Annotations");
+                child = { children: [ this.file.manifest.getNode("Record3 Mask Annotations") ] };
                 parent = maskEl;
             } 
 
