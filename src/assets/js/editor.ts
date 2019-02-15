@@ -31,7 +31,7 @@ export default class Editor {
         this.el = el;
         this.nav = this.el.querySelector("nav");
         this.main = this.el.querySelector("main");
-        this.stage = new Stage({ el: this.el.querySelector(".stage") });
+        this.stage = new Stage({ el: this.el.querySelector(".stage"), editor: this });
         this.canvas = this.el.querySelector("canvas");
         
         this.backbtn = this.el.querySelector(".back");

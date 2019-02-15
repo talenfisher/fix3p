@@ -1,8 +1,10 @@
 import Stage from "./";
 import { Brush } from "@talenfisher/canvas";
+import Editor from "../editor";
 
 interface PaintOptions {
     stage: Stage;
+    editor: Editor;
 }
 
 const DEFAULT_COLOR = "#1f376c";
@@ -15,6 +17,7 @@ export default class Paint {
     public color: any = {};
     private stage: Stage;
     private brush?: Brush;
+    private editor: Editor;
 
     private listeners = {
         "mousedown": e => this.dispatch.apply(this, [ e, "begin" ]),
@@ -24,6 +27,7 @@ export default class Paint {
 
     constructor(options: PaintOptions) {
         this.stage = options.stage;
+        this.editor = options.editor;
         this.btn = options.stage.el.querySelector(".fa-paint-brush");
         this.tray = options.stage.el.querySelector(".pane-paint-tray");
         this.annotation = options.stage.el.querySelector("#annotation");
@@ -106,6 +110,28 @@ export default class Paint {
             let value = this.annotation.value;    
             
             annotations[color] = value;
+            this.updateEditorAnnotation(color, value);
+        }
+    }
+
+    private updateEditorAnnotation(color: string, value: any) {
+        let editorEl = document.querySelector(`[data-tag="Annotation"][data-color="${color}"] input`) as HTMLInputElement | null;
+            
+        if(editorEl) {
+            editorEl.value = value;
+        } else {
+            let parent = document.querySelector(`[data-tag="Annotations"]`);
+            let child = this.file.manifest.getNode(`Annotation[color="${color}"]`);
+
+            if(!parent) {
+                let maskEl = document.querySelector(`[data-tag="Mask"]`);
+                if(!maskEl) return;
+
+                child = this.file.manifest.getNode("Record3 Mask Annotations");
+                parent = maskEl;
+            } 
+
+            this.editor.generateIterator(child, parent);
         }
     }
 
