@@ -2,6 +2,7 @@ import { X3P } from "x3p.js";
 import Stage from "./stage";
 import Popup from "./popup";
 import { clearCache } from "typedarray-pool";
+import { rgbToHex } from "./color";
 
 declare var fix3p: any;
 
@@ -170,8 +171,13 @@ export default class Editor {
             }
         });    
 
+        let annotationEl = this.stage.paint.annotation;
         input.addEventListener("keyup", function(e) {
             node.innerHTML = this.value;
+
+            if(node.tagName === "Annotation" && node.getAttribute("color") === rgbToHex(annotationEl.style.color)) {
+                annotationEl.value = this.value;
+            }
         });
 
         if(disabled) input.setAttribute("disabled", "disabled");

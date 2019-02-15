@@ -1,6 +1,7 @@
 import Stage from "./";
 import { Brush } from "@talenfisher/canvas";
 import Editor from "../editor";
+import { rgbToHex } from "../color";
 
 interface PaintOptions {
     stage: Stage;
@@ -106,7 +107,7 @@ export default class Paint {
 
         this.annotation.onkeyup = e => {
             let annotations = this.file.mask.annotations;
-            let color = this.rgbToHex(this.annotation.style.color);
+            let color = rgbToHex(this.annotation.style.color);
             let value = this.annotation.value;    
             
             annotations[color] = value;
@@ -133,21 +134,6 @@ export default class Paint {
 
             this.editor.generateIterator(child, parent);
         }
-    }
-
-    private rgbToHex(rgb) {
-        let color = "#";
-        rgb = rgb.replace("rgb(", "");
-        rgb = rgb.replace(")", "");
-        
-        for(let component of rgb.split(",")) {
-            component = component.trim();
-            let hex = Number(component).toString(16);
-
-            color += hex.length === 1 ? `0${hex}` : hex;
-        }
-
-        return color;
     }
 
     private attachListeners() {

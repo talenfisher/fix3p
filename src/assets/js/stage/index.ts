@@ -15,11 +15,11 @@ export default class Stage {
     public el: HTMLElement;
     public canvas: HTMLCanvasElement;
     public renderer: Renderer;
+    public paint: Paint;
 
     private editor: Editor;
     private fullscreenBtn: HTMLElement;
     private paintBtn: HTMLElement;
-    private paint: Paint;
     private [$file]?: X3P;
 
     constructor(options: StageOptions) {
