@@ -2,6 +2,7 @@ import { X3P } from "x3p.js";
 import Stage from "./stage";
 import Popup from "./popup";
 import { clearCache } from "typedarray-pool";
+import { rgbToHex } from "./color";
 
 declare var fix3p: any;
 
@@ -31,7 +32,7 @@ export default class Editor {
         this.el = el;
         this.nav = this.el.querySelector("nav");
         this.main = this.el.querySelector("main");
-        this.stage = new Stage({ el: this.el.querySelector(".stage") });
+        this.stage = new Stage({ el: this.el.querySelector(".stage"), editor: this });
         this.canvas = this.el.querySelector("canvas");
         
         this.backbtn = this.el.querySelector(".back");
@@ -74,7 +75,7 @@ export default class Editor {
      * @param {Node} manifest root element of the main.xml file
      * @param {Node} target the target element to attach inputs to
      */
-    generateIterator(manifest, target) {
+    generateIterator(manifest, target) { 
         for(let child of manifest.children) {
 
             let attrs = { "data-tag": child.tagName };
@@ -170,8 +171,13 @@ export default class Editor {
             }
         });    
 
+        let annotationEl = this.stage.paint.annotation;
         input.addEventListener("keyup", function(e) {
             node.innerHTML = this.value;
+
+            if(node.tagName === "Annotation" && node.getAttribute("color") === rgbToHex(annotationEl.style.color)) {
+                annotationEl.value = this.value;
+            }
         });
 
         if(disabled) input.setAttribute("disabled", "disabled");

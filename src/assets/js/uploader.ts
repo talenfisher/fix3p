@@ -38,6 +38,7 @@ export default class Uploader {
      * @param {boolean} byclick whether or not this was triggered by clicking the upload stage
      */
     async read(e, byclick = false) {
+        e.stopPropagation();
         this.label.classList.remove("hover");
 
         let file = (!byclick) ? e.dataTransfer.files[0] : this.input.files[0];
