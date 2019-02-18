@@ -26,7 +26,7 @@ export default class Editor {
 
     /**
      * Constructs a new editor
-     * @param {Node} el 
+     * @param el the editor node
      */
     constructor(el = document.querySelector(".view")) {
         this.el = el;
@@ -60,23 +60,24 @@ export default class Editor {
     /**
      * Generates the editor from the contents of an X3P file
      * (as opposed to populating existing fields in the editor)
-     * @param {Node} manifest root element of the main.xml file
+     * @param manifest root element of the main.xml file
      */
     generate(manifest) {
         this.count = 0;
         this.clear();
         this.setupDownloadButton();
-        this.generateIterator(manifest, this.main);
+        this.inputify(manifest, this.main);
     }
 
     /**
-     * Loops through the root element of the main.xml file to generate 
-     * elements within the editor view.
-     * @param {Node} manifest root element of the main.xml file
-     * @param {Node} target the target element to attach inputs to
+     * Loops through a tree and creates input elements for each node
+     *      
+     * @param source the source tree to proxy 
+     * @param target the target element to attach inputs to
+     * @return the target element
      */
-    generateIterator(manifest, target) { 
-        for(let child of manifest.children) {
+    inputify(source, target): HTMLElement { 
+        for(let child of source.children) {
 
             let attrs = { "data-tag": child.tagName };
             for(let name of child.getAttributeNames()) {
@@ -86,7 +87,7 @@ export default class Editor {
             let el = document.createEasy("div", { attrs });
             
             if(child.children.length > 0 || child.getAttribute("type") === "section") {
-                el = this.generateIterator(child, el);
+                el = this.inputify(child, el);
 
                 // record headings should be tabs instead
                 if(child.tagName.match(/^Record/g)) this.nav.appendChild(this.createTab(child.tagName));
@@ -108,10 +109,10 @@ export default class Editor {
 
     /**
      * Creates a new tab
-     * @param {string} tabName name of the tab
-     * @return {Node} the resulting tab
+     * @param tabName name of the tab
+     * @return the resulting tab
      */
-    createTab(tabName) {
+    createTab(tabName): HTMLElement {
         let tab = document.createEasy("div", {
             props: { "innerHTML": this.prettify(tabName) },
             attrs: { "data-target": tabName },
@@ -128,22 +129,22 @@ export default class Editor {
 
     /**
      * Creates a new heading
-     * @param {string} headingName name of the heading
-     * @return {Node} the resulting heading
+     * @param headingName name of the heading
+     * @return the resulting heading
      */
-    createHeading(headingName) {
+    createHeading(headingName): HTMLElement {
         return document.createEasy("h3", { 
             props: { 
                 innerHTML: this.prettify(headingName) 
             } 
-        });
+        }) as HTMLElement;
     }
 
     /**
      * Creates a new label
-     * @param {string} labelName the name of the label
-     * @param {string} id the id of the element the label is for
-     * @return {Node} the resulting label
+     * @param labelName the name of the label
+     * @param id the id of the element the label is for
+     * @return the resulting label
      */
     createLabel(labelName, id) {
         return document.createEasy("label", {
@@ -154,10 +155,10 @@ export default class Editor {
 
     /**
      * Creates a new input
-     * @param {string} id the id of the input
-     * @param {Node} node the node to proxy
-     * @param {boolean} disabled whether the input should be disabled or not
-     * @return {Node} the resulting input
+     * @param id the id of the input
+     * @param node the node to proxy
+     * @param disabled whether the input should be disabled or not
+     * @return the resulting input
      */
     createInput(id, node: HTMLElement, disabled = false) {
         let typeName = node.getAttribute("type");
@@ -186,7 +187,7 @@ export default class Editor {
 
     /**
      * Displays the editor
-     * @param {DOMDocument} manifest a parsed main.xml file from within an X3P
+     * @param x3p the x3p to edit
      */
     display(x3p: X3P) {
         this.file = x3p;
@@ -243,6 +244,10 @@ export default class Editor {
         clearCache(); // buffer allocation fails next time, unless the typedarray-pool cache is cleared
     }
 
+    /**
+     * Downloads the X3P file that is currently being edited
+     * @param e the event parameters
+     */
     async download(e) {
         e.preventDefault();
 
@@ -270,6 +275,9 @@ export default class Editor {
         };
     }
 
+    /**
+     * Sets up the download button and its event listeners
+     */
     private setupDownloadButton() {
         let link = document.createEasy("a", {
             props: { href: "#" },

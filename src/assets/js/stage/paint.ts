@@ -169,7 +169,7 @@ export default class Paint {
                 parent = maskEl;
             } 
 
-            this.editor.generateIterator(child, parent);
+            this.editor.inputify(child, parent);
         }
     }
 
