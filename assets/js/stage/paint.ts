@@ -1,8 +1,11 @@
 import Stage from "./";
 import { Brush } from "@talenfisher/canvas";
+import Editor from "../editor";
+import { rgbToHex } from "../color";
 
 interface PaintOptions {
     stage: Stage;
+    editor: Editor;
 }
 
 const DEFAULT_COLOR = "#1f376c";
@@ -12,9 +15,11 @@ export default class Paint {
     public btn: HTMLElement;
     public tray: HTMLElement;
     public annotation: HTMLInputElement;
+    public sizeSlider: HTMLInputElement;
     public color: any = {};
     private stage: Stage;
     private brush?: Brush;
+    private editor: Editor;
 
     private listeners = {
         "mousedown": e => this.dispatch.apply(this, [ e, "begin" ]),
@@ -24,9 +29,11 @@ export default class Paint {
 
     constructor(options: PaintOptions) {
         this.stage = options.stage;
+        this.editor = options.editor;
         this.btn = options.stage.el.querySelector(".fa-paint-brush");
         this.tray = options.stage.el.querySelector(".pane-paint-tray");
         this.annotation = options.stage.el.querySelector("#annotation");
+        this.sizeSlider = options.stage.el.querySelector("#pane-paint-size");
 
         let colorEl = options.stage.el.querySelector(".input-color");
         this.color = {
@@ -61,13 +68,20 @@ export default class Paint {
         return x3p ? x3p.mask.getTexture() : undefined;
     }
 
+    public get maxBrushSize() {
+        let x3p = this.file;
+        return x3p ? (x3p.axes.x.size / x3p.axes.y.size) * 100  : 0;
+    }
+
     public get renderer() {
         return this.stage.renderer;
     }
 
     public update() {
         let canvas = this.canvas;
-        this.brush = canvas ? new Brush({ canvas, size: 50, color: DEFAULT_COLOR, nolisteners: true }) : undefined;
+        let size = this.maxBrushSize * (Number(this.sizeSlider.value) / 100);
+
+        this.brush = canvas ? new Brush({ canvas, size, color: DEFAULT_COLOR, nolisteners: true }) : undefined;
         this.color.input = DEFAULT_COLOR;
 
         let overlay = this.color.overlay as HTMLElement;
@@ -102,24 +116,38 @@ export default class Paint {
 
         this.annotation.onkeyup = e => {
             let annotations = this.file.mask.annotations;
-            let color = this.rgbToHex(this.annotation.style.color);
+            let color = rgbToHex(this.annotation.style.color);
             let value = this.annotation.value;    
             
             annotations[color] = value;
+            this.updateEditorAnnotation(color, value);
+        }
+
+        this.sizeSlider.onchange = e => {
+            if(!this.brush) return;
+            this.brush.size = this.maxBrushSize * (Number(this.sizeSlider.value) / 100);
         }
     }
 
-    private rgbToHex(rgb) {
-        let color = "#";
-        rgb = rgb.replace("rgb(", "");
-        rgb = rgb.replace(")", "");
-        
-        for(let component of rgb.split(",")) {
-            component = component.trim();
-            color += Number(component).toString(16);
-        }
+    private updateEditorAnnotation(color: string, value: any) {
+        let editorEl = document.querySelector(`[data-tag="Annotation"][data-color="${color}"] input`) as HTMLInputElement | null;
+            
+        if(editorEl) {
+            editorEl.value = value;
+        } else {
+            let parent = document.querySelector(`[data-tag="Annotations"]`);
+            let child = { children: [ this.file.manifest.getNode(`Annotation[color="${color}"]`) ] };
 
-        return color;
+            if(!parent) {
+                let maskEl = document.querySelector(`[data-tag="Mask"]`);
+                if(!maskEl) return;
+
+                child = { children: [ this.file.manifest.getNode("Record3 Mask Annotations") ] };
+                parent = maskEl;
+            } 
+
+            this.editor.generateIterator(child, parent);
+        }
     }
 
     private attachListeners() {

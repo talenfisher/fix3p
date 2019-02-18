@@ -23,6 +23,7 @@
         color: $primaryColor;
         border-bottom: 1px solid;
         background: white;
+        z-index: 2;
 
         .pane-main-tray {
             position: relative;
@@ -42,6 +43,14 @@
             white-space: nowrap;
             background: rgba(255, 255, 255, 0.8);
             z-index: 0;
+
+            > span {
+                margin: 0 15px;
+                
+                input {
+                    vertical-align: middle;
+                }
+            }
 
             &.active {
                 height: 50px;
@@ -97,12 +106,15 @@
         }
     }
 
+    .x3p-render {
+        z-index: 1;
+    }
+
     canvas {
         width: 100% !important;
         height: 100% !important;
-        background: white;
+        background: white; 
         z-index: 1;
-        
     }
 
     #annotation {

@@ -58,15 +58,15 @@ try {
 })();
 
 window.addEventListener("keydown", e => {
+    let view = document.querySelector("form").getAttribute("data-view");
+
     if((e.ctrlKey || e.metaKey) && e.which === 83)  {
-        if(document.querySelector("form").getAttribute("data-view") !== "editor") return true;
+        if(view !== "editor") return true;
         e.preventDefault();
         document.querySelector("a.tab").click();
         return false;
 
-    } else if(e.which === 27 && 
-        document.querySelector("form").getAttribute("data-view") === "editor" &&
-        document.fullscreenElement === null) {
+    } else if(e.which === 27 && view === "editor" && document.fullscreenElement === null) {
         e.preventDefault();
         fix3p.editor.close();
         return true;

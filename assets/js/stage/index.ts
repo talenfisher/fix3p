@@ -1,10 +1,12 @@
 import { X3P, Renderer } from "x3p.js";
 import Paint from "./paint";
+import Editor from "../editor";
 
 const $file = Symbol();
 
 export interface StageOptions {
     el: HTMLElement;
+    editor: Editor;
 }
 
 export type MODES = "normal" | "paint";
@@ -13,16 +15,18 @@ export default class Stage {
     public el: HTMLElement;
     public canvas: HTMLCanvasElement;
     public renderer: Renderer;
+    public paint: Paint;
 
+    private editor: Editor;
     private fullscreenBtn: HTMLElement;
     private paintBtn: HTMLElement;
-    private paint: Paint;
     private [$file]?: X3P;
 
     constructor(options: StageOptions) {
         this.el = options.el;
+        this.editor = options.editor;
         this.canvas = this.el.querySelector("canvas");
-        this.paint = new Paint({ stage: this });
+        this.paint = new Paint({ stage: this, editor: this.editor });
 
         this.setupFullscreenBtn();
     }
