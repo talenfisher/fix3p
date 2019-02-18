@@ -44,6 +44,14 @@
             background: rgba(255, 255, 255, 0.8);
             z-index: 0;
 
+            > span {
+                margin: 0 15px;
+                
+                input {
+                    vertical-align: middle;
+                }
+            }
+
             &.active {
                 height: 50px;
             }

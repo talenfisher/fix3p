@@ -15,6 +15,7 @@ export default class Paint {
     public btn: HTMLElement;
     public tray: HTMLElement;
     public annotation: HTMLInputElement;
+    public sizeSlider: HTMLInputElement;
     public color: any = {};
     private stage: Stage;
     private brush?: Brush;
@@ -32,6 +33,7 @@ export default class Paint {
         this.btn = options.stage.el.querySelector(".fa-paint-brush");
         this.tray = options.stage.el.querySelector(".pane-paint-tray");
         this.annotation = options.stage.el.querySelector("#annotation");
+        this.sizeSlider = options.stage.el.querySelector("#pane-paint-size");
 
         let colorEl = options.stage.el.querySelector(".input-color");
         this.color = {
@@ -66,13 +68,20 @@ export default class Paint {
         return x3p ? x3p.mask.getTexture() : undefined;
     }
 
+    public get maxBrushSize() {
+        let x3p = this.file;
+        return x3p ? (x3p.axes.x.size / x3p.axes.y.size) * 100  : 0;
+    }
+
     public get renderer() {
         return this.stage.renderer;
     }
 
     public update() {
         let canvas = this.canvas;
-        this.brush = canvas ? new Brush({ canvas, size: 50, color: DEFAULT_COLOR, nolisteners: true }) : undefined;
+        let size = this.maxBrushSize * (Number(this.sizeSlider.value) / 100);
+
+        this.brush = canvas ? new Brush({ canvas, size, color: DEFAULT_COLOR, nolisteners: true }) : undefined;
         this.color.input = DEFAULT_COLOR;
 
         let overlay = this.color.overlay as HTMLElement;
@@ -112,6 +121,11 @@ export default class Paint {
             
             annotations[color] = value;
             this.updateEditorAnnotation(color, value);
+        }
+
+        this.sizeSlider.onchange = e => {
+            if(!this.brush) return;
+            this.brush.size = this.maxBrushSize * (Number(this.sizeSlider.value) / 100);
         }
     }
 
