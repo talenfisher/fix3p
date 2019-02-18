@@ -1,5 +1,5 @@
 export function rgbToHex(rgb: string) {
-    if(!rgb.match(/rgb\([0-9]+, [0-9]+, [0-9]+\)/g)) return rgb;
+    if(!rgb || !rgb.match(/rgb\([0-9]+, [0-9]+, [0-9]+\)/g)) return rgb;
     
     let color = "#";
     rgb = rgb.replace("rgb(", "");

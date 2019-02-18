@@ -29,6 +29,7 @@ try {
 (async function main() {
     fix3p.uploader = new Uploader();
     fix3p.uploader.display();
+    
     fix3p.editor = new Editor();
 
     let popup = new Popup("");

@@ -16,6 +16,7 @@ export default class Paint {
     public tray: HTMLElement;
     public annotation: HTMLInputElement;
     public sizeSlider: HTMLInputElement;
+    public modeSelector: HTMLSelectElement;
     public color: any = {};
     private stage: Stage;
     private brush?: Brush;
@@ -34,6 +35,7 @@ export default class Paint {
         this.tray = options.stage.el.querySelector(".pane-paint-tray");
         this.annotation = options.stage.el.querySelector("#annotation");
         this.sizeSlider = options.stage.el.querySelector("#pane-paint-size");
+        this.modeSelector = options.stage.el.querySelector("#pane-paint-mode");
 
         let colorEl = options.stage.el.querySelector(".input-color");
         this.color = {
@@ -82,7 +84,8 @@ export default class Paint {
         let size = this.maxBrushSize * (Number(this.sizeSlider.value) / 100);
 
         this.brush = canvas ? new Brush({ canvas, size, color: DEFAULT_COLOR, nolisteners: true }) : undefined;
-        this.color.input = DEFAULT_COLOR;
+        this.brush.fillPolygons = false;
+        this.color.input.value = DEFAULT_COLOR;
 
         let overlay = this.color.overlay as HTMLElement;
         overlay.style.backgroundColor = DEFAULT_COLOR;
@@ -121,12 +124,32 @@ export default class Paint {
             
             annotations[color] = value;
             this.updateEditorAnnotation(color, value);
-        }
+        };
 
         this.sizeSlider.onchange = e => {
             if(!this.brush) return;
             this.brush.size = this.maxBrushSize * (Number(this.sizeSlider.value) / 100);
-        }
+        };
+
+        this.modeSelector.onchange = e => {
+            if(!this.brush) return;
+            switch(this.modeSelector.value) {
+                case "Paint": 
+                    this.brush.fillPolygons = false;
+                    this.brush.color = this.color.input.value;
+                    break;
+
+                case "Lasso":
+                    this.brush.fillPolygons = true;
+                    this.brush.color = this.color.input.value;
+                    break;
+                
+                case "Eraser":
+                    this.brush.fillPolygons = false;
+                    this.brush.color = this.file.manifest.get(`Record3 Mask Background`);
+                    break;
+            }
+        };
     }
 
     private updateEditorAnnotation(color: string, value: any) {
