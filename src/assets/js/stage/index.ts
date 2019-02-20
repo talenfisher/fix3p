@@ -1,5 +1,5 @@
 import { X3P, Renderer } from "x3p.js";
-import Paint from "./paint";
+import Paint from "./paint/index";
 import Editor from "../editor";
 
 const $file = Symbol();
