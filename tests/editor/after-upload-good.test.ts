@@ -91,29 +91,6 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
         });
 
         describe("Labels/Inputs", () => {
-            it("Typing in them should update the corresponding manifest node", async () => {
-                (await page.$(`div.tab:nth-of-type(2)`)).click();
-
-                const name = "John Doe";
-                const selector = `[data-tag="Creator"] input`;
-                
-                await page.waitForSelector(selector);
-                await page.evaluate(`document.querySelector('${selector}').value = ""`);
-
-                let input = await page.waitForSelector(selector);
-                await input.type(name, { delay: 200 });
-
-                await sleep(300); // sometimes fails if we don't wait long enough here (due to typing delay).
-                let manifestValue = await page.evaluate(`
-                    (function() {
-                        let manifest = fix3p.editor.file.manifest;
-                        return manifest.get("Creator");
-                    })();
-                `);
-
-                expect(manifestValue).toBe(name);
-            });
-
             it("Fields that represent a date should be datetime-local inputs", async () => {
                 const selector = `[data-tag="Date"] input`;
 

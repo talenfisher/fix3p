@@ -12,11 +12,10 @@ declare var document: any;
 declare var fix3p: any;
 
 window.fix3p = {
+    session: new Session(),
     extLoaded: false,
     render: true
 };
-
-let session = new Session();
 
 /**
  * Check if loaded in chrome extension
@@ -30,10 +29,10 @@ try {
 }
 
 (async function main() {
-    fix3p.uploader = new Uploader({ session });
+    fix3p.uploader = new Uploader({ session: fix3p.session });
     fix3p.uploader.display();
     
-    fix3p.editor = new Editor({ session });
+    fix3p.editor = new Editor({ session: fix3p.session });
 
     let popup = new Popup("");
     try {
@@ -72,7 +71,7 @@ window.addEventListener("keydown", e => {
 
     } else if(e.which === 27 && view === "editor" && document.fullscreenElement === null) {
         e.preventDefault();
-        session.end();
+        fix3p.session.end();
         return true;
     }
 });
