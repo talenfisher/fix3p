@@ -3,6 +3,7 @@ import Stage from "./stage";
 import Popup from "./popup";
 import { clearCache } from "typedarray-pool";
 import { rgbToHex } from "./color";
+import Session from "./session";
 
 declare var fix3p: any;
 
@@ -14,49 +15,50 @@ const LABEL_TRANSFORMS = {
     MD5ChecksumPointData: "MD5 Checksum"
 };
 
+interface EditorOptions {
+    session: Session;
+}
+
 export default class Editor {
+    private session: Session;
     private el: Element;
     private nav: Element;
     private main: Element;
     private stage: Stage;
-    private canvas: Element;
-    private backbtn: Element;
+    private backbtn: HTMLElement;
     private count: number;
-    private file?: X3P;
 
     /**
      * Constructs a new editor
      * @param el the editor node
      */
-    constructor(el = document.querySelector(".view")) {
-        this.el = el;
+    constructor(options: EditorOptions) {
+        this.session = options.session;
+
+        this.el = document.querySelector(".view");
         this.nav = this.el.querySelector("nav");
         this.main = this.el.querySelector("main");
-        this.stage = new Stage({ el: this.el.querySelector(".stage"), editor: this });
-        this.canvas = this.el.querySelector("canvas");
+        this.stage = new Stage({ 
+            el: this.el.querySelector(".stage"), 
+            editor: this, 
+            session: options.session 
+        });
         
         this.backbtn = this.el.querySelector(".back");
-        this.backbtn.addEventListener("click", e => this.close());
+        this.backbtn.onclick = this.session.end.bind(this.session);
+        
+        this.session.on("start", this.display.bind(this));
+        this.session.on("end", this.reset.bind(this));
     }
 
     /**
      * Clears the contents of the <nav> and <main> elements
      */
-    clear() {
+    reset() {
         this.nav.innerHTML = '';
         this.main.innerHTML = '';
     }
 
-    /**
-     * Resets the values of all input elements in <main>
-     */
-    reset() {
-        for(let node in this.main.querySelectorAll("input")) {
-            //@ts-ignore
-            node.value = "";
-        }
-    }
-    
     /**
      * Generates the editor from the contents of an X3P file
      * (as opposed to populating existing fields in the editor)
@@ -64,7 +66,7 @@ export default class Editor {
      */
     generate(manifest) {
         this.count = 0;
-        this.clear();
+        this.reset();
         this.setupDownloadButton();
         this.inputify(manifest, this.main);
     }
@@ -172,11 +174,11 @@ export default class Editor {
             }
         });    
 
-        let annotationEl = this.stage.paint.annotation;
+        let annotationEl = this.stage.paint.annotationInput;
         input.addEventListener("keyup", function(e) {
             node.innerHTML = this.value;
 
-            if(node.tagName === "Annotation" && node.getAttribute("color") === rgbToHex(annotationEl.style.color)) {
+            if(node.tagName === "Annotation" && node.getAttribute("color") === rgbToHex(annotationEl.color)) {
                 annotationEl.value = this.value;
             }
         });
@@ -190,7 +192,6 @@ export default class Editor {
      * @param x3p the x3p to edit
      */
     display(x3p: X3P) {
-        this.file = x3p;
         let manifest = x3p.manifest.getTree();
         
         // remove parser error if present
@@ -202,11 +203,7 @@ export default class Editor {
         let form = document.querySelector("form");
         form.setAttribute("data-view", "editor");
 
-        if(!fix3p.render) this.stage.enabled = false;
-        else {
-            this.stage.enabled = true;
-            this.stage.file = x3p;
-        }
+        this.stage.enabled = fix3p.render;
     }
 
     /**
@@ -233,30 +230,20 @@ export default class Editor {
     }
 
     /**
-     * Closes the editor
-     */
-    close() {
-        this.stage.clear();
-        this.file = null;
-        this.clear();
-        
-        fix3p.uploader.display();
-        clearCache(); // buffer allocation fails next time, unless the typedarray-pool cache is cleared
-    }
-
-    /**
      * Downloads the X3P file that is currently being edited
      * @param e the event parameters
      */
     async download(e) {
+        if(!this.session.started) return;
         e.preventDefault();
 
-        await this.file.save();
+        let x3p = this.session.x3p;
+        await x3p.save();
         
         let popup = new Popup("Compressing...");
         popup.display();
 
-        await this.file.download();
+        await x3p.download();
         popup.update(`
             Continue editing this file? 
             <div class="popup-btns">
@@ -271,7 +258,7 @@ export default class Editor {
         let no = popup.el.querySelector("#continue-no") as HTMLElement;
         no.onclick = e => { 
             popup.hide(true);
-            this.close();
+            this.reset();
         };
     }
 

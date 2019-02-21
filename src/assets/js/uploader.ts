@@ -1,22 +1,32 @@
 import X3P from "x3p.js";
 import Popup from "./popup";
+import Session from "./session";
 
 declare var fix3p;
+
+interface UploaderOptions {
+    session: Session;
+}
 
 /**
  * The uploader element
  */
 export default class Uploader {
+    private session: Session;
     private label: HTMLElement; 
     private input: HTMLInputElement;
 
     /**
      * Constructs a new uploader view
      */
-    constructor() {
+    constructor(options: UploaderOptions) {
+        this.session = options.session;
+
         this.label = document.querySelector(".upload label");
         this.input = document.querySelector(".upload input");
         this.setupListeners();
+
+        this.session.on("end", this.display.bind(this));
     }
 
     /**
@@ -52,7 +62,7 @@ export default class Uploader {
         try {
             let x3p = await new X3P({ file });
             loading.hide(true);
-            fix3p.editor.display(x3p);
+            this.session.start(x3p);
 
         } catch(x3pexception) {
             loading.hide(true);

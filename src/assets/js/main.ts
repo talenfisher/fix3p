@@ -1,6 +1,7 @@
 import Uploader from "./uploader";
 import Editor from "./editor";
 import Popup from "./popup";
+import Session from "./session";
 import axios from "axios";
 
 import "fullscreen-api-polyfill";
@@ -15,6 +16,8 @@ window.fix3p = {
     render: true
 };
 
+let session = new Session();
+
 /**
  * Check if loaded in chrome extension
  */
@@ -27,10 +30,10 @@ try {
 }
 
 (async function main() {
-    fix3p.uploader = new Uploader();
+    fix3p.uploader = new Uploader({ session });
     fix3p.uploader.display();
     
-    fix3p.editor = new Editor();
+    fix3p.editor = new Editor({ session });
 
     let popup = new Popup("");
     try {
@@ -69,7 +72,7 @@ window.addEventListener("keydown", e => {
 
     } else if(e.which === 27 && view === "editor" && document.fullscreenElement === null) {
         e.preventDefault();
-        fix3p.editor.close();
+        session.end();
         return true;
     }
 });
