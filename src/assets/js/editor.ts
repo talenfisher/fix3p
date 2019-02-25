@@ -3,6 +3,7 @@ import Stage from "./stage";
 import Popup from "./popup";
 import { clearCache } from "typedarray-pool";
 import { rgbToHex } from "./color";
+import Session from "./session";
 
 declare var fix3p: any;
 
@@ -14,69 +15,71 @@ const LABEL_TRANSFORMS = {
     MD5ChecksumPointData: "MD5 Checksum"
 };
 
+interface EditorOptions {
+    session: Session;
+}
+
 export default class Editor {
+    private session: Session;
     private el: Element;
     private nav: Element;
     private main: Element;
     private stage: Stage;
-    private canvas: Element;
-    private backbtn: Element;
+    private backbtn: HTMLElement;
     private count: number;
-    private file?: X3P;
 
     /**
      * Constructs a new editor
-     * @param {Node} el 
+     * @param el the editor node
      */
-    constructor(el = document.querySelector(".view")) {
-        this.el = el;
+    constructor(options: EditorOptions) {
+        this.session = options.session;
+
+        this.el = document.querySelector(".view");
         this.nav = this.el.querySelector("nav");
         this.main = this.el.querySelector("main");
-        this.stage = new Stage({ el: this.el.querySelector(".stage"), editor: this });
-        this.canvas = this.el.querySelector("canvas");
+        this.stage = new Stage({ 
+            el: this.el.querySelector(".stage"), 
+            editor: this, 
+            session: options.session 
+        });
         
         this.backbtn = this.el.querySelector(".back");
-        this.backbtn.addEventListener("click", e => this.close());
+        this.backbtn.onclick = this.session.end.bind(this.session);
+        
+        this.session.on("start", this.display.bind(this));
+        this.session.on("end", this.reset.bind(this));
     }
 
     /**
      * Clears the contents of the <nav> and <main> elements
      */
-    clear() {
+    reset() {
         this.nav.innerHTML = '';
         this.main.innerHTML = '';
     }
 
     /**
-     * Resets the values of all input elements in <main>
-     */
-    reset() {
-        for(let node in this.main.querySelectorAll("input")) {
-            //@ts-ignore
-            node.value = "";
-        }
-    }
-    
-    /**
      * Generates the editor from the contents of an X3P file
      * (as opposed to populating existing fields in the editor)
-     * @param {Node} manifest root element of the main.xml file
+     * @param manifest root element of the main.xml file
      */
     generate(manifest) {
         this.count = 0;
-        this.clear();
+        this.reset();
         this.setupDownloadButton();
-        this.generateIterator(manifest, this.main);
+        this.inputify(manifest, this.main);
     }
 
     /**
-     * Loops through the root element of the main.xml file to generate 
-     * elements within the editor view.
-     * @param {Node} manifest root element of the main.xml file
-     * @param {Node} target the target element to attach inputs to
+     * Loops through a tree and creates input elements for each node
+     *      
+     * @param source the source tree to proxy 
+     * @param target the target element to attach inputs to
+     * @return the target element
      */
-    generateIterator(manifest, target) { 
-        for(let child of manifest.children) {
+    inputify(source, target): HTMLElement { 
+        for(let child of source.children) {
 
             let attrs = { "data-tag": child.tagName };
             for(let name of child.getAttributeNames()) {
@@ -86,7 +89,7 @@ export default class Editor {
             let el = document.createEasy("div", { attrs });
             
             if(child.children.length > 0 || child.getAttribute("type") === "section") {
-                el = this.generateIterator(child, el);
+                el = this.inputify(child, el);
 
                 // record headings should be tabs instead
                 if(child.tagName.match(/^Record/g)) this.nav.appendChild(this.createTab(child.tagName));
@@ -108,10 +111,10 @@ export default class Editor {
 
     /**
      * Creates a new tab
-     * @param {string} tabName name of the tab
-     * @return {Node} the resulting tab
+     * @param tabName name of the tab
+     * @return the resulting tab
      */
-    createTab(tabName) {
+    createTab(tabName): HTMLElement {
         let tab = document.createEasy("div", {
             props: { "innerHTML": this.prettify(tabName) },
             attrs: { "data-target": tabName },
@@ -128,22 +131,22 @@ export default class Editor {
 
     /**
      * Creates a new heading
-     * @param {string} headingName name of the heading
-     * @return {Node} the resulting heading
+     * @param headingName name of the heading
+     * @return the resulting heading
      */
-    createHeading(headingName) {
+    createHeading(headingName): HTMLElement {
         return document.createEasy("h3", { 
             props: { 
                 innerHTML: this.prettify(headingName) 
             } 
-        });
+        }) as HTMLElement;
     }
 
     /**
      * Creates a new label
-     * @param {string} labelName the name of the label
-     * @param {string} id the id of the element the label is for
-     * @return {Node} the resulting label
+     * @param labelName the name of the label
+     * @param id the id of the element the label is for
+     * @return the resulting label
      */
     createLabel(labelName, id) {
         return document.createEasy("label", {
@@ -154,10 +157,10 @@ export default class Editor {
 
     /**
      * Creates a new input
-     * @param {string} id the id of the input
-     * @param {Node} node the node to proxy
-     * @param {boolean} disabled whether the input should be disabled or not
-     * @return {Node} the resulting input
+     * @param id the id of the input
+     * @param node the node to proxy
+     * @param disabled whether the input should be disabled or not
+     * @return the resulting input
      */
     createInput(id, node: HTMLElement, disabled = false) {
         let typeName = node.getAttribute("type");
@@ -171,11 +174,11 @@ export default class Editor {
             }
         });    
 
-        let annotationEl = this.stage.paint.annotation;
+        let annotationEl = this.stage.paint.annotationInput;
         input.addEventListener("keyup", function(e) {
             node.innerHTML = this.value;
 
-            if(node.tagName === "Annotation" && node.getAttribute("color") === rgbToHex(annotationEl.style.color)) {
+            if(node.tagName === "Annotation" && node.getAttribute("color") === rgbToHex(annotationEl.color)) {
                 annotationEl.value = this.value;
             }
         });
@@ -186,10 +189,9 @@ export default class Editor {
 
     /**
      * Displays the editor
-     * @param {DOMDocument} manifest a parsed main.xml file from within an X3P
+     * @param x3p the x3p to edit
      */
     display(x3p: X3P) {
-        this.file = x3p;
         let manifest = x3p.manifest.getTree();
         
         // remove parser error if present
@@ -201,11 +203,7 @@ export default class Editor {
         let form = document.querySelector("form");
         form.setAttribute("data-view", "editor");
 
-        if(!fix3p.render) this.stage.enabled = false;
-        else {
-            this.stage.enabled = true;
-            this.stage.file = x3p;
-        }
+        this.stage.enabled = fix3p.render;
     }
 
     /**
@@ -232,26 +230,20 @@ export default class Editor {
     }
 
     /**
-     * Closes the editor
+     * Downloads the X3P file that is currently being edited
+     * @param e the event parameters
      */
-    close() {
-        this.stage.clear();
-        this.file = null;
-        this.clear();
-        
-        fix3p.uploader.display();
-        clearCache(); // buffer allocation fails next time, unless the typedarray-pool cache is cleared
-    }
-
     async download(e) {
+        if(!this.session.started) return;
         e.preventDefault();
 
-        await this.file.save();
+        let x3p = this.session.x3p;
+        await x3p.save();
         
         let popup = new Popup("Compressing...");
         popup.display();
 
-        await this.file.download();
+        await x3p.download();
         popup.update(`
             Continue editing this file? 
             <div class="popup-btns">
@@ -266,10 +258,13 @@ export default class Editor {
         let no = popup.el.querySelector("#continue-no") as HTMLElement;
         no.onclick = e => { 
             popup.hide(true);
-            this.close();
+            this.reset();
         };
     }
 
+    /**
+     * Sets up the download button and its event listeners
+     */
     private setupDownloadButton() {
         let link = document.createEasy("a", {
             props: { href: "#" },
