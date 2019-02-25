@@ -153,17 +153,15 @@ export default class Paint {
         let brush = this.session.brush;
         let selection = this.session.renderer.selection;
         let mask = this.session.x3p.mask;
-        let texture = mask.getTexture();
+        let texture = this.session.texture;
         let textureSrc = mask.canvas.el;
     
         // @ts-ignore
         if(!selection || !brush[name] || (name !== "begin" && !brush.active)) return;
 
-        let coords = selection.index;
-        let args = [ coords[1], coords[0] ];
         let handler = brush[name];
-        
-        handler.apply(brush, args);
+
+        handler.apply(brush, selection.index);
         texture.setPixels(textureSrc);
         this.session.renderer.drawMesh();
     }

@@ -24,7 +24,7 @@ export default class HistoryButton {
             if(!this.session.started) return;
 
             let canvas = this.session.x3p.mask.canvas;
-            let texture = this.session.x3p.mask.getTexture();
+            let texture = this.session.texture;
             let renderer = this.session.renderer;
 
             canvas[this.type]();

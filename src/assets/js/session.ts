@@ -8,6 +8,7 @@ export interface SessionData {
     renderer?: Renderer;
     brush?: Brush;
     paintColor?: string;
+    texture?: any;
     paintMode?: "Paint" | "Lasso" | "Eraser";
 }
 
@@ -42,12 +43,19 @@ export default class Session extends EventEmitter {
 
     public set renderer(renderer: Renderer) {
         this.data.renderer = renderer;
+        
+        // @ts-ignore -- need to adjust x3p.js declaration to make the gl parameter optional 
+        this.data.texture = this.data.x3p.mask.getTexture();
         this.data.brush = new Brush({ 
             canvas: this.data.x3p.mask.canvas,
             nolisteners: true 
         });
 
         this.emit("render", this.data);
+    }
+
+    public get texture() {
+        return this.data.texture;
     }
 
     public get brush() {
