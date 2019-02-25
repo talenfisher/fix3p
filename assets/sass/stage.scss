@@ -52,6 +52,14 @@
                 }
             }
 
+            .history-controls {
+                float: left;
+                
+                i {
+                    margin: 0;
+                }
+            }
+
             &.active {
                 height: 50px;
             }

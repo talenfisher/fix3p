@@ -1,12 +1,12 @@
 import { X3P, Renderer } from "x3p.js";
-import Paint from "./paint";
+import Paint from "./paint/index";
 import Editor from "../editor";
-
-const $file = Symbol();
+import Session from "../session";
 
 export interface StageOptions {
     el: HTMLElement;
     editor: Editor;
+    session: Session;
 }
 
 export type MODES = "normal" | "paint";
@@ -17,18 +17,23 @@ export default class Stage {
     public renderer: Renderer;
     public paint: Paint;
 
-    private editor: Editor;
+    private session: Session;
     private fullscreenBtn: HTMLElement;
-    private paintBtn: HTMLElement;
-    private [$file]?: X3P;
 
     constructor(options: StageOptions) {
+        this.session = options.session;
         this.el = options.el;
-        this.editor = options.editor;
         this.canvas = this.el.querySelector("canvas");
-        this.paint = new Paint({ stage: this, editor: this.editor });
+        this.paint = new Paint({ 
+            stage: this, 
+            editor: options.editor, 
+            session: this.session 
+        });
 
         this.setupFullscreenBtn();
+
+        this.session.on("start", this.render.bind(this));
+        this.session.on("end", this.reset.bind(this));
     }
 
     public get enabled() {
@@ -47,16 +52,6 @@ export default class Stage {
         this.el.setAttribute("data-mode", value);
     }
 
-    public get file() {
-        return this[$file];
-    }
-
-    public set file(x3p: X3P) {
-        this[$file] = x3p;
-        this.renderer = x3p.render(this.canvas);
-        this.paint.update();
-    }
-
     public toggleMode(mode: MODES) {
         let currentMode = this.mode;
         let newMode = currentMode === mode ? "normal" : mode;
@@ -64,24 +59,20 @@ export default class Stage {
         return newMode === mode;
     }
 
-    public clear() {
-        if(this.renderer) {
-            this.renderer.dispose();
-            this.renderer = null;
-        }
-        
-        if(this[$file]) {
-            this[$file] = null;
-        }
-
+    public reset() {
         this.mode = "normal";
+    }
+
+    private render(x3p) {
+        if(!this.enabled || !this.session.started || !this.session.x3p) return;
+        this.session.renderer = x3p.render(this.canvas);
     }
 
     private setupFullscreenBtn() {
         let btn = this.fullscreenBtn = this.el.querySelector(".fa-expand");
         
         btn.onclick = (e) => {
-            if(!this.enabled) return;
+            if(!this.enabled || !this.session.started) return;
             document.fullscreenElement === null ? this.el.requestFullscreen() : document.exitFullscreen();
         };
 

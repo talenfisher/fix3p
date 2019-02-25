@@ -1,5 +1,11 @@
-export function rgbToHex(rgb: string) {
-    if(!rgb.match(/rgb\([0-9]+, [0-9]+, [0-9]+\)/g)) return rgb;
+/**
+ * Converts an rgb color string to a hexadecimal
+ * 
+ * @param rgb the rgb color value to convert
+ * @return the converted hexadecimal value
+ */
+export function rgbToHex(rgb: string): string {
+    if(!rgb || !rgb.match(/rgb\([0-9]+, [0-9]+, [0-9]+\)/g)) return rgb;
     
     let color = "#";
     rgb = rgb.replace("rgb(", "");
