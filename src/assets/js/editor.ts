@@ -258,7 +258,7 @@ export default class Editor {
         let no = popup.el.querySelector("#continue-no") as HTMLElement;
         no.onclick = e => { 
             popup.hide(true);
-            this.reset();
+            this.session.end();
         };
     }
 

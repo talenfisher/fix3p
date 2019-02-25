@@ -45,11 +45,12 @@ try {
             
             file = decodeURIComponent(file);
             let contents = (await axios.get(file, { responseType: "blob" })).data;
-            fix3p.uploader.read({ 
-                dataTransfer: { 
-                    files: [ new File([ contents ], "file.x3p") ]
-                } 
-            });
+
+            let dataTransfer = new DataTransfer();
+            dataTransfer.items.add(new File([ contents], "file.x3p"));
+
+            let ev = new DragEvent("drop", { dataTransfer });
+            fix3p.uploader.read(ev);
         }
 
         popup.hide(true);
