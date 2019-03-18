@@ -13,7 +13,6 @@ interface UploaderOptions {
  */
 export default class Uploader {
     private session: Session;
-    private logger: Logger;
 
     private label: HTMLElement; 
     private input: HTMLInputElement;
