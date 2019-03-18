@@ -1,4 +1,5 @@
 import Session from "../../session";
+import Logger from "../../logger";
 
 interface UndoButtonOptions {
     el: HTMLElement;
@@ -30,6 +31,7 @@ export default class HistoryButton {
             canvas[this.type]();
             texture.setPixels(canvas.el);
             renderer.drawMesh();
+            Logger.action(`attempted ${this.type}`, this.session.filename);
         };
     }
 }

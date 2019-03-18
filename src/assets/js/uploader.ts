@@ -2,8 +2,7 @@ import X3P from "x3p.js";
 import Popup from "./popup";
 import Session from "./session";
 import { throws, time } from "./decorators";
-
-declare var fix3p;
+import Logger from "./logger";
 
 interface UploaderOptions {
     session: Session;
@@ -14,6 +13,8 @@ interface UploaderOptions {
  */
 export default class Uploader {
     private session: Session;
+    private logger: Logger;
+
     private label: HTMLElement; 
     private input: HTMLInputElement;
     private loadingPopup: Popup;
@@ -27,8 +28,8 @@ export default class Uploader {
         this.label = document.querySelector(".upload label");
         this.input = document.querySelector(".upload input");
         this.loadingPopup = new Popup("Loading...");
-        this.setupListeners();
 
+        this.setupListeners();
         this.session.on("end", this.display.bind(this));
     }
 
@@ -60,19 +61,17 @@ export default class Uploader {
      * @param e event parameters
      * @param byclick whether or not this was triggered by clicking the upload stage
      */
-    @time(5000)
-    @throws({
-        message: "Please upload a valid X3P file.",
-        finally: function() {
-            this.reset();
-        }
-    })
+    @time({ max: 5000, reset: true })
+    @throws({ message: "Please upload a valid X3P file.", reset: true })
     async read(file: File) {
         this.label.classList.remove("hover");
         this.loadingPopup.display();
         
+        Logger.action(`read started`, file.name);
         let x3p = await new X3P({ file });
-        this.session.start(x3p);
+
+        Logger.action(`read success`, file.name);
+        this.session.start(x3p, file.name);
     }
 
     /**

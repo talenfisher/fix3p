@@ -4,6 +4,8 @@ import Popup from "./popup";
 import { clearCache } from "typedarray-pool";
 import { rgbToHex } from "./color";
 import Session from "./session";
+import Logger from "./logger";
+import { time, throws } from "./decorators";
 
 declare var fix3p: any;
 
@@ -21,6 +23,7 @@ interface EditorOptions {
 
 export default class Editor {
     private session: Session;
+
     private el: Element;
     private nav: Element;
     private main: Element;
@@ -65,10 +68,14 @@ export default class Editor {
      * @param manifest root element of the main.xml file
      */
     generate(manifest) {
+        Logger.action("editor generation started", this.session.filename);
+
         this.count = 0;
         this.reset();
         this.setupDownloadButton();
         this.inputify(manifest, this.main);
+
+        Logger.action("editor generation completed", this.session.filename);
     }
 
     /**
@@ -197,13 +204,14 @@ export default class Editor {
         // remove parser error if present
         let body = manifest.querySelector("body");
         if(body) body.parentElement.removeChild(body);
-
+        
         this.generate(manifest.children[0]);
         
         let form = document.querySelector("form");
         form.setAttribute("data-view", "editor");
 
         this.stage.enabled = fix3p.render;
+        Logger.action(`rendering ${fix3p.render ? "enabled" : "disabled"}`, this.session.filename);
     }
 
     /**
@@ -233,17 +241,21 @@ export default class Editor {
      * Downloads the X3P file that is currently being edited
      * @param e the event parameters
      */
+    @time({ max: 5000 })
+    @throws({ message: "An error occurred." })
     async download(e) {
         if(!this.session.started) return;
         e.preventDefault();
 
         let x3p = this.session.x3p;
-        await x3p.save();
+        await x3p.save();        
         
         let popup = new Popup("Compressing...");
         popup.display();
 
         await x3p.download();
+        Logger.action("file downloaded", this.session.filename);
+
         popup.update(`
             Continue editing this file? 
             <div class="popup-btns">

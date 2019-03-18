@@ -6,6 +6,7 @@ import axios from "axios";
 
 import "fullscreen-api-polyfill";
 import "./ext";
+import Logger from "./logger";
 
 declare var window: any;
 declare var document: any;
@@ -14,7 +15,8 @@ declare var fix3p: any;
 window.fix3p = {
     session: new Session(),
     extLoaded: false,
-    render: true
+    render: true,
+    reporting: !!localStorage.getItem("reporting")
 };
 
 /**
@@ -29,10 +31,15 @@ try {
 }
 
 (async function main() {
-    fix3p.uploader = new Uploader({ session: fix3p.session });
-    fix3p.uploader.display();
+    fix3p.uploader = new Uploader({ 
+        session: fix3p.session,
+    });
     
-    fix3p.editor = new Editor({ session: fix3p.session });
+    fix3p.editor = new Editor({ 
+        session: fix3p.session,
+    });
+    
+    fix3p.uploader.display();
 
     let popup = new Popup("");
     try {
@@ -76,3 +83,7 @@ window.addEventListener("keydown", e => {
         return true;
     }
 });
+
+window.onerror = function(message: string, url: string, lineNo: number, columnNo: number, error: object) {
+    Logger.error(`unhandled error: ${message}`, fix3p.session.filename);
+};

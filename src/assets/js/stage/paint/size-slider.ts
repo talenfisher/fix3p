@@ -1,4 +1,5 @@
 import Session from "../../session";
+import Logger from "../../logger";
 
 interface SizeSliderOptions {
     el: HTMLInputElement;
@@ -52,5 +53,6 @@ export default class SizeSlider {
 
         let brush = this.session.brush;
         brush.size = this.value * this.maxBrushSize;
+        Logger.action(`brush size changed to ${brush.size}`, this.session.filename);
     }
 }

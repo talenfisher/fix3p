@@ -1,4 +1,5 @@
 import Popup from "../popup";
+import Logger from "../logger";
 
 /**
  * Expect the duration of a call to be no longer than specified
@@ -6,39 +7,57 @@ import Popup from "../popup";
  * @param duration the max duration (in milliseconds)
  * @param callback the function to call
  */
-export function time(max: number) {
+export function time(options: { max: number, reset?: boolean }) {
     return function(target, key, descriptor) {
         const method = descriptor.value;
 
         descriptor.value = async function(...args) {
-            let start = performance.now();
-            await method.apply(this, args);
-            let end = performance.now();
+            var tryReset = () => {
+                if(options.reset && this.reset) {
+                    this.reset();
+                }
+            };
 
-            if(end - start > max) {
-                console.warn(`Calling ${this.constructor.name}.${key} took longer than expected (took ${end - start}ms, expected <= ${max}ms)`);
+            let filename = this.session ? this.session.filename : null;            
+            let warning = setTimeout(() => Logger.warn(`Calling ${this.constructor.name}.${key} is taking a while (max = ${options.max}ms)`, filename), options.max);
+            let start = performance.now();
+            let returnValue = await method.apply(this, args);
+            clearTimeout(warning);
+
+            let end = performance.now();
+            let diff = end - start;
+            if(diff > options.max) {
+                Logger.warn(`${this.constructor.name}.${key} took ${diff}ms`, filename);
             }
+
+            tryReset();
+            return returnValue;
         }
 
         return descriptor;
     }
 }
 
-export function throws(options: { message: string, finally?: () => void }) {
+export function throws(options: { message: string, reset?: boolean }) {
     return function(target, key, descriptor) {
         const method = descriptor.value;
 
         descriptor.value = async function(...args) {
             try {
                 await method.apply(this, args);
+
             } catch(e) {
-                let error = new Popup(`<i class="fas fa-exclamation-triangle"></i> ${options.message}`, ["upload-error"]);
+                let error = new Popup(`<i class="fas fa-exclamation-triangle"></i> ${options.message}`);
                 error.display(2, true);
-                console.error(e);
+
+                let filename = this.session ? this.session.filename : null;
+                Logger.error(e, filename);
+
             } finally {
-                if(options.finally) {
-                    options.finally.apply(this);
+                if(options.reset && this.reset) {
+                    this.reset();
                 }
+
             }
         }
     

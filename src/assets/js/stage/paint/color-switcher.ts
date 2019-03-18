@@ -1,5 +1,5 @@
 import Session from "../../session";
-import Paint from "./index";
+import Logger from "../../logger";
 
 interface ColorSwitcherOptions {
     session: Session;
@@ -22,7 +22,6 @@ export default class ColorSwitcher {
         this.input = this.el.querySelector("input");
 
         this.setupListeners();
-
         this.session.on("start", this.reset.bind(this));
     }
 
@@ -43,6 +42,7 @@ export default class ColorSwitcher {
 
             this.session.paintColor = color;
             this.overlay.style.backgroundColor = color;
+            Logger.action(`switched color to ${color}`, this.session.filename);
         }
     }
 }
