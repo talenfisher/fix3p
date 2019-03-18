@@ -23,14 +23,6 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
     
                 expect(visible).toBe(true);
             });
-
-            it("Should be deleted after the editor has been generated", async () => {
-                await page.waitForSelector("[data-tag]");
-                await sleep(1000);
-
-                let popup = await page.evaluate(`document.querySelectorAll(".loading").length;`);
-                expect(popup).toBe(0);
-            });
         });
  
         it("Should shift to editor view when supplied a valid X3P file", async () => {
