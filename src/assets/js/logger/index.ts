@@ -1,6 +1,7 @@
 import Item, { ItemType } from "./item";
 
 const TYPE_MAP = {
+    "info": console.info,
     "action": console.log,
     "error": console.error,
     "warning": console.warn,
@@ -34,5 +35,9 @@ export default class Logger {
 
     static action(message: string, filename?: string) {
         Logger.log("action", message, filename);
+    }
+
+    static info(message: string, filename?: string) {
+        Logger.log("info", message, filename);
     }
 }

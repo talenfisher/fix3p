@@ -27,7 +27,7 @@ try {
         fix3p.extLoaded = true;
     }
 } catch(e) {
-    console.log("Chrome Extension not detected");
+    Logger.info("chrome Extension not detected");
 }
 
 (async function main() {

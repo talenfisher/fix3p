@@ -1,5 +1,5 @@
 
-export type ItemType = "warning" | "error" | "action";
+export type ItemType = "warning" | "error" | "action" | "info";
 
 interface ItemOptions {
     type: ItemType;
