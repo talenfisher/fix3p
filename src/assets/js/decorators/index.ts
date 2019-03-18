@@ -38,7 +38,7 @@ export function time(options: { max: number, reset?: boolean }) {
     }
 }
 
-export function throws(options: { message: string, reset?: boolean }) {
+export function throws(options: { message: string, classes?: string[], reset?: boolean }) {
     return function(target, key, descriptor) {
         const method = descriptor.value;
 
@@ -47,7 +47,7 @@ export function throws(options: { message: string, reset?: boolean }) {
                 await method.apply(this, args);
 
             } catch(e) {
-                let error = new Popup(`<i class="fas fa-exclamation-triangle"></i> ${options.message}`);
+                let error = new Popup(`<i class="fas fa-exclamation-triangle"></i> ${options.message}`, options.classes);
                 error.display(2, true);
 
                 let filename = this.session ? this.session.filename : null;

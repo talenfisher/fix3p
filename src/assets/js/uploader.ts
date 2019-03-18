@@ -61,7 +61,7 @@ export default class Uploader {
      * @param byclick whether or not this was triggered by clicking the upload stage
      */
     @time({ max: 5000, reset: true })
-    @throws({ message: "Please upload a valid X3P file.", reset: true })
+    @throws({ message: "Please upload a valid X3P file.", classes: ["upload-error"], reset: true })
     async read(file: File) {
         this.label.classList.remove("hover");
         this.loadingPopup.display();
