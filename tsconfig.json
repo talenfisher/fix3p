@@ -4,6 +4,12 @@
         "target": "es2015",
         "allowJs": true,
         "moduleResolution": "node",
-        "resolveJsonModule": true
-    }
+        "resolveJsonModule": true,
+        "experimentalDecorators": true
+    },
+    "exclude": [
+        "*.js",
+        "src/assets/dist/*",
+        "src/assets/js/chrome.js"
+    ]
 }

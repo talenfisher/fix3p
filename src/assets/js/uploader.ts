@@ -1,6 +1,7 @@
 import X3P from "x3p.js";
 import Popup from "./popup";
 import Session from "./session";
+import { throws, time } from "./decorators";
 
 declare var fix3p;
 
@@ -15,6 +16,7 @@ export default class Uploader {
     private session: Session;
     private label: HTMLElement; 
     private input: HTMLInputElement;
+    private loadingPopup: Popup;
 
     /**
      * Constructs a new uploader view
@@ -24,6 +26,7 @@ export default class Uploader {
 
         this.label = document.querySelector(".upload label");
         this.input = document.querySelector(".upload input");
+        this.loadingPopup = new Popup("Loading...");
         this.setupListeners();
 
         this.session.on("end", this.display.bind(this));
@@ -40,8 +43,15 @@ export default class Uploader {
 
         this.label.addEventListener("dragenter", e => this.label.classList.add("hover"));
         this.label.addEventListener("dragleave", e => this.label.classList.remove("hover"));
-        this.label.addEventListener("drop", this.read.bind(this));
-        this.input.addEventListener("change", this.read.bind(this));
+        this.label.addEventListener("drop", e => {
+            e.stopPropagation();
+            this.read(e.dataTransfer.files[0]);
+        });
+
+        this.input.addEventListener("change", e => {
+            e.stopPropagation();
+            this.read(this.input.files[0]);
+        });
     }
 
     /**
@@ -50,30 +60,27 @@ export default class Uploader {
      * @param e event parameters
      * @param byclick whether or not this was triggered by clicking the upload stage
      */
-    async read(e: DragEvent | Event) {
-        e.stopPropagation();
-        this.label.classList.remove("hover");
-
-        let file = (e instanceof DragEvent) ? e.dataTransfer.files[0] : this.input.files[0];
-        
-        let loading = new Popup(`Loading...`, ["loading"]);
-        loading.display();
-        
-        try {
-            let x3p = await new X3P({ file });
-            loading.hide(true);
-            this.session.start(x3p);
-
-        } catch(x3pexception) {
-            loading.hide(true);
-
-            let error = new Popup(`<i class="fas fa-exclamation-triangle"></i> Please upload a valid X3P file.`, ["upload-error"]);
-            error.display(2, true);
-
-            console.error(x3pexception);
-        } finally {
-            this.input.value = "";
+    @time(5000)
+    @throws({
+        message: "Please upload a valid X3P file.",
+        finally: function() {
+            this.reset();
         }
+    })
+    async read(file: File) {
+        this.label.classList.remove("hover");
+        this.loadingPopup.display();
+        
+        let x3p = await new X3P({ file });
+        this.session.start(x3p);
+    }
+
+    /**
+     * Resets the uploader to its initial state
+     */
+    reset() {
+        this.loadingPopup.hide();
+        this.input.value = "";
     }
   
     /**
