@@ -45,6 +45,3 @@ After installing from source, run `npm run develop` to both start the server and
 ## Chrome Extension
 - Use your operating system's file explorer or equivalent, use the "open with/open in" option to open X3P files in Google Chrome.
 - Quickly access FiX3P via an icon labelled "X3P" next to the omnibar/search bar.  
-
-# Future
-- Vertex painting / selection **[In progress]**
