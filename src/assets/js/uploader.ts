@@ -26,7 +26,7 @@ export default class Uploader {
 
         this.label = document.querySelector(".upload label");
         this.input = document.querySelector(".upload input");
-        this.loadingPopup = new Popup("Loading...");
+        this.loadingPopup = new Popup("Loading...", ["loading"]);
 
         this.setupListeners();
         this.session.on("end", this.display.bind(this));
