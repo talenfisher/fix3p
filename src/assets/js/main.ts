@@ -28,7 +28,9 @@ class FiX3P {
         setupLogger(this);
         this.checkForExtension();
         this.setupScreens();
-        this.init();
+
+        let file = localStorage.getItem("openfile");
+        this.init(file);
     }
 
     public checkForExtension() {
@@ -46,30 +48,33 @@ class FiX3P {
         this.editor = new Editor({ session: this.session });
         this.uploader.display();
     }
+    
+    async init(filename?: string) {
+        if(filename === null) return;
 
-    async init() {
         let popup = new Popup("");
         try {
-            let openFile = localStorage.getItem("openfile");
-    
-            if(openFile !== null) {
-                localStorage.removeItem("openfile");
-                popup.update("Reading file...");
-                popup.display();
-                
-                openFile = decodeURIComponent(openFile);
-                
-                let contents = (await axios.get(openFile, { responseType: "blob" })).data;
-                let file = new File([ contents ], openFile);
-                this.uploader.read(file);
-            }
-    
+            localStorage.removeItem("openfile");
+            popup.update("Reading file...");
+            popup.display();
+            
+            let file = await this.readLocalFile(filename);
+            this.uploader.read(file);
             popup.hide(true);
         } catch(exception) {
             popup.update("Error reading X3P file.");
             popup.display(2, true);
-            console.error(exception);
+            Logger.error("read error", )
         }
+    }
+
+
+    private async readLocalFile(filename: string): Promise<File> {
+        filename = decodeURIComponent(filename);
+        let xhrResponse = await axios.get(filename, { responseType: "blob" });
+        let xhrData = xhrResponse.data;
+
+        return new File([ xhrData ], filename);
     }
 }
 
