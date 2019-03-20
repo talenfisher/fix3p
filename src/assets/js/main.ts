@@ -3,10 +3,8 @@ import Editor from "./editor";
 import Popup from "./popup";
 import Session from "./session";
 import axios from "axios";
-import Logger, { LocalStore, KrashReporter } from "./logger";
+import Logger from "./logger";
 
-import "fullscreen-api-polyfill";
-import "./ext";
 
 declare var window: any;
 declare var document: any;
@@ -20,40 +18,9 @@ window.fix3p = {
     version: document.querySelector(`meta[name="fix3p.version"]`).getAttribute("value"),
 };
 
-void function setupLogger() {
-    async function sendCrashReport() {
-        if(!fix3p.reporting) return;
-        
-        Logger.info("uploading crash report");
-        let report = await Logger.report();
-
-        if(report) {
-            let popup = new Popup(`
-                <h3>Crash Recovery</h3>
-                <p>FiX3P just recovered from a crash.</p>
-                <div class="popup-btns">
-                    <a class="popup-btn" href="${report.url}">Details</a>
-                    <a class="popup-close popup-btn">Close</a>
-                </div>
-            `);
-
-            let close = popup.el.querySelector(".popup-close") as HTMLElement;
-            close.onclick = () => popup.hide(true);
-            popup.display();
-        }
-    }
-
-    Logger.store = new LocalStore();
-    Logger.reporter = new KrashReporter();
-
-    window.onerror = (message: string) => Logger.error(`unhandled error: ${message}`, fix3p.session.filename);
-    window.onunload = () => Logger.clear();
-
-    if(Logger.count > 0) {
-        Logger.info("crash recovery started");
-        sendCrashReport();
-    }
-}();
+import "fullscreen-api-polyfill";
+import "./ext";
+import "./logger/setup";
 
 void function checkForExtension() {
     try { 
