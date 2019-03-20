@@ -10,5 +10,9 @@ export interface LogReporterResponse {
     url: string;
 }
 
+export interface LogReporterOptions {
+    version: string;
+}
+
 export { default as KrashReporter } from "./krash-reporter";
 export { default as DummyReporter } from "./dummy-reporter";

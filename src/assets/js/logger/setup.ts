@@ -27,7 +27,7 @@ export default function setup(fix3p) {
     }
 
     Logger.store = new LocalStore();
-    Logger.reporter = new KrashReporter();
+    Logger.reporter = new KrashReporter({ version: fix3p.version });
 
     window.onerror = (message: string) => Logger.error(`unhandled error: ${message}`, fix3p.session.filename);
     window.onunload = () => Logger.clear();
