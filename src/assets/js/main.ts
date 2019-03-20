@@ -1,3 +1,7 @@
+// polyfills
+import "fullscreen-api-polyfill";
+
+// modules
 import Uploader from "./uploader";
 import Editor from "./editor";
 import Popup from "./popup";
@@ -17,7 +21,7 @@ window.fix3p = {
     version: document.querySelector(`meta[name="fix3p.version"]`).getAttribute("value"),
 };
 
-import "fullscreen-api-polyfill";
+// setup files
 import "./dom";
 import "./logger/setup";
 
