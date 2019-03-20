@@ -9,8 +9,17 @@ export default class LocalStore implements LogStore {
     }
 
     read(): Item[] {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY), (key, value) => {
-            return typeof key === "number" ? new Item(value) : value;
-        });
+        try {
+            let source = localStorage.getItem(STORAGE_KEY) || "[]";
+            let result = JSON.parse(source, (key, value) => {
+                return typeof key === "number" ? new Item(value) : value;
+            });
+
+            return result.constructor.name === "Array" ? result : [];
+
+        } catch {
+            return [];
+            
+        }
     }
 }

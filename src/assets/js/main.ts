@@ -21,15 +21,18 @@ window.fix3p = {
 };
 
 void function setupLogger() {
-    window.onerror = (message: string) => Logger.error(`unhandled error: ${message}`, fix3p.session.filename);
-    window.onunload = () => Logger.clear();
-
     Logger.store = new LocalStore();
     Logger.reporter = new KrashReporter();
 
+    window.onerror = (message: string) => Logger.error(`unhandled error: ${message}`, fix3p.session.filename);
+    window.onunload = () => Logger.clear();
+
     if(Logger.count > 0) {
         Logger.info("crash recovery started");
-        Logger.report();
+        
+        if(fix3p.reporting) {
+            Logger.report();
+        }
     }
 }();
 
