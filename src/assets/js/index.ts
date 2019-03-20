@@ -68,7 +68,6 @@ class FiX3P {
         }
     }
 
-
     private async readLocalFile(filename: string): Promise<File> {
         filename = decodeURIComponent(filename);
         let xhrResponse = await axios.get(filename, { responseType: "blob" });
