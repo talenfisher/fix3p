@@ -6,11 +6,17 @@ const KRASH_REPORT_URL = "https://krash.vila.cythral.com/report";
 
 export default class KrashReporter implements LogReporter {
     async report(log: Item[]): Promise<LogReporterResponse> {
-        let xhrResponse = await axios.post(KRASH_REPORT_URL, {
-            repo: "fix3p",
-            log,
-            version: document.querySelector(`meta[name="fix3p.version"]`).getAttribute("value"),
-        });
+        let xhrResponse = await axios.post(
+            KRASH_REPORT_URL, 
+            {
+                repo: "fix3p",
+                log,
+                version: document.querySelector(`meta[name="fix3p.version"]`).getAttribute("value"),
+            },
+            {
+                validateStatus: status => status === 200,
+            }
+        );
 
         if(!("id" in xhrResponse.data) || !("url" in xhrResponse.data)) {
             throw new Error("Received invalid response from Krash.");
