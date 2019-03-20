@@ -5,7 +5,6 @@ import Session from "./session";
 import axios from "axios";
 import Logger from "./logger";
 
-
 declare var window: any;
 declare var document: any;
 declare var fix3p: any;
@@ -19,7 +18,7 @@ window.fix3p = {
 };
 
 import "fullscreen-api-polyfill";
-import "./ext";
+import "./dom";
 import "./logger/setup";
 
 void function checkForExtension() {
