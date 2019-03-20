@@ -22,6 +22,7 @@ interface EditorOptions {
     session: Session;
 }
 
+
 export default class Editor {
     private session: Session;
 
@@ -31,6 +32,7 @@ export default class Editor {
     private stage: Stage;
     private backbtn: HTMLElement;
     private count: number;
+    private shortcuts?: (e: KeyboardEvent) => void;
 
     /**
      * Constructs a new editor
@@ -51,6 +53,7 @@ export default class Editor {
         this.backbtn = this.el.querySelector(".back");
         this.backbtn.onclick = this.session.end.bind(this.session);
         
+        this.setupShortcuts();
         this.session.on("start", this.display.bind(this));
         this.session.on("end", this.reset.bind(this));
     }
@@ -302,5 +305,40 @@ export default class Editor {
         link.innerHTML = `<i class="fas fa-download"></i> Download</a>`;
         link.onclick = this.download.bind(this);
         this.nav.appendChild(link);
+    }
+
+    /**
+     * Ctrl-S download shortcut
+     * @param e Keyboard event arguments
+     */
+    private downloadShortcut(e: KeyboardEvent) {
+        if((e.ctrlKey || e.metaKey) && e.which === 83) {
+            e.preventDefault();
+            this.download(e);
+            return true;
+        }
+    }
+
+    /**
+     * Escape shortcut for closing the editor.
+     * @param e Keyboard event arguments
+     */
+    private closeShortcut(e: KeyboardEvent) {
+        if(e.which === 27 && document.fullscreenElement === null) {
+            e.preventDefault();
+            this.session.end();
+            return true;
+        }
+    }
+
+    /**
+     * Setup keyboard shortcuts
+     */
+    private setupShortcuts() {
+        window.addEventListener("keydown", (e: KeyboardEvent) => {
+            if(!this.session.started) return;
+            this.downloadShortcut(e);
+            this.closeShortcut(e);
+        });
     }
 }

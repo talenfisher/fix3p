@@ -9,11 +9,11 @@ import Session from "./session";
 import axios from "axios";
 import Logger, { setup as setupLogger } from "./logger";
 
-declare var window: any;
-
 // setup files
 import "./dom/setup";
 
+declare var window: any;
+declare var document: any;
 
 class FiX3P {
     public session: Session = new Session();
@@ -33,7 +33,7 @@ class FiX3P {
         this.init(file);
     }
 
-    public checkForExtension() {
+    private checkForExtension() {
         try { 
             if(typeof window.chrome.runtime.id !== "undefined") {
                 this.extLoaded = true;
@@ -43,13 +43,13 @@ class FiX3P {
         }
     }
 
-    public setupScreens() {
+    private setupScreens() {
         this.uploader = new Uploader({ session: this.session });
         this.editor = new Editor({ session: this.session });
         this.uploader.display();
     }
     
-    async init(filename?: string) {
+    private async init(filename?: string) {
         if(filename === null) return;
 
         let popup = new Popup("");
@@ -80,22 +80,4 @@ class FiX3P {
 const fix3p = new FiX3P();
 window.fix3p = fix3p;
 export default fix3p;
-
-
-window.addEventListener("keydown", e => {
-    let view = document.querySelector("form").getAttribute("data-view");
-
-    if((e.ctrlKey || e.metaKey) && e.which === 83)  {
-        if(view !== "editor") return true;
-        e.preventDefault();
-        let tab = document.querySelector("a.tab") as HTMLElement;
-        tab.click();
-        return false;
-
-    } else if(e.which === 27 && view === "editor" && document.fullscreenElement === null) {
-        e.preventDefault();
-        fix3p.session.end();
-        return true;
-    }
-});
 
