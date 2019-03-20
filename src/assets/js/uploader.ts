@@ -57,8 +57,7 @@ export default class Uploader {
     /**
      * Read the file that was selected
      * 
-     * @param e event parameters
-     * @param byclick whether or not this was triggered by clicking the upload stage
+     * @param file the file to read
      */
     @time({ max: 5000, reset: true })
     @throws({ message: "Please upload a valid X3P file.", classes: ["upload-error"], reset: true })

@@ -5,18 +5,20 @@ interface ItemOptions {
     type: ItemType;
     message: string;
     filename?: string;
+    timestamp?: number;
 }
 
 export default class Item {
-    private type: ItemType;
-    private message: string;
-    private filename?: string;
-    private timestamp: number = Date.now();
+    public type: ItemType;
+    public message: string;
+    public filename?: string;
+    public timestamp: number;
 
     constructor(options: ItemOptions) {
         this.type = options.type;
         this.message = options.message;
         this.filename = options.filename;
+        this.timestamp = options.timestamp || Date.now();
     }
 
     toString() {

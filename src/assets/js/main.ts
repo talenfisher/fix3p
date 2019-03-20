@@ -3,10 +3,11 @@ import Editor from "./editor";
 import Popup from "./popup";
 import Session from "./session";
 import axios from "axios";
+import Logger, { LocalStore } from "./logger";
 
 import "fullscreen-api-polyfill";
 import "./ext";
-import Logger from "./logger";
+
 
 declare var window: any;
 declare var document: any;
@@ -19,18 +20,27 @@ window.fix3p = {
     reporting: !!localStorage.getItem("reporting")
 };
 
-/**
- * Check if loaded in chrome extension
- */
-try { 
-    if(typeof window.chrome.runtime.id !== "undefined") {
-        fix3p.extLoaded = true;
-    }
-} catch(e) {
-    Logger.info("chrome extension not detected");
-}
+void function setupLogger() {
+    window.onerror = (message: string) => Logger.error(`unhandled error: ${message}`, fix3p.session.filename);
+    window.onunload = () => Logger.clear();
 
-(async function main() {
+    Logger.store = new LocalStore();
+    if(Logger.count > 0) {
+        Logger.info("crash recovery started");
+    }
+}();
+
+void function checkForExtension() {
+    try { 
+        if(typeof window.chrome.runtime.id !== "undefined") {
+            fix3p.extLoaded = true;
+        }
+    } catch(e) {
+        Logger.info("chrome extension not detected");
+    }
+}();
+
+void async function main() {
     fix3p.uploader = new Uploader({ 
         session: fix3p.session,
     });
@@ -66,7 +76,7 @@ try {
         popup.display(2, true);
         console.error(exception);
     }
-})();
+}();
 
 window.addEventListener("keydown", e => {
     let view = document.querySelector("form").getAttribute("data-view");
@@ -84,6 +94,3 @@ window.addEventListener("keydown", e => {
     }
 });
 
-window.onerror = function(message: string, url: string, lineNo: number, columnNo: number, error: object) {
-    Logger.error(`unhandled error: ${message}`, fix3p.session.filename);
-};
