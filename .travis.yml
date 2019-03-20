@@ -18,13 +18,12 @@ before_script:
   - cd ../
 
 script:
-  - npm run build
+  - NODE_ENV="development" npm run build
   - npm run test
 
 deploy:
   - provider: script
     script: bash bin/deploy
-    skip_cleanup: true
     on:
       all_branches: true
       condition: $TRAVIS_BRANCH == "master" || -n $TRAVIS_TAG
