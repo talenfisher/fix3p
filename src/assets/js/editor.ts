@@ -63,6 +63,7 @@ export default class Editor {
     reset() {
         this.nav.innerHTML = EMPTY;
         this.main.innerHTML = EMPTY;
+        this.tab = 1;
     }
 
     /**

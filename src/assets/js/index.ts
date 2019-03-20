@@ -9,11 +9,11 @@ import Session from "./session";
 import axios from "axios";
 import Logger, { setup as setupLogger } from "./logger";
 
-// setup files
-import "./dom/setup";
-
 declare var window: any;
 declare var document: any;
+
+// setup files
+import "./dom/setup";
 
 class FiX3P {
     public session: Session = new Session();

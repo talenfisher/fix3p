@@ -2,8 +2,8 @@ import { LogReporter, LogReporterResponse } from ".";
 import Item from "../item";
 import axios from "axios";
 import { throws } from "../../decorators";
-import fix3p from "../../"
-;
+import fix3p from "../../";
+
 const KRASH_REPORT_URL = "https://krash.vila.cythral.com/report";
 
 export default class KrashReporter implements LogReporter {
