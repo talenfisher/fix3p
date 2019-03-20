@@ -21,7 +21,7 @@ module.exports = {
     mode: process.env.NODE_ENV !== "development" ? "production" : "development",
     entry: {
         [workerName]: `${X3PJS_PATH}/${workerName}.js`,
-        "fix3p.bundle": path.resolve(__dirname, 'src/assets/js/main.ts'),
+        "fix3p.bundle": path.resolve(__dirname, 'src/assets/js/index.ts'),
     },
     output: {
         path: path.resolve(__dirname, 'src/assets/dist/'),

@@ -5,8 +5,7 @@ import { rgbToHex } from "./color";
 import Session from "./session";
 import Logger from "./logger";
 import { time, throws } from "./decorators";
-
-declare var fix3p: any;
+import fix3p from ".";
 
 const EMPTY = "";
 const TAB_ATTR = "data-view";
