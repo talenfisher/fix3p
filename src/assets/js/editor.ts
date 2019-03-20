@@ -8,6 +8,9 @@ import { time, throws } from "./decorators";
 
 declare var fix3p: any;
 
+const EMPTY = "";
+const TAB_ATTR = "data-view";
+
 const INPUT_TRANSFORMS = { 
     date: "datetime-local" 
 };
@@ -57,8 +60,23 @@ export default class Editor {
      * Clears the contents of the <nav> and <main> elements
      */
     reset() {
-        this.nav.innerHTML = '';
-        this.main.innerHTML = '';
+        this.nav.innerHTML = EMPTY;
+        this.main.innerHTML = EMPTY;
+    }
+
+    /**
+     * Gets the current tab number
+     */
+    get tab() {
+        return parseInt(this.el.getAttribute(TAB_ATTR));
+    }
+
+    /**
+     * Switches to the specified tab
+     * @param tab the tab number to switch to.
+     */
+    set tab(tab: number) {
+        this.el.setAttribute(TAB_ATTR, tab.toString());
     }
 
     /**
