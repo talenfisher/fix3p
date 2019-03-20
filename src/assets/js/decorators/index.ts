@@ -44,7 +44,7 @@ export function throws(options: { message: string, classes?: string[], reset?: b
 
         descriptor.value = async function(...args) {
             try {
-                await method.apply(this, args);
+                return await method.apply(this, args);
 
             } catch(e) {
                 let error = new Popup(`<i class="fas fa-exclamation-triangle"></i> ${options.message}`, options.classes);

@@ -20,6 +20,9 @@ window.fix3p = {
     version: document.querySelector(`meta[name="fix3p.version"]`).getAttribute("value"),
 };
 
+
+
+
 void function setupLogger() {
     Logger.store = new LocalStore();
     Logger.reporter = new KrashReporter();
@@ -27,12 +30,15 @@ void function setupLogger() {
     window.onerror = (message: string) => Logger.error(`unhandled error: ${message}`, fix3p.session.filename);
     window.onunload = () => Logger.clear();
 
+    async function sendCrashReport() {
+        if(!fix3p.reporting) return;
+        Logger.info("uploading crash report");
+        Logger.report();
+    }
+
     if(Logger.count > 0) {
         Logger.info("crash recovery started");
-        
-        if(fix3p.reporting) {
-            Logger.report();
-        }
+        sendCrashReport();
     }
 }();
 
