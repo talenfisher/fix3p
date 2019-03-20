@@ -1,4 +1,4 @@
-// polyfills
+// polyfills - must go before anything else is imported
 import "fullscreen-api-polyfill";
 
 // modules
@@ -22,7 +22,7 @@ window.fix3p = {
 };
 
 // setup files
-import "./dom";
+import "./dom/setup";
 import "./logger/setup";
 
 void function checkForExtension() {
