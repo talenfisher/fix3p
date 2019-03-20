@@ -62,4 +62,18 @@ describe("Logger", () => {
             expect(result.type).toBe("action");
         });
     });
+
+    describe("report", () => {
+        it("should return null when no reporter is set", async () => {
+            Logger.reporter = null;
+            let report = await Logger.report();
+            expect(report).toBe(null);
+        });
+
+        it("should return an object with an id and url when a reporter is set", async () => {
+            let report = await Logger.report();
+            expect(typeof report.id).toBe("number");
+            expect(typeof report.url).toBe("string");
+        });
+    });
 });
