@@ -3,11 +3,10 @@ import Editor from "./editor";
 import Popup from "./popup";
 import Session from "./session";
 import axios from "axios";
-import Logger, { LocalStore } from "./logger";
+import Logger, { LocalStore, KrashReporter } from "./logger";
 
 import "fullscreen-api-polyfill";
 import "./ext";
-
 
 declare var window: any;
 declare var document: any;
@@ -17,7 +16,8 @@ window.fix3p = {
     session: new Session(),
     extLoaded: false,
     render: true,
-    reporting: !!localStorage.getItem("reporting")
+    reporting: !!localStorage.getItem("reporting"),
+    version: document.querySelector(`meta[name="fix3p.version"]`).getAttribute("value"),
 };
 
 void function setupLogger() {
@@ -25,8 +25,11 @@ void function setupLogger() {
     window.onunload = () => Logger.clear();
 
     Logger.store = new LocalStore();
+    Logger.reporter = new KrashReporter();
+
     if(Logger.count > 0) {
         Logger.info("crash recovery started");
+        Logger.report();
     }
 }();
 
