@@ -20,21 +20,34 @@ window.fix3p = {
     version: document.querySelector(`meta[name="fix3p.version"]`).getAttribute("value"),
 };
 
-
-
-
 void function setupLogger() {
+    async function sendCrashReport() {
+        if(!fix3p.reporting) return;
+        
+        Logger.info("uploading crash report");
+        let report = await Logger.report();
+
+        if(report) {
+            let popup = new Popup(`
+                <h3>Crash Recovery</h3>
+                <p>FiX3P just recovered from a crash.</p>
+                <div class="popup-btns">
+                    <a class="popup-btn" href="${report.url}">Details</a>
+                    <a class="popup-close popup-btn">Close</a>
+                </div>
+            `);
+
+            let close = popup.el.querySelector(".popup-close") as HTMLElement;
+            close.onclick = () => popup.hide(true);
+            popup.display();
+        }
+    }
+
     Logger.store = new LocalStore();
     Logger.reporter = new KrashReporter();
 
     window.onerror = (message: string) => Logger.error(`unhandled error: ${message}`, fix3p.session.filename);
     window.onunload = () => Logger.clear();
-
-    async function sendCrashReport() {
-        if(!fix3p.reporting) return;
-        Logger.info("uploading crash report");
-        Logger.report();
-    }
 
     if(Logger.count > 0) {
         Logger.info("crash recovery started");
@@ -53,14 +66,9 @@ void function checkForExtension() {
 }();
 
 void async function main() {
-    fix3p.uploader = new Uploader({ 
-        session: fix3p.session,
-    });
-    
-    fix3p.editor = new Editor({ 
-        session: fix3p.session,
-    });
-    
+    fix3p.uploader = new Uploader({ session: fix3p.session });
+    fix3p.editor = new Editor({ session: fix3p.session });
+
     fix3p.uploader.display();
 
     let popup = new Popup("");
