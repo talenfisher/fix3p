@@ -32,7 +32,6 @@ export default class Editor {
     private stage: Stage;
     private backbtn: HTMLElement;
     private count: number;
-    private shortcuts?: (e: KeyboardEvent) => void;
 
     /**
      * Constructs a new editor
