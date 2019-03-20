@@ -109,4 +109,4 @@ export default class Logger {
 
 export * from "./store";
 export * from "./reporter";
-export { default as Setup } from "./setup";
+export { default as setup } from "./setup";

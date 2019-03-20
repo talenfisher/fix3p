@@ -7,7 +7,7 @@ import Editor from "./editor";
 import Popup from "./popup";
 import Session from "./session";
 import axios from "axios";
-import Logger, { Setup as SetupLogger } from "./logger";
+import Logger, { setup as setupLogger } from "./logger";
 
 declare var window: any;
 
@@ -25,7 +25,7 @@ class FiX3P {
     public editor?: Editor;
 
     public constructor() {
-        SetupLogger(this);
+        setupLogger(this);
         this.checkForExtension();
         this.setupScreens();
         this.init();
