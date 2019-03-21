@@ -19,7 +19,7 @@ export default function setup(fix3p) {
                 <h3>Crash Recovery</h3>
                 <p>FiX3P just recovered from a crash.</p>
                 <div class="popup-btns">
-                    <a class="popup-btn" href="${report.url}">Details</a>
+                    <a class="popup-btn" href="${report.url}" target="_blank">Details</a>
                     <a class="popup-close popup-btn">Close</a>
                 </div>
             `);
