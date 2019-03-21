@@ -24,7 +24,7 @@ module.exports = {
         "fix3p.bundle": path.resolve(__dirname, 'src/assets/js/index.ts'),
     },
     output: {
-        path: path.resolve(__dirname, 'src/assets/dist/'),
+        path: path.resolve(__dirname, 'dist/'),
         filename: '[name].js'
     },
     module: {

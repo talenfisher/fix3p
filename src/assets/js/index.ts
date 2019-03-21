@@ -64,7 +64,7 @@ class FiX3P {
         } catch(exception) {
             popup.update("Error reading X3P file.");
             popup.display(2, true);
-            Logger.error("read error", )
+            Logger.error("read error", filename);
         }
     }
 
