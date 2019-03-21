@@ -1,6 +1,7 @@
 import Logger from ".";
 import LocalStore from "./store/local-store";
 import KrashReporter from "./reporter/krash-reporter";
+import Tabs from "./tabs";
 import Popup from "../popup";
 
 export default function setup(fix3p) {
@@ -26,13 +27,23 @@ export default function setup(fix3p) {
         }
     }
 
+    Tabs.increment();
+    Logger.prefix = `[tab ${Tabs.count}]`;
     Logger.store = new LocalStore();
     Logger.reporter = new KrashReporter({ version: fix3p.version });
 
     window.onerror = (message: string) => Logger.error(`unhandled error: ${message}`, fix3p.session.filename);
-    window.onunload = () => Logger.clear();
+    window.onunload = () => {
+        Tabs.decrement();
 
-    if(Logger.count > 0) {
+        if(Tabs.count == 0) {
+            Logger.clear();
+        } else {
+            Logger.info("closed tab");
+        }
+    }
+    
+    if(Logger.count > 0 && Tabs.count == 1) {
         Logger.info("crash recovery started");
         sendCrashReport();
     }

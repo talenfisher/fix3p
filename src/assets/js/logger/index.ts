@@ -21,7 +21,8 @@ const $reporter = Symbol();
 
 export default class Logger {
     public static writeToConsole: boolean = true;
-
+    public static prefix: string = "";
+    
     private static [$store]?: LogStore;
     private static [$reporter]?: LogReporter;
     private static [$log]: Item[] = [];
@@ -54,7 +55,14 @@ export default class Logger {
     }
 
     public static log(type: ItemType, message: string, filename?: string) {
-        let item = new Item({ type, message, filename });
+        Logger.load(); // read info from other tabs
+        
+        let item = new Item({ 
+            type, 
+            filename,
+            message: Logger.addPrefixtoMessage(message),
+        });
+        
         Logger[$log].push(item);
         Logger.save();
         Logger.output(item);
@@ -104,6 +112,10 @@ export default class Logger {
         let action = TYPE_MAP[item.type] || console.log;
         let color = COLOR_MAP[item.type] || "black";
         action(output, `color: ${color}; font-weight: bold; font-size: 1.1em;`, "");
+    }
+
+    private static addPrefixtoMessage(message: string) {
+        return (Logger.prefix !== "") ? `${Logger.prefix} ${message}` : message;
     }
 }
 
