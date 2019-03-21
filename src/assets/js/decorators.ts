@@ -1,5 +1,5 @@
-import Popup from "../popup";
-import Logger from "../logger";
+import Popup from "./popup";
+import Logger from "./logger";
 
 /**
  * Expect the duration of a call to be no longer than specified
