@@ -4,8 +4,8 @@ node_js:
   - '10'
 
 before_script:
-  - npm install 
-  - cd src && git init
+  - npm install
+  - cd dist && git init
   - git config user.email "travis@example.com"
   - git config user.name "Travis CI"
   - git remote add origin https://${GH_AUTH}@github.com/talenfisher/fix3p.git
@@ -18,12 +18,13 @@ before_script:
   - cd ../
 
 script:
-  - NODE_ENV="development" npm run build
-  - npm run test
+  - NODE_ENV="development" npm run test
 
 deploy:
   - provider: script
+    skip-cleanup: true
     script: bash bin/deploy
+    local-dir: dist
     on:
       all_branches: true
       condition: $TRAVIS_BRANCH == "master" || -n $TRAVIS_TAG
