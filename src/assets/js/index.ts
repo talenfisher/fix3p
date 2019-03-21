@@ -20,7 +20,7 @@ class FiX3P {
     public session: Session = new Session();
     public extLoaded: boolean = false;
     public render: boolean = true;
-    public reporting: boolean = !!localStorage.getItem("reporting");
+    public reporting: boolean = localStorage.getItem("reporting") === "on";
     public version: string = document.querySelector(`meta[name="fix3p.version"]`).getAttribute("value");
     public uploader?: Uploader;
     public editor?: Editor;

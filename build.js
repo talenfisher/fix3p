@@ -6,30 +6,52 @@ const static_files = package.staticFiles;
 
 const IN_DIR = __dirname + "/src/";
 const OUT_DIR = __dirname + "/dist/";
+const MANIFEST_FILE = OUT_DIR + "manifest.json";
 
-// get entry files
-let entryFiles = [];
-for(let file of fs.readdirSync(IN_DIR)) {
-    if(file.match(/.html$/)) {
-        entryFiles.push(IN_DIR + file);
+function getFaviconFilename() {
+    for(let file of fs.readdirSync(OUT_DIR)) {
+        if(file.match(/favicon.(.*).png/)) {
+            return file;
+        }
     }
 }
 
-const bundler = new Bundler(entryFiles, {
-    outDir: OUT_DIR,
-    watch: process.argv.includes("--watch")
-});
+function updateManifest() {
+    let manifest = require(MANIFEST_FILE);
+    let faviconFilename = getFaviconFilename();
 
-bundler.on("bundled", bundle => {
-    for(let file of static_files) {
-        fs.copyFileSync(IN_DIR + file, OUT_DIR + file);
-    }
-});
-
-if(process.argv.includes("--serve")) {
-    bundler.serve();
-
-} else {
-    bundler.bundle();
-
+    manifest.icons["128"] = faviconFilename;
+    manifest.browser_action.default_icon["128"] = faviconFilename;
+    fs.writeFileSync(MANIFEST_FILE, JSON.stringify(manifest));
 }
+
+void function main() {
+    // get entry files
+    let entryFiles = [];
+    for(let file of fs.readdirSync(IN_DIR)) {
+        if(file.match(/.html$/)) {
+            entryFiles.push(IN_DIR + file);
+        }
+    }
+
+    const bundler = new Bundler(entryFiles, {
+        outDir: OUT_DIR,
+        watch: process.argv.includes("--watch")
+    });
+
+    bundler.on("bundled", bundle => {
+        for(let file of static_files) {
+            fs.copyFileSync(IN_DIR + file, OUT_DIR + file);
+        }
+
+        updateManifest();
+    });
+
+    if(process.argv.includes("--serve")) {
+        bundler.serve();
+
+    } else {
+        bundler.bundle();
+
+    }
+}();

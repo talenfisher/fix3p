@@ -47,7 +47,8 @@
   "author": "Talen Fisher",
   "license": "MIT",
   "staticFiles": [
-    "manifest.json"
+    "manifest.json",
+    "chrome.js"
   ],
   "browserify": {
     "transform": [
