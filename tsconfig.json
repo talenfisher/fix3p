@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "lib": ["es2015", "es6", "es7", "dom"],
-        "target": "es2015",
+        "target": "es5",
         "allowJs": true,
         "moduleResolution": "node",
         "resolveJsonModule": true,
@@ -9,7 +9,8 @@
     },
     "exclude": [
         "*.js",
-        "src/assets/dist/*",
-        "src/assets/js/chrome.js"
+        "src/assets/dist/**",
+        "src/assets/js/chrome.js",
+        "dist/**/*"
     ]
 }

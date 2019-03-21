@@ -7,42 +7,37 @@
     "@talenfisher/canvas": "^0.2.2",
     "axios": "^0.18.0",
     "fullscreen-api-polyfill": "^1.1.2",
-    "x3p.js": "^0.4.2"
+    "x3p.js": "^0.4.3"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.4.0",
+    "@babel/plugin-transform-runtime": "^7.4.0",
+    "@babel/polyfill": "^7.4.0",
     "@types/expect-puppeteer": "^3.3.1",
     "@types/jest": "^23.3.14",
     "@types/jest-environment-puppeteer": "^2.2.1",
     "@types/node": "^10.14.1",
     "@types/puppeteer": "^1.12.3",
     "chrome-webstore-upload-cli": "^1.2.0",
-    "concurrently": "^4.1.0",
-    "http-server": "^0.11.1",
-    "ify-loader": "^1.1.0",
     "jest": "^23.6.0",
     "jest-environment-puppeteer": "^3.9.1",
     "jest-puppeteer": "^3.9.1",
     "node-sass": "^4.11.0",
+    "parcel-bundler": "^1.12.3",
+    "posthtml-include": "^1.2.0",
     "puppeteer": "^1.13.0",
     "ts-jest": "^23.10.5",
-    "ts-loader": "^5.3.3",
-    "typescript": "^3.3.4000",
-    "watch": "^1.0.2",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.3.0"
+    "typescript": "^3.3.4000"
   },
   "scripts": {
-    "clean": "rm -rf src/assets/dist/ src/worker* .cache",
-    "build:sass": "node-sass --output-style compressed src/assets/sass/main.scss src/assets/dist/fix3p.bundle.css",
-    "build:js": "webpack && bin/buildfix",
-    "build": "npm run build:sass && npm run build:js",
-    "watch:sass": "watch 'npm run build:sass' src/assets/sass",
-    "watch:js": "watch 'npm run build:js' src/assets/js",
-    "watch": "concurrently npm:watch:js npm:watch:sass",
+    "clean": "rm -rf dist/ src/assets/dist/ src/worker* .cache",
+    "build:js": "node build.js",
+    "build": "node build.js",
+    "watch": "node build.js --watch",
     "release": "webstore upload --source extension.zip --extension-id $WS_EXT_ID --client-id $WS_CLIENT_ID --client-secret $WS_CLIENT_SECRET --refresh-token $WS_REFRESH_TOKEN --auto-publish",
-    "start": "http-server -c-2 -o -p 8080 src > /dev/null",
+    "start": "node build.js --serve",
+    "develop": "node build.js --watch --serve",
     "test": "jest --colors --silent",
-    "develop": "concurrently npm:start npm:watch",
     "postinstall": "npm run build",
     "postversion": "git push --follow-tags"
   },
@@ -51,6 +46,9 @@
   },
   "author": "Talen Fisher",
   "license": "MIT",
+  "staticFiles": [
+    "manifest.json"
+  ],
   "browserify": {
     "transform": [
       "glslify",

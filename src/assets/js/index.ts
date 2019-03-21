@@ -1,4 +1,5 @@
 // polyfills - must go before anything else is imported
+import "@babel/polyfill";
 import "fullscreen-api-polyfill";
 
 // modules

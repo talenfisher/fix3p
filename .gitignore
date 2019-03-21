@@ -6,3 +6,4 @@ extension.zip
 .cache/
 tests/data/
 coverage/
+dist/
