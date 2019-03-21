@@ -36,8 +36,7 @@ void function main() {
 
     const bundler = new Bundler(entryFiles, {
         outDir: OUT_DIR,
-        watch: process.argv.includes("--watch"),
-        publicUrl: '.'
+        watch: process.argv.includes("--watch")
     });
 
     bundler.on("bundled", bundle => {

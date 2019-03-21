@@ -38,7 +38,6 @@
     "start": "node build.js --serve",
     "develop": "node build.js --watch --serve",
     "test": "jest --colors --silent",
-    "postinstall": "npm run build",
     "postversion": "git push --follow-tags"
   },
   "browser": {

@@ -5,7 +5,10 @@ node_js:
 
 before_script:
   - npm install
-  - cd dist && git init
+  - mkdir dist
+  - cd dist
+  
+  - git init
   - git config user.email "travis@example.com"
   - git config user.name "Travis CI"
   - git remote add origin https://${GH_AUTH}@github.com/talenfisher/fix3p.git
