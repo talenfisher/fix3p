@@ -24,13 +24,13 @@ export default class KrashReporter implements LogReporter {
         );
         
         let data = xhrResponse.data;
-        if(!("id" in data) || !("url" in data)) {
+        if(!("id" in data) || !("html_url" in data)) {
             throw new Error("Received invalid response from Krash.");
         }
         
         return {
             id: data.id,
-            url: data.url,
+            url: data.html_url,
         };
     }
 }
