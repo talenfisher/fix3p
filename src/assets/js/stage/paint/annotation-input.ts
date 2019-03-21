@@ -1,6 +1,7 @@
 import Session from "../../session";
 import { rgbToHex } from "../../color";
 import Editor from "../../editor";
+import Logger from "../../logger";
 
 interface AnnotationOptions {
     session: Session;

@@ -1,7 +1,0 @@
-#!/bin/bash
-
-# this script renames the worker file in the src/assets/dist/fix3p.bundle.js 
-# so that it is relative to the src directory
-
-workerName=$(ls src/assets/dist | grep worker | head -1 |sed "s/\./\\\./g");
-sed -i "s/\/$workerName/\.\/assets\/dist\/$workerName/g" src/assets/dist/fix3p.bundle.js

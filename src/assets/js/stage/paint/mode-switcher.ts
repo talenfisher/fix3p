@@ -1,4 +1,5 @@
 import Session from "../../session";
+import Logger from "../../logger";
 
 interface ModeSwitcherOptions {
     el: HTMLSelectElement;
@@ -60,5 +61,7 @@ export default class ModeSwitcher {
                 brush.color = x3p.manifest.get(`Record3 Mask Background`);
                 break;
         }
+
+        Logger.action(`annotator mode switched to ${this.value.toLowerCase()}`, this.session.filename);
     }
 }

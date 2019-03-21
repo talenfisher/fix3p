@@ -1,6 +1,7 @@
 import { resolve } from "path";
 import { promisify } from "util";
 import { readdirSync, fstat, readFileSync as read } from "fs";
+import { url } from "../vars";
 const sleep = promisify(setTimeout);
 
 for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
@@ -8,7 +9,7 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
     // after upload
     describe(`Editor: <${file}> (good, after upload, no rendering)`, () => {
         beforeEach(async () => {
-            await page.goto("http://localhost:1432/index.html");
+            await page.goto(url);
 
             // turn off rendering
             page.evaluate(`fix3p.render = false;`);

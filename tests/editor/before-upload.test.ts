@@ -1,6 +1,8 @@
+import { url } from "../vars";
+
 describe("Editor (before upload)", () => {
     beforeEach(async () => {
-        await page.goto("http://localhost:1432/index.html");
+        await page.goto(url);
     });
 
     it("Should initially be invisible", async () => {

@@ -2,6 +2,8 @@ import { X3P, Renderer } from "x3p.js";
 import Paint from "./paint/index";
 import Editor from "../editor";
 import Session from "../session";
+import { throws } from "../decorators";
+import Logger from "../logger";
 
 export interface StageOptions {
     el: HTMLElement;
@@ -42,6 +44,7 @@ export default class Stage {
 
     public set enabled(enabled: boolean) {
         enabled ? this.el.removeAttribute("disabled") : this.el.setAttribute("disabled", "disabled");
+        Logger.action(`stage ${enabled ? "enabled" : "disabled"}`, this.session.filename);
     }
 
     public get mode() {
@@ -50,6 +53,7 @@ export default class Stage {
 
     public set mode(value: string) {
         this.el.setAttribute("data-mode", value);
+        Logger.action(`stage mode set to ${value}`, this.session.filename);
     }
 
     public toggleMode(mode: MODES) {
@@ -63,9 +67,11 @@ export default class Stage {
         this.mode = "normal";
     }
 
+    @throws({ message: "An error occured while rendering." })
     private render(x3p) {
         if(!this.enabled || !this.session.started || !this.session.x3p) return;
         this.session.renderer = x3p.render(this.canvas);
+        Logger.action("rendering started", this.session.filename);
     }
 
     private setupFullscreenBtn() {

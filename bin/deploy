@@ -1,6 +1,9 @@
 #!/bin/bash
-cp CREDITS.md src
-cd src
+
+NODE_ENV="production" npm run build
+
+cp CREDITS.md dist
+cd dist
 sed -i "s/{{version}}/$TRAVIS_BUILD_NUMBER/" index.html
 
 if [[ $TRAVIS_TAG != "" ]]; then 
