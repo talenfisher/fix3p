@@ -1,6 +1,7 @@
 import { resolve } from "path";
 import { promisify } from "util";
 import { readdirSync } from "fs";
+import { url } from "../vars";
 
 const sleep = promisify(setTimeout);
 
@@ -10,7 +11,7 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
         var input;
 
         beforeEach(async () => {
-            await page.goto("http://localhost:1432/index.html");
+            await page.goto(url);
             page.evaluate(`fix3p.render = false;`);
             input = await page.$(".upload input");
             input.uploadFile(resolve(__dirname, "../data/good/"+file));

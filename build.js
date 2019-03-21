@@ -17,7 +17,8 @@ for(let file of fs.readdirSync(IN_DIR)) {
 
 const bundler = new Bundler(entryFiles, {
     outDir: OUT_DIR,
-    watch: process.argv.includes("--watch")
+    watch: process.argv.includes("--watch"),
+    hmrPort: 1234
 });
 
 bundler.on("bundled", bundle => {
