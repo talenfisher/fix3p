@@ -24,7 +24,6 @@ export default class KrashReporter implements LogReporter {
         );
         
         let data = xhrResponse.data;
-        console.log(data);
         if(!("id" in data) || !("htmlUrl" in data)) {
             throw new Error("Received invalid response from Krash.");
         }
