@@ -10,8 +10,6 @@
     "x3p.js": "^0.4.3"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-decorators": "^7.4.0",
-    "@babel/plugin-transform-runtime": "^7.4.0",
     "@babel/polyfill": "^7.4.0",
     "@types/expect-puppeteer": "^3.3.1",
     "@types/jest": "^23.3.14",

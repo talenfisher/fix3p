@@ -1,16 +1,17 @@
 {
     "compilerOptions": {
         "lib": ["es2015", "es6", "es7", "dom"],
-        "target": "es5",
+        "target": "es2015",
         "allowJs": true,
         "moduleResolution": "node",
         "resolveJsonModule": true,
         "experimentalDecorators": true
     },
+    "include": [
+        "src/**/*",
+        "tests/**/*"
+    ],
     "exclude": [
-        "*.js",
-        "src/assets/dist/**",
-        "src/assets/js/chrome.js",
         "dist/**/*"
     ]
 }

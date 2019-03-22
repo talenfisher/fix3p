@@ -35,9 +35,11 @@ void function main() {
     }
 
     const bundler = new Bundler(entryFiles, {
-        outDir: OUT_DIR,
-        watch: process.argv.includes("--watch"),
-        publicUrl: process.argv.includes("--serve") || process.env.NODE_ENV == "development" ? null : "./",
+        outDir:     OUT_DIR,
+        watch:      process.argv.includes("--watch"),
+        publicUrl:  process.argv.includes("--serve") || process.env.NODE_ENV === "development" ? null : "./",
+        minify:     process.env.NODE_ENV === "production",
+        sourceMaps: process.env.NODE_ENV === "development"
     });
 
     bundler.on("bundled", bundle => {
