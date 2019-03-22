@@ -1,0 +1,78 @@
+.view  {
+    left: -4px;
+
+    .back {
+        position: absolute;
+        top: -45px;
+        right: 50px;
+        font-weight: bold;
+        color: white;
+        font-size: 16pt;
+        cursor: pointer;
+    }
+
+    nav {
+        display: flex;
+
+        .tab {
+            display: inline-block;
+            color: $primaryColor;
+            padding: 15px;
+            cursor: pointer;
+            text-align: center;
+            flex-grow: 1;
+
+            &:hover {
+                @extend .active-tab;
+            }
+        }
+    }
+
+    [data-tag] {
+        display: flex;
+        flex-wrap: wrap;
+
+        label, input {
+            height: 50px;
+            padding: 10px;
+            flex-grow: 1;
+        }
+
+        label {
+            flex-basis: 20%;
+            line-height: 30px;
+            min-width: 200px;
+        }
+        
+        input {
+            flex-basis: 80%;
+        }
+
+        h3, [data-tag] {
+            flex-basis: 100%;
+        }
+    }
+
+    main div {
+        padding: 15px 0 15px 15px !important;
+    }
+
+    main > div {
+        display: none !important; // !important needed here, cascade doesn't work otherwise
+        padding-right: 30px !important;
+    }
+
+    
+
+    @for $i from 1 through 5 {
+        &[data-view="#{$i}"] {
+            nav .tab:nth-child(#{$i + 1}) { @extend .active-tab; }
+            main > div:nth-child(#{$i}) { display: flex !important; }
+        }
+    }
+}
+
+.active-tab {
+    background: $primaryColor;
+    color: white;
+}

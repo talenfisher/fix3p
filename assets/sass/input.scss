@@ -1,0 +1,79 @@
+.input-color {
+    position: relative;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    vertical-align: middle;
+
+    .input-overlay { 
+        pointer-events: none;
+        cursor: pointer;
+        z-index: 1;
+        border-radius: 100%;
+        border: 2px solid $primaryColor;
+    }
+
+    input { 
+        z-index: 0; 
+        opacity: 0.1;
+    }
+
+    .input-overlay, &:before, input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        cursor: pointer;
+    }
+}
+
+.select-container {
+    position: relative;
+    height: 30px;
+    display: inline-block;
+    width: auto;
+    color: $primaryColor;
+    border-bottom: 1px solid;
+    vertical-align: middle;
+    font-size: 14pt;
+
+    > * {
+        vertical-align: top;
+    }
+
+    label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        line-height: 30px;
+    }
+
+    select {
+        -webkit-appearance: none;
+        appearance: none;
+        background: none;
+        border: none;
+        color: $primaryColor;
+        padding: 0 15px 0 60px;
+        height: 100%;
+        line-height: 30px;
+        font-size: 12pt;
+        cursor: pointer;
+    }
+
+    &:after {
+        content: '\f107';
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: inline-block;
+        height: 100%;
+        line-height: 30px;
+        pointer-events: none;
+        cursor: pointer;
+    }
+}

@@ -1,0 +1,42 @@
+language: node_js
+
+node_js:
+  - '10'
+
+before_script:
+  - npm install
+  - mkdir dist
+  - cd dist
+  
+  - git init
+  - git config user.email "travis@example.com"
+  - git config user.name "Travis CI"
+  - git remote add origin https://${GH_AUTH}@github.com/talenfisher/fix3p.git
+  - git fetch
+  - git reset origin/gh-pages && git checkout gh-pages
+  
+  # setup test files
+  - cd ../tests
+  - git clone https://${GH_AUTH}@github.com/talenfisher/fix3p-testfiles.git data
+  - cd ../
+
+script:
+  - NODE_ENV="development" npm run test
+
+deploy:
+  - provider: script
+    skip-cleanup: true
+    script: bash bin/deploy
+    local-dir: dist
+    on:
+      all_branches: true
+      condition: $TRAVIS_BRANCH == "master" || -n $TRAVIS_TAG
+
+  - provider: script
+    script: npm run release
+    skip_cleanup: true
+    on:
+      tags: true
+
+notifications:
+  slack: csafe-isu:$SLACK_TOKEN
