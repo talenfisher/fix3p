@@ -21,7 +21,8 @@ before_script:
   - cd ../
 
 script:
-  - NODE_ENV="development" npm run test
+  - NODE_ENV="development" npm run build
+  - npm run test
 
 deploy:
   - provider: script
