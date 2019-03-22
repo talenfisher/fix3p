@@ -13,9 +13,6 @@ fi
 
 zip -r ../extension.zip *
 
-BASETAG='<base href=\"https\:\/\/talenfisher.github.io\/fix3p\">';
-sed -i "s/<\/head>/$BASETAG\0/" index.html
-
 git add .
 git commit -m "Pages build $TRAVIS_BUILD_NUMBER"
 git push --quiet
