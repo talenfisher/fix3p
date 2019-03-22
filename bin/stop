@@ -1,9 +1,0 @@
-#!/bin/bash
-
-if ! docker stop fix3p-dev >/dev/null; then
-    echo "Error Stopping FiX3P";
-fi
-
-if ! docker rm fix3p-dev >/dev/null; then
-    echo "Error removing container";
-fi
