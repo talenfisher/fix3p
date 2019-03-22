@@ -39,7 +39,7 @@ void function main() {
         watch:      process.argv.includes("--watch"),
         publicUrl:  process.argv.includes("--serve") || process.env.NODE_ENV === "development" ? null : "./",
         minify:     process.env.NODE_ENV === "production",
-        sourceMaps: process.env.NODE_ENV === "development"
+        sourceMaps: process.env.NODE_ENV !== "production"
     });
 
     bundler.on("bundled", bundle => {
