@@ -1,6 +1,6 @@
 {
   "name": "fix3p",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Application for fixing headers in X3P bullet scan files",
   "main": "",
   "dependencies": {
