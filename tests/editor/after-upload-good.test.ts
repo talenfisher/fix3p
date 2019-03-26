@@ -16,12 +16,12 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
 
             let input = await page.$(".upload input");
             await input.uploadFile(resolve(__dirname, "../data/good/"+file));
-            await page.waitForSelector(`[data-view="editor"]`);
+            await page.waitForSelector(`[view="editor"]`);
             await sleep(1000);
         });
 
         it("Should be visible", async () => {
-            let el = await page.$(`.view`);
+            let el = await page.$(`fix3p-editor`);
             let visible = await el.isIntersectingViewport();
 
             expect(visible).toBe(true);
@@ -81,7 +81,7 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
             (await page.$(".back")).click();
             
             await sleep(1000);
-            let el = await page.$(`.view`);
+            let el = await page.$(`fix3p-editor`);
             let visible = await el.isIntersectingViewport();
 
             expect(visible).toBe(false);

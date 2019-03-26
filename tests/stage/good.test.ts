@@ -11,7 +11,7 @@ for(let file of readdirSync(dataFiles.good)) {
         beforeEach(async () => {
             await page.goto(url);
 
-            let input = await page.$(".upload input");
+            let input = await page.$("fix3p-uploader input");
             await input.uploadFile(resolve(`${dataFiles.good}${file}`));
             await page.waitForSelector("[data-tag]");
         });

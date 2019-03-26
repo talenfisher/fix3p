@@ -9,7 +9,7 @@ for(let file of readdirSync(resolve(__dirname, "../data/bad/"))) {
         beforeEach(async () => {
             await page.goto(url);
             page.evaluate(`fix3p.render = false;`);
-            input = await page.$(".upload input");
+            input = await page.$("fix3p-uploader input");
         });
 
         if(!file.match(/\.x3p$/g) || file.match(/\[nu\]/g)) {

@@ -6,7 +6,7 @@ describe("Editor (before upload)", () => {
     });
 
     it("Should initially be invisible", async () => {
-        let el = await page.$(".view");
+        let el = await page.$("fix3p-editor");
         let visible = await el.isIntersectingViewport();
 
         expect(visible).toBe(false);
