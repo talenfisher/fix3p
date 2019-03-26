@@ -266,7 +266,7 @@ export default class Editor extends HTMLElement {
         let no = popup.el.querySelector("#continue-no") as HTMLElement;
         no.onclick = e => { 
             popup.hide(true);
-            Session.end();
+            setTimeout(() => Session.end(), 500); // wait for popup animation to finish
         };
     }
 
