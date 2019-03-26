@@ -1,19 +1,14 @@
 import X3P from "x3p.js";
 import Popup from "./popup";
 import Session from "./session";
-import { throws, time } from "./decorators";
+import { throws, time, CustomElement } from "./decorators";
 import Logger from "./logger";
-
-interface UploaderOptions {
-    session: Session;
-}
 
 /**
  * The uploader element
  */
-export default class Uploader {
-    private session: Session;
-
+@CustomElement
+export default class Uploader extends HTMLElement {
     private label: HTMLElement; 
     private input: HTMLInputElement;
     private loadingPopup: Popup;
@@ -21,15 +16,13 @@ export default class Uploader {
     /**
      * Constructs a new uploader view
      */
-    constructor(options: UploaderOptions) {
-        this.session = options.session;
-
-        this.label = document.querySelector(".upload label");
-        this.input = document.querySelector(".upload input");
+    connectedCallback() {
+        this.label = this.querySelector(".upload label");
+        this.input = this.querySelector(".upload input");
         this.loadingPopup = new Popup("Loading...", ["loading"]);
 
         this.setupListeners();
-        this.session.on("end", this.display.bind(this));
+        Session.on("end", this.reset.bind(this));
     }
 
     /**
@@ -67,9 +60,9 @@ export default class Uploader {
         
         Logger.action(`read started`, file.name);
         let x3p = await new X3P({ file });
-
         Logger.action(`read success`, file.name);
-        this.session.start(x3p, file.name);
+    
+        Session.start(x3p, file.name);
     }
 
     /**
@@ -77,14 +70,6 @@ export default class Uploader {
      */
     reset() {
         this.loadingPopup.hide();
-        this.input.value = "";
-    }
-  
-    /**
-     * Displays the uploader screen
-     */
-    display() {
-        document.querySelector("form").setAttribute("data-view", "uploader");
         this.input.value = "";
     }
 }

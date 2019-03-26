@@ -1,37 +1,39 @@
 // polyfills - must go before anything else is imported
 import "@babel/polyfill";
+import "@webcomponents/webcomponentsjs";
 import "fullscreen-api-polyfill";
 
 // modules
-import Uploader from "./uploader";
-import Editor from "./editor";
-import Popup from "./popup";
 import Session from "./session";
+import Popup from "./popup";
 import axios from "axios";
 import Logger, { setup as setupLogger } from "./logger";
 
 declare var window: any;
 declare var document: any;
 
-// setup files
+// dom helpers and custom elements
 import "./dom/setup";
+import "./panorama";
+import "./uploader";
+import "./editor";
+import "./stage";
 
 class FiX3P {
-    public session: Session = new Session();
+    public session = Session;
     public extLoaded: boolean = false;
     public render: boolean = true;
     public reporting: boolean = localStorage.getItem("reporting") === "on";
     public version: string = document.querySelector(`meta[name="fix3p.version"]`).getAttribute("value");
-    public uploader?: Uploader;
-    public editor?: Editor;
 
     public constructor() {
         setupLogger(this);
         this.checkForExtension();
-        this.setupScreens();
 
-        let file = localStorage.getItem("openfile");
-        this.init(file);
+        document.on("WebComponentsReady", () => {
+            let file = localStorage.getItem("openfile");
+            this.init(file);
+        });
     }
 
     private checkForExtension() {
@@ -42,12 +44,6 @@ class FiX3P {
         } catch(e) {
             Logger.info("chrome extension not detected");
         }
-    }
-
-    private setupScreens() {
-        this.uploader = new Uploader({ session: this.session });
-        this.editor = new Editor({ session: this.session });
-        this.uploader.display();
     }
     
     private async init(filename?: string) {
@@ -60,7 +56,8 @@ class FiX3P {
             popup.display();
             
             let file = await this.readLocalFile(filename);
-            this.uploader.read(file);
+            let uploader = document.querySelector("fix3p-uploader");
+            uploader.read(file);
             popup.hide(true);
         } catch(exception) {
             popup.update("Error reading X3P file.");

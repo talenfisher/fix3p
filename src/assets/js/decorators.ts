@@ -18,7 +18,8 @@ export function time(options: { max: number, reset?: boolean }) {
                 }
             };
 
-            let filename = this.session ? this.session.filename : null;            
+            let Session = require("./session");
+            let filename = Session ? Session.filename : null;            
             let warning = setTimeout(() => Logger.warn(`Calling ${this.constructor.name}.${key} is taking a while (max = ${options.max}ms)`, filename), options.max);
             let start = performance.now();
             let returnValue = await method.apply(this, args);
@@ -50,7 +51,8 @@ export function throws(options: { message: string, classes?: string[], reset?: b
                 let error = new Popup(`<i class="fas fa-exclamation-triangle"></i> ${options.message}`, options.classes);
                 error.display(2, true);
 
-                let filename = this.session ? this.session.filename : null;
+                let Session = require("./session");
+                let filename = Session ? Session.filename : null;
                 Logger.error(e, filename);
 
             } finally {
@@ -63,4 +65,12 @@ export function throws(options: { message: string, classes?: string[], reset?: b
     
         return descriptor;
     }
+}
+
+
+
+
+export function CustomElement(constructor) {
+    customElements.define(`fix3p-${constructor.name.toLowerCase()}`, constructor);
+    return constructor;
 }

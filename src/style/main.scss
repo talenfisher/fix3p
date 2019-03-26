@@ -49,69 +49,13 @@ label, .tab {
  
 @import "header"; 
 @import "animations";
-@import "editor";
+@import "panorama";
 @import "input";
 @import "stage";
 
 .viewport {
     overflow-x: hidden;
 }
-
-form {
-    white-space: nowrap;
-    position: relative;
-    transition: right .5s;
-    right: 0;
-
-    .screen {
-        width: 100vw;
-        display: inline-block;
-        position: relative;
-        vertical-align: top;
-    }
-
-    &[data-view="uploader"] {
-        height: calc(100vh - 70px);
-        overflow: hidden;
-    }
-
-    &[data-view="editor"] {
-        right: 100vw;
-        height: auto;
-    }
-}
-
-.upload {
-    text-align: center;
-
-    input {
-        display: none;
-    }
-
-    label {
-        display: block;
-        height: 100vh;
-        width: calc(100% - 30px);
-        padding: 200px 15px;
-        font-size: 2.5em;
-        color: $primaryColor;
-        cursor: pointer;
-        position: relative;
-        
-        small {
-            font-size: 0.8em;
-        }
-
-        i { 
-            font-size: 3em;
-        }
-
-        &:hover, .hover {
-            color: lighten($primaryColor, 10%);
-        }
-    }    
-}
-
 
 
 .popup {

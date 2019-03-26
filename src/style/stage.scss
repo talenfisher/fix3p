@@ -55,8 +55,20 @@
             .history-controls {
                 float: left;
                 
-                i {
-                    margin: 0;
+                fix3p-historybutton {
+                    margin: 0 10px;
+                    cursor: pointer;
+                    transition: transform .5s;
+                    padding: 10px;
+                    border-radius: 100%;
+                    position: relative;
+                    border: 5px solid transparent;
+                    cursor: pointer;
+                    transition: transform .5s;
+
+                    &:hover {
+                        transform: scale(1.1);
+                    }
                 }
             }
 

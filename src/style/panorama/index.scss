@@ -1,0 +1,29 @@
+fix3p-panorama {
+    white-space: nowrap;
+    position: relative;
+    right: 0;
+
+    .screen {
+        width: 100vw;
+        display: inline-block;
+        position: relative;
+        vertical-align: top;
+        transition: transform .5s;
+    }
+
+    &[view="uploader"] {
+        height: calc(100vh - 70px);
+        overflow: hidden;
+    }
+
+    &[view="editor"] {
+        height: auto;
+
+        .screen {
+            transform: translateX(-100%);
+        }
+    }
+
+    @import "./editor.scss";
+    @import "./uploader.scss";
+}

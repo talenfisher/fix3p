@@ -1,26 +1,19 @@
 import Session from "../../session";
 import Logger from "../../logger";
+import { CustomElement } from "../../decorators";
 
-interface SizeSliderOptions {
-    el: HTMLInputElement;
-    session: Session;
-}
+@CustomElement
+export default class SizeSlider extends HTMLElement {
+    private input: HTMLInputElement;
 
-
-export default class SizeSlider {
-    private el: HTMLInputElement;
-    private session: Session;
-
-    constructor(options: SizeSliderOptions) {
-        this.el = options.el;
-        this.session = options.session;
-
+    connectedCallback() {
+        this.input = this.querySelector("input");
         this.setupListeners();
-        this.session.on("render", this.reset.bind(this));
+        Session.on("render", this.reset.bind(this));
     }
 
     public reset() {
-        if(!this.session.started) return;
+        if(!Session.started) return;
 
         this.value = 0.15;
         this.updateBrushSize();
@@ -29,30 +22,30 @@ export default class SizeSlider {
     public get value() {
         // range inputs don't work with decimals, otherwise
         // I would just use 0/1 min/max attrs on the range element
-        return (Number(this.el.value) / 100); 
+        return (Number(this.input.value) / 100);
     }
 
     public set value(value: number) {
-        if(!this.session.started || value < 0 || value > 1) return;
-        this.el.value = String(value * 100);
+        if(!Session.started || value < 0 || value > 1) return;
+        this.input.value = (value * 100).toString();
     }
 
     public get maxBrushSize() {
-        if(!this.session.started) return 0;
+        if(!Session.started) return 0;
 
-        let { x, y } = this.session.x3p.axes;
+        let { x, y } = Session.x3p.axes;
         return (x.size / y.size) * 100;
     }
 
     private setupListeners() {
-        this.el.onchange = this.updateBrushSize.bind(this);
+        this.input.onchange = this.updateBrushSize.bind(this);
     }
 
     private updateBrushSize() {
-        if(!this.session.started) return;
+        if(!Session.started) return;
 
-        let brush = this.session.brush;
+        let brush = Session.brush;
         brush.size = this.value * this.maxBrushSize;
-        Logger.action(`brush size changed to ${brush.size}`, this.session.filename);
+        Logger.action(`brush size changed to ${brush.size}`, Session.filename);
     }
 }

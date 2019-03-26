@@ -2,10 +2,9 @@ import { X3P } from "x3p.js";
 import Stage from "./stage";
 import Popup from "./popup";
 import { rgbToHex } from "./color";
-import Session from "./session";
+import { time, throws, CustomElement } from "./decorators";
 import Logger from "./logger";
-import { time, throws } from "./decorators";
-import fix3p from ".";
+import Session from "./session";
 
 const EMPTY = "";
 const TAB_ATTR = "data-view";
@@ -18,15 +17,8 @@ const LABEL_TRANSFORMS = {
     MD5ChecksumPointData: "MD5 Checksum"
 };
 
-interface EditorOptions {
-    session: Session;
-}
-
-
-export default class Editor {
-    private session: Session;
-
-    private el: Element;
+@CustomElement
+export default class Editor extends HTMLElement {
     private nav: Element;
     private main: Element;
     private stage: Stage;
@@ -37,24 +29,17 @@ export default class Editor {
      * Constructs a new editor
      * @param el the editor node
      */
-    constructor(options: EditorOptions) {
-        this.session = options.session;
-
-        this.el = document.querySelector(".view");
-        this.nav = this.el.querySelector("nav");
-        this.main = this.el.querySelector("main");
-        this.stage = new Stage({ 
-            el: this.el.querySelector(".stage"), 
-            editor: this, 
-            session: options.session 
-        });
+    connectedCallback() {
+        this.nav = this.querySelector("nav");
+        this.main = this.querySelector("main");
+        this.stage = this.querySelector("fix3p-stage");
         
-        this.backbtn = this.el.querySelector(".back");
-        this.backbtn.onclick = this.session.end.bind(this.session);
+        this.backbtn = this.querySelector(".back");
+        this.backbtn.onclick = Session.end.bind(Session);
         
         this.setupShortcuts();
-        this.session.on("start", this.display.bind(this));
-        this.session.on("end", this.reset.bind(this));
+        Session.on("start", this.display.bind(this));
+        Session.on("end", this.reset.bind(this));
     }
 
     /**
@@ -70,7 +55,7 @@ export default class Editor {
      * Gets the current tab number
      */
     get tab() {
-        return parseInt(this.el.getAttribute(TAB_ATTR));
+        return parseInt(this.getAttribute(TAB_ATTR));
     }
 
     /**
@@ -78,7 +63,7 @@ export default class Editor {
      * @param tab the tab number to switch to.
      */
     set tab(tab: number) {
-        this.el.setAttribute(TAB_ATTR, tab.toString());
+        this.setAttribute(TAB_ATTR, tab.toString());
     }
 
     /**
@@ -87,14 +72,12 @@ export default class Editor {
      * @param manifest root element of the main.xml file
      */
     generate(manifest) {
-        Logger.action("editor generation started", this.session.filename);
-
+        Logger.action("editor generation started", Session.filename);
         this.count = 0;
         this.reset();
         this.setupDownloadButton();
         this.inputify(manifest, this.main);
-
-        Logger.action("editor generation completed", this.session.filename);
+        Logger.action("editor generation completed", Session.filename);
     }
 
     /**
@@ -148,8 +131,7 @@ export default class Editor {
         }) as HTMLElement;
 
         tab.onclick = (e) => {
-            let view = document.querySelector(".view");
-            view.setAttribute("data-view", tab.index().toString());
+            this.setAttribute("data-view", tab.index().toString());
         };
 
         return tab;
@@ -225,12 +207,7 @@ export default class Editor {
         if(body) body.parentElement.removeChild(body);
         
         this.generate(manifest.children[0]);
-        
-        let form = document.querySelector("form");
-        form.setAttribute("data-view", "editor");
-
-        this.stage.enabled = fix3p.render;
-        Logger.action(`rendering ${fix3p.render ? "enabled" : "disabled"}`, this.session.filename);
+        Session.emit("editor:ready", x3p);
     }
 
     /**
@@ -263,17 +240,17 @@ export default class Editor {
     @time({ max: 5000 })
     @throws({ message: "An error occurred." })
     async download(e) {
-        if(!this.session.started) return;
+        if(!Session.started) return;
         e.preventDefault();
 
-        let x3p = this.session.x3p;
+        let x3p = Session.x3p;
         await x3p.save();        
         
         let popup = new Popup("Compressing...");
         popup.display();
 
         await x3p.download();
-        Logger.action("file downloaded", this.session.filename);
+        Logger.action("file downloaded", Session.filename);
 
         popup.update(`
             Continue editing this file? 
@@ -289,7 +266,7 @@ export default class Editor {
         let no = popup.el.querySelector("#continue-no") as HTMLElement;
         no.onclick = e => { 
             popup.hide(true);
-            this.session.end();
+            Session.end();
         };
     }
 
@@ -326,7 +303,7 @@ export default class Editor {
     private closeShortcut(e: KeyboardEvent) {
         if(e.which === 27 && document.fullscreenElement === null) {
             e.preventDefault();
-            this.session.end();
+            Session.end();
             return true;
         }
     }
@@ -336,7 +313,7 @@ export default class Editor {
      */
     private setupShortcuts() {
         window.addEventListener("keydown", (e: KeyboardEvent) => {
-            if(!this.session.started) return;
+            if(!Session.started) return;
             this.downloadShortcut(e);
             this.closeShortcut(e);
         });

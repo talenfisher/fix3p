@@ -11,13 +11,13 @@
         <div class="viewport">
             <include src="layout/header.html"></include>
 
-            <form> 
+            <fix3p-panorama> 
 
                 <!-- Uploader -->
                 <include src="layout/uploader.html"></include>
 
                 <!-- Editor -->
-                <div class="view screen" data-view="1">
+                <fix3p-editor class="editor screen" data-view="1">
                     <div class="back"><i class="fas fa-times"></i> Close</div>
                     <nav>
                         <a href="#" class="tab"><i class="fas fa-download"></i> Download</a>
@@ -30,7 +30,7 @@
                     <div class="row">
 
                         <!-- Stage Section -->
-                        <div class="stage" data-mode="normal">
+                        <fix3p-stage class="stage" data-mode="normal">
 
                             <!-- Stage Pane / Header -->
                             <div class="pane">
@@ -46,43 +46,48 @@
                                 <!-- Paint Options -->
                                 <div class="pane-paint-tray">
                                     <span class="history-controls">
-                                        <i id="undo" class="fas fa-undo"></i>
-                                        <i id="redo" class="fas fa-redo"></i>
+                                        <fix3p-historybutton type="undo" id="undo" class="fas fa-undo"></fix3p-historybutton>
+                                        <fix3p-historybutton type="redo" id="redo" class="fas fa-redo"></fix3p-historybutton>
                                     </span>
                                     <span>
-                                        <span class="select-container">
+                                        <fix3p-modeswitcher class="select-container">
                                             <label for="pane-paint-mode">Mode: </label>
                                             <select id="pane-paint-mode">
                                                 <option selected>Paint</option>
                                                 <option>Lasso</option>
                                                 <option>Eraser</option>
                                             </select>
-                                        </span>
+                                        </fix3p-modeswitcher>
                                     </span>
                                     <span>
-                                        <label for="pane-paint-size">Size: </label>
-                                        <input type="range" min="15" max="100" value="15" id="pane-paint-size">
+                                        <fix3p-sizeslider>
+                                            <label for="pane-paint-size">Size: </label>
+                                            <input type="range" min="15" max="100" value="15" id="pane-paint-size">
+                                        </fix3p-sizeslider>
                                     </span>
                                     <span>
                                         <label for="pane-paint-color">Color: </label>
-                                        <span class="input input-color">
+                                        <fix3p-colorswitcher class="input input-color">
                                             <span class="input-overlay"></span>
                                             <input type="color" id="pane-paint-color">
-                                        </span>
+                                        </fix3p-colorswitcher>
                                     </span>
                                 </div>
                             </div>
 
                             <!-- Drawing Area -->
                             <canvas id="visual" height="500" width="1200"></canvas>
-                            <input id="annotation" placeholder="Type Annotation Here">
-                        </div>
+                            
+                            <fix3p-annotationinput>
+                                <input id="annotation" placeholder="Type Annotation Here">
+                            </fix3p-annotationinput>
+                        </fix3p-stage>
 
                         <!-- Main Editing Section -->
                         <main></main>
                     </div>
-                </div>
-            </form>
+                </fix3p-editor>
+            </fix3p-panorama>
         </div>
 
         <a id="report-a-bug" href="https://github.com/talenfisher/fix3p/issues/new">feedback/report a bug</a>

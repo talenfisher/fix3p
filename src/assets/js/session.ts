@@ -14,7 +14,7 @@ export interface SessionData {
     paintMode?: "Paint" | "Lasso" | "Eraser";
 }
 
-export default class Session extends EventEmitter {
+export class Session extends EventEmitter {
     private data: SessionData = {};
 
     public start(x3p: X3P, filename: string) {
@@ -103,3 +103,6 @@ export default class Session extends EventEmitter {
         return typeof this.data.x3p !== "undefined";
     }   
 }
+
+const session = new Session();
+export default session;
