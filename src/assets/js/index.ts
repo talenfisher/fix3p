@@ -57,8 +57,10 @@ class FiX3P {
             
             let file = await this.readLocalFile(filename);
             let uploader = document.querySelector("fix3p-uploader");
-            uploader.read(file);
+            
             popup.hide(true);
+            uploader.read(file);
+            
         } catch(exception) {
             popup.update("Error reading X3P file.");
             popup.display(2, true);
