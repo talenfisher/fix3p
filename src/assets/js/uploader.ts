@@ -56,6 +56,8 @@ export default class Uploader extends HTMLElement {
     @time({ max: 5000, reset: true })
     @throws({ message: "Please upload a valid X3P file.", classes: ["upload-error"], reset: true })
     async read(file: File) {
+        if(Session.started) return;
+
         this.label.classList.remove("hover");
         this.loadingPopup.display();
         
