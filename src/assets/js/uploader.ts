@@ -22,6 +22,7 @@ export default class Uploader extends HTMLElement {
         this.loadingPopup = new Popup("Loading...", ["loading"]);
 
         this.setupListeners();
+        Session.on("editor:ready", () => setTimeout(() => this.loadingPopup.hide(), 1000));
         Session.on("end", this.reset.bind(this));
     }
 
@@ -69,7 +70,6 @@ export default class Uploader extends HTMLElement {
      * Resets the uploader to its initial state
      */
     reset() {
-        this.loadingPopup.hide();
         this.input.value = "";
     }
 }

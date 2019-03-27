@@ -83,6 +83,17 @@
     height: 50px;
     width: 100px;
 
+    &:before {
+        content: "";
+        background: white;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+    }
+
     input, .custom-checkbox-overlay {
         position: absolute;
         width: 100%;
@@ -92,6 +103,10 @@
         cursor: pointer;
     }
 
+    input {
+        z-index: 0;
+    }
+
     .custom-checkbox-overlay {
         pointer-events: none;
         background: white;
@@ -99,6 +114,7 @@
         color: $primaryColor;
         border-radius: 25px;
         transition: background .5s;
+        z-index: 2;
 
         .custom-checkbox-circle {
             position: relative;
@@ -109,6 +125,7 @@
             background: $primaryColor;
             transform: scale(0.8);
             transition: left .5s;
+            z-index: 3;
         }
     }
 
