@@ -127,9 +127,11 @@ export default class Paint {
         if(!selection || !brush[name] || (name !== "begin" && !brush.active)) return;
 
         let handler = brush[name];
-
         handler.apply(brush, selection.index);
-        texture.setPixels(textureSrc);
-        Session.renderer.drawMesh();
+
+        requestAnimationFrame(() => {
+            texture.setPixels(textureSrc);
+            Session.renderer.drawMesh();
+        });        
     }
 }
