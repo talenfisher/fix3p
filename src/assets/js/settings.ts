@@ -30,6 +30,5 @@ void function setup() {
 
         if(!(el instanceof HTMLInputElement)) return;
         new CheckboxSetting({ el });
-        console.log(el);
     }
 }();

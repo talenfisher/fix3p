@@ -4,18 +4,18 @@
   "description": "Application for fixing headers in X3P bullet scan files",
   "main": "",
   "dependencies": {
-    "@talenfisher/canvas": "^0.2.2",
-    "@webcomponents/webcomponentsjs": "^2.2.7",
+    "@talenfisher/canvas": "^0.3.0",
+    "@webcomponents/webcomponentsjs": "^2.2.10",
     "axios": "^0.18.0",
     "fullscreen-api-polyfill": "^1.1.2",
     "x3p.js": "^0.4.3"
   },
   "devDependencies": {
-    "@babel/polyfill": "^7.4.0",
+    "@babel/polyfill": "^7.4.3",
     "@types/expect-puppeteer": "^3.3.1",
     "@types/jest": "^23.3.14",
     "@types/jest-environment-puppeteer": "^2.2.1",
-    "@types/node": "^10.14.1",
+    "@types/node": "^10.14.5",
     "@types/puppeteer": "^1.12.3",
     "chrome-webstore-upload-cli": "^1.2.0",
     "jest": "^23.6.0",
@@ -24,9 +24,9 @@
     "node-sass": "^4.11.0",
     "parcel-bundler": "^1.12.3",
     "posthtml-include": "^1.2.0",
-    "puppeteer": "^1.13.0",
+    "puppeteer": "^1.14.0",
     "ts-jest": "^23.10.5",
-    "typescript": "^3.3.4000"
+    "typescript": "^3.4.4"
   },
   "scripts": {
     "clean": "rm -rf dist/ src/assets/dist/ src/worker* .cache",

@@ -2,7 +2,7 @@ import { EventEmitter } from "events";
 import { clearCache } from "typedarray-pool";
 import { X3P, Renderer } from "x3p.js";
 import { Brush } from "@talenfisher/canvas";
-import Logger from "./logger";
+import Logger from "./logger"; 
 
 export interface SessionData {
     x3p?: X3P;
@@ -20,7 +20,7 @@ export class Session extends EventEmitter {
     public start(x3p: X3P, filename: string) {
         if(this.started) return;
         this.data.filename = filename;
-        this.data.x3p = x3p;
+        this.data.x3p = x3p; 
 
         this.emit("start", this.data.x3p);
         Logger.action("session started", this.data.filename);
