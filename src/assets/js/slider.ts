@@ -18,7 +18,7 @@ export default class Slider extends HTMLElement {
     }
 
     get width() {
-        return this.track.clientWidth - THUMB_WIDTH;
+        return this.track.offsetWidth - THUMB_WIDTH;
     }
 
     get value() {
@@ -54,8 +54,7 @@ export default class Slider extends HTMLElement {
 
         window.addEventListener("mousemove", e => {
             if(!this.active) return;
-            let offset = e.screenX - this.track.offsetLeft;
-
+            let offset = e.clientX - this.track.offsetLeft;
             offset = Math.max(offset, 0);
             offset = Math.min(offset, this.width);
 
