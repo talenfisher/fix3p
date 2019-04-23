@@ -2,7 +2,7 @@ module.exports = {
     launch: {
         dumpio: false,
         headless: process.env.HEADLESS != 'false',
-        args: ["--no-sandbox"]
+        args: ["--no-sandbox", "--start-maximized", "--window-size=1920,1040"]
     },
 
     server: {
