@@ -1,8 +1,5 @@
 import { settings_url } from "../vars";
 
-const OFFSET_TOP_PAD = 5;
-const OFFSET_LEFT_PAD = 3;
-
 var slider = {
     track: {
         width: 0,
@@ -43,6 +40,10 @@ describe("Decimation Slider", () => {
 
         // get track variables
         slider.track.width = await page.evaluate(`document.querySelector("#decimation").width`) - 3;
+    });
+
+    afterEach(async () => {
+        await page.evaluate(`localStorage.clear()`);
     });
 
     it("Should initially be set to 0", async () => {
