@@ -7,6 +7,10 @@ interface Node {
 
 interface NodeList {
     on(event: string, handler: (e) => any);
+    addClass(className: string): void;
+    addClasses(classes: string[]): void;
+    removeClass(className: string): void;
+    removeClasses(classes: string[]): void;
 }
 
 /**
@@ -62,5 +66,41 @@ Node.prototype.on = function(event, handler) {
 NodeList.prototype.on = function(event, handler) {
     for(let node of this) {
         node.addEventListener(event, handler);
+    }
+}
+
+/**
+ * Adds a class to every node in the nodelist.
+ */
+NodeList.prototype.addClass = function(className: string): void {
+    for(let node of this) {
+        node.classList.add(className);
+    }
+}
+
+/**
+ * Adds an array of classes to every node in the nodelist.
+ */
+NodeList.prototype.addClasses = function(classes: string[]): void {
+    for(let className of classes) {
+        this.addClass(className);
+    }
+}
+
+/**
+ * Removes a class from every node in the node list.
+ */
+NodeList.prototype.removeClass = function(className: string): void {
+    for(let node of this) {
+        node.classList.remove(className);
+    }
+}
+
+/**
+ * Removes an array of classes from every node in the node list.
+ */
+NodeList.prototype.removeClasses = function(classes: string[]): void {
+    for(let className of classes) {
+        this.removeClass(className);
     }
 }

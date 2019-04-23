@@ -5,5 +5,5 @@ RUN npm install && npm run build
 
 FROM nginx as production
 WORKDIR /usr/share/nginx/html
-COPY --from=development /var/fix3p/src .
+COPY --from=development /var/fix3p/dist .
 EXPOSE 80

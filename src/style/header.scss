@@ -5,10 +5,24 @@ header {
     line-height: 95px;
     display: flex;
 
+    a {
+        color: white;
+        text-decoration: none;
+    }
+
     > div {
         height: 100%;
-        flex-basis: calc(100% / 3);
+        flex-basis: calc(100% / 2);
         text-align: center;
+
+        &:nth-child(1) {
+            text-align: right;
+            margin-right: 15px;
+        }
+
+        &:nth-child(2) {
+            text-align: left;
+        }
 
         img {
             height: 100%;

@@ -1,6 +1,7 @@
 import { resolve } from "path";
 import { promisify } from "util";
 import { readdirSync, fstat, readFileSync as read } from "fs";
+import { url } from "../vars";
 const sleep = promisify(setTimeout);
 
 for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
@@ -8,23 +9,23 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
     // after upload
     describe(`Editor: <${file}> (good, after upload, no rendering)`, () => {
         beforeEach(async () => {
-            await page.goto("http://localhost:1432/index.html");
+            await page.goto(url);
 
             // turn off rendering
             page.evaluate(`fix3p.render = false;`);
 
             let input = await page.$(".upload input");
             await input.uploadFile(resolve(__dirname, "../data/good/"+file));
-            await page.waitForSelector(`[data-view="editor"]`);
+            await page.waitForSelector(`[view="editor"]`);
             await sleep(1000);
         });
 
         it("Should be visible", async () => {
-            let el = await page.$(`.view`);
+            let el = await page.$(`fix3p-editor`);
             let visible = await el.isIntersectingViewport();
 
             expect(visible).toBe(true);
-        });
+        }, 7000);
 
         it("Record1 should be visible", async () => {
             let el = await page.waitForSelector(`[data-tag="Record1"]`);
@@ -80,7 +81,7 @@ for(let file of readdirSync(resolve(__dirname, "../data/good"))) {
             (await page.$(".back")).click();
             
             await sleep(1000);
-            let el = await page.$(`.view`);
+            let el = await page.$(`fix3p-editor`);
             let visible = await el.isIntersectingViewport();
 
             expect(visible).toBe(false);

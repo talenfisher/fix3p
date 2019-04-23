@@ -1,56 +1,51 @@
 import Session from "../../session";
 import { rgbToHex } from "../../color";
 import Editor from "../../editor";
+import Logger from "../../logger";
+import { CustomElement } from "../../decorators";
 
 interface AnnotationOptions {
-    session: Session;
     editor: Editor;
     el: HTMLInputElement;
 }
 
-export default class AnnotationInput {
-    private session: Session;
-    private editor: Editor;
-    private el: HTMLInputElement;
+@CustomElement
+export default class AnnotationInput extends HTMLElement {
+    private input: HTMLInputElement;
 
-    constructor(options: AnnotationOptions) {
-        this.el = options.el;
-        this.session = options.session;
-        this.editor = options.editor;
-
+    connectedCallback() {
+        this.input = this.querySelector("input");
         this.setupListeners();
-        this.session.on("paint:color-switch", color => this.color = color);
+        Session.on("paint:color-switch", color => this.color = color);
     }
 
     public get color() {
-        return this.el.style.color;
+        return this.input.style.color;
     }
 
     public set color(color: string) {
-        if(!this.session.started) return;
-        
-        let el = this.el;
-        let x3p = this.session.x3p;
+        if(!Session.started) return;
 
-        el.style.color = color;
-        el.value = x3p.mask.annotations[color] || "";
+        let x3p = Session.x3p;
+        this.input.style.color = color;
+        this.value = x3p.mask.annotations[color] || "";
     }
 
     public get value() {
-        return this.el.value;
+        return this.input.value;
     }
 
     public set value(value: string) {
-        this.el.value = value;
+        this.input.value = value;
     }
 
     private setupListeners() {
-        this.el.onkeyup = e => {
-            if(!this.session.started) return;
+        this.input.onkeyup = e => {
+            if(!Session.started) return;
 
-            let annotations = this.session.x3p.mask.annotations;
-            let color = rgbToHex(this.el.style.color);
-            let value = this.el.value;    
+            let annotations = Session.x3p.mask.annotations;
+            let color = rgbToHex(this.color);
+            let value = this.value;    
             
             annotations[color] = value;
             this.updateEditor(color, value);
@@ -58,9 +53,9 @@ export default class AnnotationInput {
     }
 
     private updateEditor(color, value) {
-        if(!this.session.started) return;
+        if(!Session.started) return;
 
-        let x3p = this.session.x3p;
+        let x3p = Session.x3p;
         let editorEl = document.querySelector(`[data-tag="Annotation"][data-color="${color}"] input`) as HTMLInputElement | null;
             
         if(editorEl) {
@@ -77,7 +72,8 @@ export default class AnnotationInput {
                 target = maskEl;
             } 
 
-            this.editor.inputify(source, target);
+            let editor = document.querySelector("fix3p-editor") as Editor;
+            editor.inputify(source, target);
         }
     }
 }

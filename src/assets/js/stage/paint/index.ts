@@ -12,11 +12,10 @@ import SizeSlider from "./size-slider";
 interface PaintOptions {
     stage: Stage;
     editor: Editor;
-    session: Session;
 }
 
-const DEFAULT_COLOR = "#1f376c";
-const DEFAULT_COLOR_RGB = "rgb(31, 55, 108)";
+export const DEFAULT_COLOR = "#1f376c";
+export const DEFAULT_COLOR_RGB = "rgb(31, 55, 108)";
 
 /**
  * Class for handling texture painting
@@ -27,7 +26,6 @@ export default class Paint {
     public color: any = {};
 
     private file?: X3P;
-    private session: Session;
     private stage: Stage;
     private brush?: Brush;
     private editor: Editor;
@@ -50,57 +48,28 @@ export default class Paint {
      * @param options options for setting up painting
      */
     constructor(options: PaintOptions) {
-        this.session = options.session;
         this.stage = options.stage;
         this.editor = options.editor;
 
-        let stage = options.stage.el;
+        let stage = options.stage;
         this.btn = stage.querySelector(".fa-paint-brush");
         this.tray = stage.querySelector(".pane-paint-tray");
-        
-        this.colorSwitcher = new ColorSwitcher({
-            session: this.session,
-            el: stage.querySelector(".input-color"),
-            defaultColor: DEFAULT_COLOR,
-        });
-
-        this.modeSwitcher = new ModeSwitcher({
-            session: this.session,
-            el: stage.querySelector("#pane-paint-mode"),
-        });
-
-        this.undoButton = new HistoryButton({
-            session: this.session,
-            el: stage.querySelector("#undo"),
-            type: "undo",
-        });
-
-        this.redoButton = new HistoryButton({
-            session: this.session,
-            el: stage.querySelector("#redo"),
-            type: "redo",
-        });
-
-        this.annotationInput = new AnnotationInput({
-            session: this.session,
-            el: stage.querySelector("#annotation"),
-            editor: options.editor,
-        });
-
-        this.sizeSlider = new SizeSlider({
-            session: this.session,
-            el: stage.querySelector("#pane-paint-size")
-        });
+        this.undoButton = stage.querySelector(`fix3p-historybutton[type="undo"]`);
+        this.redoButton = stage.querySelector(`fix3p-historybutton[type="redo"]`);
+        this.colorSwitcher = stage.querySelector("fix3p-colorswitcher");
+        this.sizeSlider = stage.querySelector("fix3p-sizeslider");
+        this.modeSwitcher = stage.querySelector("fix3p-modeswitcher");
+        this.annotationInput = stage.querySelector("fix3p-annotationinput");
 
         this.setupListeners();
-        this.session.on("render", this.update.bind(this));
+        Session.on("render", this.update.bind(this));
     }
 
     /**
      * Updates the paint object to use the current file
      */
     public update() {
-        this.session.paintColor = DEFAULT_COLOR;
+        Session.paintColor = DEFAULT_COLOR;
         this.annotationInput.color = DEFAULT_COLOR_RGB;
     }
 
@@ -112,10 +81,10 @@ export default class Paint {
         // the paint button - triggers paint mode on and off
         let btn = this.btn;
         btn.onclick = e => {
-            if(!this.session.renderer) return;
+            if(!Session.renderer) return;
 
             let active = this.stage.toggleMode("paint");
-            this.session.renderer.mode = active ? "still" : "normal";
+            Session.renderer.mode = active ? "still" : "normal";
             active ? this.attachCanvasListeners() : this.detachCanvasListeners();
         }
     }
@@ -145,24 +114,24 @@ export default class Paint {
      * @param name the name of the event to dispatch
      */
     private dispatch(e: MouseEvent, name: "begin" | "move" | "end") {
-        if(!this.session.renderer) return;
-        
-        let rightButtonClicked = e.which === 3 || e.button === 2;
-        if(rightButtonClicked) return; 
+        // return if right mouse button was pressed
+        if(!Session.renderer || (e.which === 3 || e.button === 2)) return;
 
-        let brush = this.session.brush;
-        let selection = this.session.renderer.selection;
-        let mask = this.session.x3p.mask;
-        let texture = this.session.texture;
+        let brush = Session.brush;
+        let selection = Session.renderer.selection;
+        let mask = Session.x3p.mask;
+        let texture = Session.texture;
         let textureSrc = mask.canvas.el;
     
         // @ts-ignore
         if(!selection || !brush[name] || (name !== "begin" && !brush.active)) return;
 
         let handler = brush[name];
-
         handler.apply(brush, selection.index);
-        texture.setPixels(textureSrc);
-        this.session.renderer.drawMesh();
+
+        requestAnimationFrame(() => {
+            texture.setPixels(textureSrc);
+            Session.renderer.drawMesh();
+        });        
     }
 }

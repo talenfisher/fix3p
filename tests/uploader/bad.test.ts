@@ -1,14 +1,15 @@
 import { resolve } from "path";
 import { readdirSync } from "fs";
+import { url } from "../vars";
 
 for(let file of readdirSync(resolve(__dirname, "../data/bad/"))) {
     describe(`Uploader <${file}> (bad)`, () => {
         var input;
 
         beforeEach(async () => {
-            await page.goto("http://localhost:1432/index.html");
+            await page.goto(url);
             page.evaluate(`fix3p.render = false;`);
-            input = await page.$(".upload input");
+            input = await page.$("fix3p-uploader input");
         });
 
         if(!file.match(/\.x3p$/g) || file.match(/\[nu\]/g)) {

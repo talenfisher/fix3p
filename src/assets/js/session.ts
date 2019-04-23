@@ -2,9 +2,11 @@ import { EventEmitter } from "events";
 import { clearCache } from "typedarray-pool";
 import { X3P, Renderer } from "x3p.js";
 import { Brush } from "@talenfisher/canvas";
+import Logger from "./logger"; 
 
 export interface SessionData {
     x3p?: X3P;
+    filename?: string;
     renderer?: Renderer;
     brush?: Brush;
     paintColor?: string;
@@ -12,13 +14,16 @@ export interface SessionData {
     paintMode?: "Paint" | "Lasso" | "Eraser";
 }
 
-export default class Session extends EventEmitter {
+export class Session extends EventEmitter {
     private data: SessionData = {};
 
-    public start(x3p: X3P) {
+    public start(x3p: X3P, filename: string) {
         if(this.started) return;
-        this.data.x3p = x3p;
+        this.data.filename = filename;
+        this.data.x3p = x3p; 
+
         this.emit("start", this.data.x3p);
+        Logger.action("session started", this.data.filename);
     }
     
     public end() {
@@ -29,12 +34,17 @@ export default class Session extends EventEmitter {
         }
 
         this.emit("end");
+        Logger.action("session ended", this.data.filename);
         this.data = {};
         clearCache();
     }
 
     public get x3p() {
         return this.data.x3p;
+    }
+
+    public get filename() {
+        return this.data.filename;
     }
 
     public get renderer() {
@@ -93,3 +103,6 @@ export default class Session extends EventEmitter {
         return typeof this.data.x3p !== "undefined";
     }   
 }
+
+const session = new Session();
+export default session;

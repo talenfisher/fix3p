@@ -1,32 +1,29 @@
 import X3P from "x3p.js";
 import Popup from "./popup";
 import Session from "./session";
-
-declare var fix3p;
-
-interface UploaderOptions {
-    session: Session;
-}
+import { throws, time, CustomElement } from "./decorators";
+import Logger from "./logger";
 
 /**
  * The uploader element
  */
-export default class Uploader {
-    private session: Session;
+@CustomElement
+export default class Uploader extends HTMLElement {
     private label: HTMLElement; 
     private input: HTMLInputElement;
+    private loadingPopup: Popup;
 
     /**
      * Constructs a new uploader view
      */
-    constructor(options: UploaderOptions) {
-        this.session = options.session;
+    connectedCallback() {
+        this.label = this.querySelector(".upload label");
+        this.input = this.querySelector(".upload input");
+        this.loadingPopup = new Popup("Loading...", ["loading"]);
 
-        this.label = document.querySelector(".upload label");
-        this.input = document.querySelector(".upload input");
         this.setupListeners();
-
-        this.session.on("end", this.display.bind(this));
+        Session.on("editor:ready", () => setTimeout(() => this.loadingPopup.hide(), 1000));
+        Session.on("end", this.reset.bind(this));
     }
 
     /**
@@ -40,47 +37,41 @@ export default class Uploader {
 
         this.label.addEventListener("dragenter", e => this.label.classList.add("hover"));
         this.label.addEventListener("dragleave", e => this.label.classList.remove("hover"));
-        this.label.addEventListener("drop", this.read.bind(this));
-        this.input.addEventListener("change", this.read.bind(this));
+        this.label.addEventListener("drop", e => {
+            e.stopPropagation();
+            this.read(e.dataTransfer.files[0]);
+        });
+
+        this.input.addEventListener("change", e => {
+            e.stopPropagation();
+            this.read(this.input.files[0]);
+        });
     }
 
     /**
      * Read the file that was selected
      * 
-     * @param e event parameters
-     * @param byclick whether or not this was triggered by clicking the upload stage
+     * @param file the file to read
      */
-    async read(e: DragEvent | Event) {
-        e.stopPropagation();
+    @time({ max: 5000, reset: true })
+    @throws({ message: "Please upload a valid X3P file.", classes: ["upload-error"], reset: true })
+    async read(file: File) {
+        if(Session.started) return;
+
         this.label.classList.remove("hover");
-
-        let file = (e instanceof DragEvent) ? e.dataTransfer.files[0] : this.input.files[0];
+        this.loadingPopup.display();
         
-        let loading = new Popup(`Loading...`, ["loading"]);
-        loading.display();
+        Logger.action(`read started`, file.name);
+        let x3p = await new X3P({ file });
+        Logger.action(`read success`, file.name);
         
-        try {
-            let x3p = await new X3P({ file });
-            loading.hide(true);
-            this.session.start(x3p);
-
-        } catch(x3pexception) {
-            loading.hide(true);
-
-            let error = new Popup(`<i class="fas fa-exclamation-triangle"></i> Please upload a valid X3P file.`, ["upload-error"]);
-            error.display(2, true);
-
-            console.error(x3pexception);
-        } finally {
-            this.input.value = "";
-        }
+        Session.start(x3p, file.name);
     }
-  
+
     /**
-     * Displays the uploader screen
+     * Resets the uploader to its initial state
      */
-    display() {
-        document.querySelector("form").setAttribute("data-view", "uploader");
+    reset() {
         this.input.value = "";
     }
 }

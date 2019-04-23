@@ -1,55 +1,61 @@
+import "./paint/history-button";
+import "./paint/color-switcher";
+import "./paint/size-slider";
+import "./paint/mode-switcher";
+import "./paint/annotation-input";
+
 import { X3P, Renderer } from "x3p.js";
 import Paint from "./paint/index";
 import Editor from "../editor";
 import Session from "../session";
+import { throws, CustomElement } from "../decorators";
+import Logger from "../logger";
+import fix3p from "../";
 
 export interface StageOptions {
     el: HTMLElement;
     editor: Editor;
-    session: Session;
 }
 
 export type MODES = "normal" | "paint";
 
-export default class Stage {
-    public el: HTMLElement;
+@CustomElement
+export default class Stage extends HTMLElement {
     public canvas: HTMLCanvasElement;
     public renderer: Renderer;
     public paint: Paint;
-
-    private session: Session;
     private fullscreenBtn: HTMLElement;
 
-    constructor(options: StageOptions) {
-        this.session = options.session;
-        this.el = options.el;
-        this.canvas = this.el.querySelector("canvas");
+    connectedCallback() {
+        this.canvas = this.querySelector("canvas");
         this.paint = new Paint({ 
             stage: this, 
-            editor: options.editor, 
-            session: this.session 
+            editor: document.querySelector("fix3p-editor")
         });
 
+        console.log(this.paint);
         this.setupFullscreenBtn();
 
-        this.session.on("start", this.render.bind(this));
-        this.session.on("end", this.reset.bind(this));
+        Session.on("editor:ready", this.render.bind(this));
+        Session.on("end", this.reset.bind(this));
     }
 
     public get enabled() {
-        return !this.el.hasAttribute("disabled");
+        return !this.hasAttribute("disabled");
     }
 
     public set enabled(enabled: boolean) {
-        enabled ? this.el.removeAttribute("disabled") : this.el.setAttribute("disabled", "disabled");
+        enabled ? this.removeAttribute("disabled") : this.setAttribute("disabled", "disabled");
+        Logger.action(`rendering ${enabled ? "enabled" : "disabled"}`, Session.filename);
     }
 
     public get mode() {
-        return this.el.getAttribute("data-mode");
+        return this.getAttribute("data-mode");
     }
 
     public set mode(value: string) {
-        this.el.setAttribute("data-mode", value);
+        this.setAttribute("data-mode", value);
+        Logger.action(`stage mode set to ${value}`, Session.filename);
     }
 
     public toggleMode(mode: MODES) {
@@ -63,17 +69,24 @@ export default class Stage {
         this.mode = "normal";
     }
 
+    @throws({ message: "An error occured while rendering." })
     private render(x3p) {
-        if(!this.enabled || !this.session.started || !this.session.x3p) return;
-        this.session.renderer = x3p.render(this.canvas);
+        this.enabled = fix3p.render;
+        if(!this.enabled || !Session.started || !Session.x3p) return;
+
+        Session.renderer = x3p.render(this.canvas, {
+            decimationFactor: fix3p.decimation
+        });
+        
+        Logger.action("rendering started", Session.filename);
     }
 
     private setupFullscreenBtn() {
-        let btn = this.fullscreenBtn = this.el.querySelector(".fa-expand");
+        let btn = this.fullscreenBtn = this.querySelector(".fa-expand");
         
         btn.onclick = (e) => {
-            if(!this.enabled || !this.session.started) return;
-            document.fullscreenElement === null ? this.el.requestFullscreen() : document.exitFullscreen();
+            if(!this.enabled || !Session.started) return;
+            document.fullscreenElement === null ? this.requestFullscreen() : document.exitFullscreen();
         };
 
         document.onfullscreenchange = (e) => {

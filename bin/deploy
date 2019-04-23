@@ -1,6 +1,9 @@
 #!/bin/bash
-cp CREDITS.md src
-cd src
+rm -rf dist/*
+NODE_ENV="production" npm run build
+
+cp CREDITS.md dist
+cd dist
 sed -i "s/{{version}}/$TRAVIS_BUILD_NUMBER/" index.html
 
 if [[ $TRAVIS_TAG != "" ]]; then 
@@ -8,8 +11,10 @@ if [[ $TRAVIS_TAG != "" ]]; then
     sed -i "s/0\.0\.0/$version/" manifest.json; 
 fi
 
+zip -r ../extension.zip *
+
 git add .
 git commit -m "Pages build $TRAVIS_BUILD_NUMBER"
 git push --quiet
-zip -r ../extension.zip *
+
 cd ../

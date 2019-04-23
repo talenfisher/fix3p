@@ -4,6 +4,14 @@
         "target": "es2015",
         "allowJs": true,
         "moduleResolution": "node",
-        "resolveJsonModule": true
-    }
+        "resolveJsonModule": true,
+        "experimentalDecorators": true
+    },
+    "include": [
+        "src/**/*",
+        "tests/**/*"
+    ],
+    "exclude": [
+        "dist/**/*"
+    ]
 }

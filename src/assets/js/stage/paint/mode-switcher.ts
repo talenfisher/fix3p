@@ -1,54 +1,53 @@
 import Session from "../../session";
+import Logger from "../../logger";
+import { CustomElement } from "../../decorators";
 
 interface ModeSwitcherOptions {
     el: HTMLSelectElement;
-    session: Session;
 }
 
 type Mode = "Paint" | "Lasso" | "Eraser";
 
-export default class ModeSwitcher {
-    private el: HTMLSelectElement;
-    private session: Session;
+@CustomElement
+export default class ModeSwitcher extends HTMLElement {
+    private select: HTMLSelectElement;
     
-    constructor(options: ModeSwitcherOptions) {
-        this.el = options.el;
-        this.session = options.session;
-
+    connectedCallback() {
+        this.select = this.querySelector("select");
         this.setupListeners();
-        this.session.on("render", x3p => this.value = "Paint");
+        Session.on("render", x3p => this.value = "Paint");
     }
 
     public get value(): Mode {
-        return this.el.value as Mode;
+        return this.select.value as Mode;
     }
 
     public set value(value: Mode) {
-        if(!this.session.started) return;
+        if(!Session.started) return;
 
-        this.el.value = value;
+        this.select.value = value;
         this.updateBrush();
     }
 
     private setupListeners() {
-        this.el.onchange = e => {
-            this.session.paintMode = this.value;
+        this.select.onchange = e => {
+            Session.paintMode = this.value;
             this.updateBrush();
         }
     }
 
     private updateBrush() {
-        if(!this.session.started || !this.session.brush) return;
+        if(!Session.started || !Session.brush) return;
 
-        let x3p = this.session.x3p;
-        let brush = this.session.brush;
-        let color = this.session.paintColor;
+        let x3p = Session.x3p;
+        let brush = Session.brush;
+        let color = Session.paintColor;
 
         switch(this.value) {
             case "Paint": 
-                    brush.fillPolygons = false;
-                    brush.color = color;
-                    break;
+                brush.fillPolygons = false;
+                brush.color = color;
+                break;
 
             case "Lasso":
                 brush.fillPolygons = true;
@@ -60,5 +59,7 @@ export default class ModeSwitcher {
                 brush.color = x3p.manifest.get(`Record3 Mask Background`);
                 break;
         }
+
+        Logger.action(`annotator mode switched to ${this.value.toLowerCase()}`, Session.filename);
     }
 }
