@@ -139,3 +139,27 @@
         }
     }
 }
+
+fix3p-slider {
+    width: 100%;
+
+    .slider-track {
+        height: 10px;
+        width: 100%;
+        background: $primaryColor;
+        border-radius: 25px;
+        position: relative;
+
+        .slider-thumb {
+            position: absolute;
+            top: -10px;
+            left: 0;
+            height: 30px;
+            border-radius: 25px;
+            width: 30px;
+            background: white;
+            border: 1px solid;
+            color: $primaryColor;
+        }
+    }
+}

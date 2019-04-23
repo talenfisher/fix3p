@@ -12,6 +12,25 @@ body {
     position: relative;
 }
 
+#settings-btn {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 50px;
+    width: 50px;
+    background: $primaryColor;
+    color: white;
+    font-size: 30px;
+    text-align: center;
+    display: block;
+    line-height: 50px;
+    cursor: pointer;
+
+    &:hover {
+        background: lighten($primaryColor, 10%);
+    }
+}
+
 #report-a-bug {
     position: fixed;
     height: 50px;

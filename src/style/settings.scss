@@ -11,6 +11,18 @@ main {
     }
 }
 
+.back {
+    display: block;
+    margin: 30px 0;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
 .setting {
     display: flex;
     height: 100px;

@@ -74,7 +74,10 @@ export default class Stage extends HTMLElement {
         this.enabled = fix3p.render;
         if(!this.enabled || !Session.started || !Session.x3p) return;
 
-        Session.renderer = x3p.render(this.canvas);
+        Session.renderer = x3p.render(this.canvas, {
+            decimationFactor: fix3p.decimation
+        });
+        
         Logger.action("rendering started", Session.filename);
     }
 

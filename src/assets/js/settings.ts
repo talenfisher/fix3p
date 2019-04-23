@@ -1,7 +1,15 @@
 import "@babel/polyfill";
+import "@webcomponents/webcomponentsjs";
+import "./slider";
+
+import Slider from "./slider";
 
 const CHECKBOXES = [
     "reporting"
+];
+
+const SLIDERS = [
+    "decimation"
 ];
 
 interface CheckboxSettingOptions {
@@ -30,5 +38,14 @@ void function setup() {
 
         if(!(el instanceof HTMLInputElement)) return;
         new CheckboxSetting({ el });
+    }
+
+    for(let slider of SLIDERS) {
+        let el = document.getElementById(slider) as Slider;
+        el.value = Number(localStorage.getItem(slider));
+
+        el.onchange = function() {
+            localStorage.setItem(slider, el.value.toString());
+        }
     }
 }();

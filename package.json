@@ -8,7 +8,7 @@
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "axios": "^0.18.0",
     "fullscreen-api-polyfill": "^1.1.2",
-    "x3p.js": "^0.4.3"
+    "x3p.js": "^0.5.1"
   },
   "devDependencies": {
     "@babel/polyfill": "^7.4.3",

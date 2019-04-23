@@ -5,6 +5,11 @@ header {
     line-height: 95px;
     display: flex;
 
+    a {
+        color: white;
+        text-decoration: none;
+    }
+
     > div {
         height: 100%;
         flex-basis: calc(100% / 2);

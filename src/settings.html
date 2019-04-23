@@ -9,6 +9,7 @@
     </head>
     <body>
         <include src="layout/header.html"></include>
+        
         <main>
             <h1>Settings</h1>
             <div class="setting">
@@ -24,6 +25,19 @@
                     </div>
                 </div>
             </div>
+
+            <div class="setting">
+                <label for="decimation">
+                    <h2>Decimation Factor</h2>
+                    <p>The higher this number is, the lower amount of polygons are rendered</p>
+                </label>
+
+                <div class="setting-input">
+                    <fix3p-slider id="decimation"></fix3p-slider>
+                </div>
+            </div>
+
+            <a href="/index.html" class="back"><i class="fas fa-chevron-left"></i> Return to Application</a>
         </main>
     </body>
 </html>

@@ -25,6 +25,7 @@ class FiX3P {
     public render: boolean = true;
     public reporting: boolean = localStorage.getItem("reporting") === "on";
     public version: string = document.querySelector(`meta[name="fix3p.version"]`).getAttribute("value");
+    public decimation: number = Number(localStorage.getItem("decimation"));
 
     public constructor() {
         setupLogger(this);
