@@ -25,6 +25,11 @@ export default class ColorSwitcher extends HTMLElement {
         return this.input.value;
     }
 
+    public set value(value: string) {
+        this.input.value = value;
+        this.input.dispatchEvent(new Event("change"));
+    }
+
     private reset() {
         this.input.value = DEFAULT_COLOR;
         this.overlay.style.backgroundColor = DEFAULT_COLOR;

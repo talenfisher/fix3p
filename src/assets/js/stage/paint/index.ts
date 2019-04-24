@@ -115,7 +115,8 @@ export default class Paint {
      */
     private dispatch(e: MouseEvent, name: "begin" | "move" | "end") {
         // return if right mouse button was pressed
-        if(!Session.renderer || (e.which === 3 || e.button === 2)) return;
+        if(!Session.renderer)   return;
+        if(!!(e.buttons & 2))    return this.handleRightClick(e);
 
         let brush = Session.brush;
         let selection = Session.renderer.selection;
@@ -133,5 +134,14 @@ export default class Paint {
             texture.setPixels(textureSrc);
             Session.renderer.drawMesh();
         });        
+    }
+
+    private handleRightClick(e: MouseEvent) {
+        let selection = Session.renderer.selection;
+        let mask = Session.x3p.mask;
+
+        if(!mask || !selection || !selection.color) return;
+        console.log(selection.color.substring(0, 7));
+        this.colorSwitcher.value = selection.color.substring(0, 7);
     }
 }
