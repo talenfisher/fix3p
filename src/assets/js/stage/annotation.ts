@@ -1,6 +1,7 @@
 import { CustomElement } from "../decorators";
 import Editor from "../editor";
 import Session from "../session";
+import sanitize from "../sanitize";
 
 @CustomElement
 export default class Annotation extends HTMLElement {
@@ -65,15 +66,16 @@ export default class Annotation extends HTMLElement {
         Session.on("paint:color-switch", color => this.active = color === this.color);
         this.onclick = () => this.active = true;
         this.onkeyup = () => {
+            let value = sanitize(this.value);
             let annotations = Session.x3p.mask.annotations;
             let color = this.color;
             let x3p = Session.x3p;
             let editorEl = document.querySelector(`[data-tag="Annotation"][data-color="${color}"] input`) as HTMLInputElement | null;
 
-            annotations[color] = this.value;
+            annotations[color] = value;
                 
             if(editorEl) {
-                editorEl.value = this.value;
+                editorEl.value = value;
             } else {
                 let target = document.querySelector(`[data-tag="Annotations"]`);
                 let source = { children: [ x3p.manifest.getNode(`Annotation[color="${color}"]`) ] };

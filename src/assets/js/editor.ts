@@ -6,6 +6,7 @@ import { time, throws, CustomElement } from "./decorators";
 import Logger from "./logger";
 import Session from "./session";
 import fix3p from ".";
+import sanitize from "./sanitize";
 import Annotation from "./stage/annotation";
 
 const EMPTY = "";
@@ -186,7 +187,7 @@ export default class Editor extends HTMLElement {
 
         let annotations = this.stage.annotations;
         input.addEventListener("keyup", function(e) {
-            node.innerHTML = this.value;
+            node.innerHTML = sanitize(this.value);
 
             if(node.tagName === "Annotation") {
                 let color = node.getAttribute("color");
