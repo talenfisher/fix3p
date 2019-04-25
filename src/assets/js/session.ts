@@ -17,6 +17,11 @@ export interface SessionData {
 export class Session extends EventEmitter {
     private data: SessionData = {};
 
+    constructor() {
+        super();
+        this.setMaxListeners(50);
+    }
+
     public start(x3p: X3P, filename: string) {
         if(this.started) return;
         this.data.filename = filename;

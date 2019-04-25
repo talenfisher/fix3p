@@ -34,7 +34,7 @@ export default class SizeSlider extends HTMLElement {
         if(!Session.started) return 0;
 
         let { x, y } = Session.x3p.axes;
-        return (x.size / y.size) * 100;
+        return ((x.size as number) / (y.size as number)) * 100;
     }
 
     private setupListeners() {

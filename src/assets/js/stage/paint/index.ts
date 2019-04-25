@@ -6,7 +6,6 @@ import X3P from "x3p.js";
 import ColorSwitcher from "./color-switcher";
 import ModeSwitcher from "./mode-switcher";
 import HistoryButton from "./history-button";
-import AnnotationInput from "./annotation-input";
 import SizeSlider from "./size-slider";
 
 interface PaintOptions {
@@ -34,7 +33,6 @@ export default class Paint {
     public readonly modeSwitcher: ModeSwitcher;
     public readonly undoButton: HistoryButton;
     public readonly redoButton: HistoryButton;
-    public readonly annotationInput: AnnotationInput;
     public readonly sizeSlider: SizeSlider;
 
     private listeners = {
@@ -59,7 +57,6 @@ export default class Paint {
         this.colorSwitcher = stage.querySelector("fix3p-colorswitcher");
         this.sizeSlider = stage.querySelector("fix3p-sizeslider");
         this.modeSwitcher = stage.querySelector("fix3p-modeswitcher");
-        this.annotationInput = stage.querySelector("fix3p-annotationinput");
 
         this.setupListeners();
         Session.on("render", this.update.bind(this));
@@ -69,8 +66,7 @@ export default class Paint {
      * Updates the paint object to use the current file
      */
     public update() {
-        Session.paintColor = DEFAULT_COLOR;
-        this.annotationInput.color = DEFAULT_COLOR_RGB;
+        this.colorSwitcher.value = DEFAULT_COLOR;
     }
 
     /**
@@ -141,7 +137,6 @@ export default class Paint {
         let mask = Session.x3p.mask;
 
         if(!mask || !selection || !selection.color) return;
-        console.log(selection.color.substring(0, 7));
         this.colorSwitcher.value = selection.color.substring(0, 7);
     }
 }

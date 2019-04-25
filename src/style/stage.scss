@@ -137,6 +137,58 @@
         z-index: 1;
     }
 
+    fix3p-annotations {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100px;
+        padding: 15px 0;
+        z-index: 2;
+        overflow: hidden;
+        opacity: 0;
+        transition: opacity .5s;
+
+        .annotations-panorama {
+            white-space: nowrap;
+            position: relative;
+            display: inline-block;
+            transition: transform .5s;
+            height: 100%;
+
+            fix3p-annotation {
+                display: inline-block;
+                height: 100%;
+                background: $primaryColor;
+                width: 80px;
+                border-radius: 100%;
+                color: transparent;
+                line-height: 70px;
+                text-align: center;
+                transition: width .5s;
+                padding: 0 15px;
+                cursor: pointer;
+                overflow: hidden;
+                font-size: 30px;
+                margin: 0 7.5px;
+
+                &[active] {
+                    width: auto;
+                    color: white;
+                    border-radius: 25px;
+                    cursor: text;
+                    min-width: 300px;
+                }
+            }
+        }
+    }
+
+    &[data-mode="paint"] {
+        fix3p-annotations {
+            opacity: 1;
+        }
+    }
+
     #annotation {
         -webkit-appearance: none;
         appearance: none;
