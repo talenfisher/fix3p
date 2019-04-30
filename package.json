@@ -9,7 +9,7 @@
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "axios": "^0.18.0",
     "fullscreen-api-polyfill": "^1.1.2",
-    "x3p.js": "^0.7.0"
+    "x3p.js": "^0.7.1"
   },
   "devDependencies": {
     "@babel/polyfill": "^7.4.4",
@@ -44,7 +44,7 @@
     "ws": false
   },
   "browserslist": [
-      "last 2 chrome versions"
+    "last 2 chrome versions"
   ],
   "author": "Talen Fisher",
   "license": "MIT",
