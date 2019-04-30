@@ -81,6 +81,7 @@ export default class Annotations extends HTMLElement {
         window.addEventListener("resize", () => this.view(this.activeAnnotation));
         document.addEventListener("fullscreenchange", () => this.view(this.activeAnnotation));
         
+        Session.on("end", this.clear.bind(this));
         Session.on("paint:color-switch", async color => {
             if(!this.has(color) && color !== Session.backgroundColor) {
                 this.set(color, "");
