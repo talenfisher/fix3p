@@ -5,6 +5,9 @@ import { rgbToHex } from "./color";
 import { time, throws, CustomElement } from "./decorators";
 import Logger from "./logger";
 import Session from "./session";
+import fix3p from ".";
+import sanitize from "./sanitize";
+import Annotation from "./stage/annotation";
 
 const EMPTY = "";
 const TAB_ATTR = "data-view";
@@ -182,13 +185,17 @@ export default class Editor extends HTMLElement {
             }
         });    
 
-        let annotationEl = this.stage.paint.annotationInput;
+        let annotations = this.stage.annotations;
         input.addEventListener("keyup", function(e) {
-            node.innerHTML = this.value;
+            node.innerHTML = sanitize(this.value);
 
-            if(node.tagName === "Annotation" && node.getAttribute("color") === rgbToHex(annotationEl.color)) {
-                annotationEl.value = this.value;
-            }
+            if(node.tagName === "Annotation") {
+                let color = node.getAttribute("color");
+                
+                if(fix3p.render && annotations) {
+                    annotations.set(color, this.value);
+                }
+            } 
         });
 
         if(disabled) input.setAttribute("disabled", "disabled");

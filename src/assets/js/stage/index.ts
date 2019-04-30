@@ -1,8 +1,10 @@
+import "./annotation";
+import "./annotations";
+
 import "./paint/history-button";
 import "./paint/color-switcher";
 import "./paint/size-slider";
 import "./paint/mode-switcher";
-import "./paint/annotation-input";
 
 import { X3P, Renderer } from "x3p.js";
 import Paint from "./paint/index";
@@ -11,6 +13,7 @@ import Session from "../session";
 import { throws, CustomElement } from "../decorators";
 import Logger from "../logger";
 import fix3p from "../";
+import Annotations from "./annotations";
 
 export interface StageOptions {
     el: HTMLElement;
@@ -24,16 +27,17 @@ export default class Stage extends HTMLElement {
     public canvas: HTMLCanvasElement;
     public renderer: Renderer;
     public paint: Paint;
+    public annotations: Annotations;
     private fullscreenBtn: HTMLElement;
 
     connectedCallback() {
+        this.annotations = this.querySelector("fix3p-annotations");
         this.canvas = this.querySelector("canvas");
         this.paint = new Paint({ 
             stage: this, 
             editor: document.querySelector("fix3p-editor")
         });
-
-        console.log(this.paint);
+        
         this.setupFullscreenBtn();
 
         Session.on("editor:ready", this.render.bind(this));
@@ -58,7 +62,20 @@ export default class Stage extends HTMLElement {
         Logger.action(`stage mode set to ${value}`, Session.filename);
     }
 
+    public get ready() {
+        return this.hasAttribute("ready");
+    }
+
+    public set ready(ready: boolean) {
+        if(ready) {
+            this.setAttribute("ready", "");
+        } else {
+            this.removeAttribute("ready");
+        }
+    }
+
     public toggleMode(mode: MODES) {
+        if(!this.ready) return;
         let currentMode = this.mode;
         let newMode = currentMode === mode ? "normal" : mode;
         this.mode = newMode;
@@ -67,15 +84,36 @@ export default class Stage extends HTMLElement {
 
     public reset() {
         this.mode = "normal";
+        this.ready = false;
     }
 
     @throws({ message: "An error occured while rendering." })
-    private render(x3p) {
+    private async render(x3p) {
         this.enabled = fix3p.render;
         if(!this.enabled || !Session.started || !Session.x3p) return;
 
         Session.renderer = x3p.render(this.canvas, {
             decimationFactor: fix3p.decimation
+        });
+    
+        let mask = Session.x3p.mask;
+        mask.on("loaded", () => {
+            let texture = mask.getTexture(undefined);
+            let colors = mask.colors;
+            let background = mask.color;
+            
+            texture.setPixels(mask.canvas.el);
+            Session.renderer.drawMesh();
+
+            for(let color of colors) {
+                let hex = color.hex6;
+                
+                if(hex !== background) {
+                    this.annotations.set(hex, mask.annotations[hex] || "");
+                }
+            }
+
+            this.ready = true;
         });
         
         Logger.action("rendering started", Session.filename);

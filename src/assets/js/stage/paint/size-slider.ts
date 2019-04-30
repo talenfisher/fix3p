@@ -34,7 +34,7 @@ export default class SizeSlider extends HTMLElement {
         if(!Session.started) return 0;
 
         let { x, y } = Session.x3p.axes;
-        return (x.size / y.size) * 100;
+        return ((x.size as number) / (y.size as number)) * 100;
     }
 
     private setupListeners() {
@@ -45,7 +45,7 @@ export default class SizeSlider extends HTMLElement {
         if(!Session.started) return;
 
         let brush = Session.brush;
-        brush.size = this.value * this.maxBrushSize;
+        brush.size = Math.ceil(this.value * this.maxBrushSize);
         Logger.action(`brush size changed to ${brush.size}`, Session.filename);
     }
 }

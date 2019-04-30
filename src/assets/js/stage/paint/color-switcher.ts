@@ -2,6 +2,7 @@ import Session from "../../session";
 import Logger from "../../logger";
 import { CustomElement } from "../../decorators";
 import { DEFAULT_COLOR } from "./";
+import { rgbToHex } from "../../color";
 
 interface ColorSwitcherOptions {
     el: HTMLElement;
@@ -22,7 +23,7 @@ export default class ColorSwitcher extends HTMLElement {
     }
 
     public get value() {
-        return this.input.value;
+        return rgbToHex(this.input.value);
     }
 
     public set value(value: string) {
@@ -39,9 +40,9 @@ export default class ColorSwitcher extends HTMLElement {
         this.input.onchange = e => {
             if(!Session.started) return;
             
-            let color = this.input.value;
+            let color = this.value;
 
-            Session.paintColor = color;
+            Session.paintColor = rgbToHex(color);
             this.overlay.style.backgroundColor = color;
             Logger.action(`switched color to ${color}`, Session.filename);
         }

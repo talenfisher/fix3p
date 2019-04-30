@@ -67,9 +67,6 @@ export function throws(options: { message: string, classes?: string[], reset?: b
     }
 }
 
-
-
-
 export function CustomElement(constructor) {
     customElements.define(`fix3p-${constructor.name.toLowerCase()}`, constructor);
     return constructor;

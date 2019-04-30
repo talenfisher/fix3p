@@ -17,6 +17,11 @@ export interface SessionData {
 export class Session extends EventEmitter {
     private data: SessionData = {};
 
+    constructor() {
+        super();
+        this.setMaxListeners(50);
+    }
+
     public start(x3p: X3P, filename: string) {
         if(this.started) return;
         this.data.filename = filename;
@@ -66,6 +71,10 @@ export class Session extends EventEmitter {
 
     public get texture() {
         return this.data.texture;
+    }
+
+    public get backgroundColor() {
+        return this.data.x3p.mask.color;
     }
 
     public get brush() {
