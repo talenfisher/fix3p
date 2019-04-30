@@ -45,7 +45,7 @@ export default class SizeSlider extends HTMLElement {
         if(!Session.started) return;
 
         let brush = Session.brush;
-        brush.size = this.value * this.maxBrushSize;
+        brush.size = Math.ceil(this.value * this.maxBrushSize);
         Logger.action(`brush size changed to ${brush.size}`, Session.filename);
     }
 }
