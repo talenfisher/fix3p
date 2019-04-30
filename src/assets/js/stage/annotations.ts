@@ -82,12 +82,15 @@ export default class Annotations extends HTMLElement {
         document.addEventListener("fullscreenchange", () => this.view(this.activeAnnotation));
         
         Session.on("paint:color-switch", async color => {
-            if(!this.has(color)) {
+            if(!this.has(color) && color !== Session.backgroundColor) {
                 this.set(color, "");
                 
                 let node = this.getNode(color) as Annotation;
+                let value = Session.x3p.mask.annotations[color];
+
                 await node.ready;
                 node.active = true;
+                node.value = value || "";
             }
         });
     }

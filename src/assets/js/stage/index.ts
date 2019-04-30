@@ -85,12 +85,14 @@ export default class Stage extends HTMLElement {
     
         let mask = Session.x3p.mask;
         mask.on("loaded", () => {
-            let canvas = mask.canvas;
+            let texture = mask.getTexture();
+            let colors = mask.colors;
             let background = mask.color;
-            let colors = canvas.getColors();
-    
+            
+            texture.setPixels(mask.canvas.el);
+            
             for(let color of colors) {
-                color = color.substring(0, 7); // remove alpha component
+                color = color.hex6;
                 
                 if(color !== background) {
                     this.annotations.set(color, mask.annotations[color] || "");

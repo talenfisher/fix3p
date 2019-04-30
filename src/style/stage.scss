@@ -162,24 +162,24 @@
                 background: $primaryColor;
                 width: 80px;
                 border-radius: 100%;
-                color: transparent;
+                color: white;
                 line-height: 70px;
                 text-align: center;
                 transition: width .5s;
                 padding: 0 15px;
                 cursor: pointer;
                 overflow: hidden;
-                font-size: 30px;
+                font-size: 0;
                 margin: 0 7.5px;
                 position: relative;
-
+                border: 1px solid black;
+                
                 &[active] {
                     width: auto;
-                    color: white;
                     border-radius: 25px;
                     cursor: text;
                     min-width: 400px;
-
+                    font-size: 30px;
 
                     &:empty:after {
                         content: "Annotation Name";

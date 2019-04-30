@@ -73,6 +73,10 @@ export class Session extends EventEmitter {
         return this.data.texture;
     }
 
+    public get backgroundColor() {
+        return this.data.x3p.mask.color;
+    }
+
     public get brush() {
         return this.data.brush;
     }

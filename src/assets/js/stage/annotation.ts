@@ -2,6 +2,8 @@ import { CustomElement } from "../decorators";
 import Editor from "../editor";
 import Session from "../session";
 import sanitize from "../sanitize";
+import Color from "@talenfisher/color";
+import ColorSwitcher from "./paint/color-switcher";
 
 @CustomElement
 export default class Annotation extends HTMLElement {
@@ -9,7 +11,8 @@ export default class Annotation extends HTMLElement {
 
     connectedCallback() {
         this.contentEditable = "true";
-        this.style.background = this.color;
+
+        this.color = this.getAttribute("color");
         this.setupListeners();
     }
 
@@ -28,8 +31,11 @@ export default class Annotation extends HTMLElement {
         return this.getAttribute("color") as string;
     }
 
-    set color(color) {
-        this.setAttribute("color", color);
+    set color(value: string) {
+        let color = new Color(value);
+        this.setAttribute("color", color.hex);
+        this.style.background = color.hex;
+        this.style.color = color.isDark ? "white" : "black";
     }
 
     get active() {
@@ -54,17 +60,26 @@ export default class Annotation extends HTMLElement {
     }
 
     set value(value) {
+        let before = this.value;
         this.innerHTML = value;
-        this.dispatchEvent(new Event("change"));
+
+        if(value !== before) {
+            this.dispatchEvent(new Event("change"));
+        }
     }
 
     toggle() {
         this.active = !this.active;
     }
 
-    private setupListeners() {
-        Session.on("paint:color-switch", color => this.active = color === this.color);
-        this.onclick = () => this.active = true;
+    private setupListeners() {        
+        this.onclick = () => {
+            this.active = true;
+
+            let colorSwitcher = document.querySelector("fix3p-colorswitcher") as ColorSwitcher;
+            colorSwitcher.value = this.color;
+        }
+
         this.onkeyup = () => {
             let value = sanitize(this.value);
             let annotations = Session.x3p.mask.annotations;
@@ -91,7 +106,13 @@ export default class Annotation extends HTMLElement {
                 let editor = document.querySelector("fix3p-editor") as Editor;
                 editor.inputify(source, target);
             }
-        }
+        };
+
+        Session.on("paint:color-switch", color => {
+            if(color === this.color && !this.active) {
+                this.active = true;
+            }
+        });
     }
 
     static create(color: string, value: string = "") {

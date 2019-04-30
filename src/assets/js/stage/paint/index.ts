@@ -112,7 +112,7 @@ export default class Paint {
     private dispatch(e: MouseEvent, name: "begin" | "move" | "end") {
         // return if right mouse button was pressed
         if(!Session.renderer)   return;
-        if(!!(e.buttons & 2))    return this.handleRightClick(e);
+        if(e.button === 2)    return this.handleRightClick(e);
 
         let brush = Session.brush;
         let selection = Session.renderer.selection;
