@@ -1,5 +1,5 @@
 .active-btn {
-    border: 5px solid $primaryColor;
+    border: 3px solid $primaryColor;
 }
 
 .stage {
@@ -149,6 +149,23 @@
         opacity: 0;
         transition: opacity .5s;
 
+        &[loading] {
+            &:before {
+                position: absolute;
+                content: "Processing Colors...";
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                z-index: 2;
+                text-align: center;
+                line-height: 100px;
+                color: $primaryColor;
+                font-size: 2em;
+                background: rgba(255, 255, 255, 0.9);
+            }
+        }
+
         .annotations-panorama {
             white-space: nowrap;
             position: relative;
@@ -173,7 +190,7 @@
                 margin: 0 7.5px;
                 position: relative;
                 border: 1px solid black;
-                
+
                 &[active] {
                     width: auto;
                     border-radius: 25px;
@@ -254,6 +271,25 @@
         #annotation { 
             opacity: 1;
             pointer-events: initial;
+        }
+    }
+
+    &:not([ready]) {
+        .pane-paint-btn {
+            pointer-events: none;
+            opacity: 0.8;
+
+            &:after {
+                position: absolute;
+                right: 100%;
+                top: 0;
+                height: 100%;
+                line-height: 50px;
+                content: "Reading Colors...";
+                font-size: 0.5em;
+                font-family: Montserrat, sans-serif;
+                
+            }
         }
     }
 }

@@ -62,7 +62,20 @@ export default class Stage extends HTMLElement {
         Logger.action(`stage mode set to ${value}`, Session.filename);
     }
 
+    public get ready() {
+        return this.hasAttribute("ready");
+    }
+
+    public set ready(ready: boolean) {
+        if(ready) {
+            this.setAttribute("ready", "");
+        } else {
+            this.removeAttribute("ready");
+        }
+    }
+
     public toggleMode(mode: MODES) {
+        if(!this.ready) return;
         let currentMode = this.mode;
         let newMode = currentMode === mode ? "normal" : mode;
         this.mode = newMode;
@@ -71,7 +84,7 @@ export default class Stage extends HTMLElement {
 
     public reset() {
         this.mode = "normal";
-        this.annotations.clear();
+        this.ready = false;
     }
 
     @throws({ message: "An error occured while rendering." })
@@ -85,19 +98,22 @@ export default class Stage extends HTMLElement {
     
         let mask = Session.x3p.mask;
         mask.on("loaded", () => {
-            let texture = mask.getTexture();
+            let texture = mask.getTexture(undefined);
             let colors = mask.colors;
             let background = mask.color;
             
             texture.setPixels(mask.canvas.el);
-            
+            Session.renderer.drawMesh();
+
             for(let color of colors) {
-                color = color.hex6;
+                let hex = color.hex6;
                 
-                if(color !== background) {
-                    this.annotations.set(color, mask.annotations[color] || "");
+                if(hex !== background) {
+                    this.annotations.set(hex, mask.annotations[hex] || "");
                 }
             }
+
+            this.ready = true;
         });
         
         Logger.action("rendering started", Session.filename);
