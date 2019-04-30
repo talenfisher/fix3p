@@ -2,7 +2,7 @@ import Session from "../../session";
 import Logger from "../../logger";
 import { CustomElement } from "../../decorators";
 
-@CustomElement
+@CustomElement("sizeslider")
 export default class SizeSlider extends HTMLElement {
     private input: HTMLInputElement;
 

@@ -4,7 +4,7 @@ import { CustomElement } from "../../decorators";
 
 export type HistoryButtonType = "undo" | "redo";
 
-@CustomElement
+@CustomElement("historybutton")
 export default class HistoryButton extends HTMLElement {
     connectedCallback() {
         this.validateType(this.type);

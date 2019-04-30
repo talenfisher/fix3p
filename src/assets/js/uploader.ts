@@ -7,7 +7,7 @@ import Logger from "./logger";
 /**
  * The uploader element
  */
-@CustomElement
+@CustomElement("uploader")
 export default class Uploader extends HTMLElement {
     private label: HTMLElement; 
     private input: HTMLInputElement;

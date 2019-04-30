@@ -22,7 +22,7 @@ export interface StageOptions {
 
 export type MODES = "normal" | "paint";
 
-@CustomElement
+@CustomElement("stage")
 export default class Stage extends HTMLElement {
     public canvas: HTMLCanvasElement;
     public renderer: Renderer;

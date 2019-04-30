@@ -43,6 +43,9 @@
   "browser": {
     "ws": false
   },
+  "browserslist": [
+      "last 2 chrome versions"
+  ],
   "author": "Talen Fisher",
   "license": "MIT",
   "staticFiles": [

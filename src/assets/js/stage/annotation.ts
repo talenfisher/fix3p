@@ -5,7 +5,7 @@ import sanitize from "../sanitize";
 import Color from "@talenfisher/color";
 import ColorSwitcher from "./paint/color-switcher";
 
-@CustomElement
+@CustomElement("annotation")
 export default class Annotation extends HTMLElement {
     public onactivate: any;
 

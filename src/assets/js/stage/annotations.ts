@@ -2,7 +2,7 @@ import { CustomElement } from "../decorators";
 import Annotation from "./annotation";
 import Session from "../session";
 
-@CustomElement
+@CustomElement("annotations")
 export default class Annotations extends HTMLElement {
     private panorama: HTMLElement;
     private activeAnnotation: Annotation;
