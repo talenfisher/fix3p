@@ -163,3 +163,37 @@ fix3p-slider {
         }
     }
 }
+
+fix3p-fileinput {
+    border: 1px solid;
+    height: 50px;
+    line-height: 50px;
+    display: block;
+    border-radius: 25px;
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 0 15px;
+    position: relative;
+    color: $primaryColor;
+
+
+    &:before {
+        content: "Choose a File";
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: $primaryColor;
+        color: white;
+        width: 100%;
+        height: 100%;
+        border-radius: 25px;
+        opacity: 0;
+        transition: opacity .5s;
+    }
+
+    &:hover:before {
+        opacity: 1;
+    }
+}

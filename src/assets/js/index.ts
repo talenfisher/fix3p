@@ -9,6 +9,7 @@ import Popup from "./popup";
 import axios from "axios";
 import Logger, { setup as setupLogger } from "./logger";
 import { getHeaderPart } from "./util";
+import { Manifest } from "x3p.js";
 
 declare var window: any;
 declare var document: any;
@@ -20,6 +21,7 @@ import "./uploader";
 import "./editor";
 import "./stage";
 
+
 class FiX3P {
     public session = Session;
     public extLoaded: boolean = false;
@@ -27,9 +29,11 @@ class FiX3P {
     public reporting: boolean = localStorage.getItem("reporting") === "on";
     public version: string = document.querySelector(`meta[name="fix3p.version"]`).getAttribute("value");
     public decimation: number = Number(localStorage.getItem("decimation"));
+    public presets: string = localStorage.getItem("presets") || "";
 
     public constructor() {
         setupLogger(this);
+        Manifest.defaultMask = this.presets;
         this.checkForExtension();
 
         document.on("WebComponentsReady", () => {
