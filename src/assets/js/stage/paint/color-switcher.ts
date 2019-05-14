@@ -9,7 +9,7 @@ interface ColorSwitcherOptions {
     defaultColor: string;
 }
 
-@CustomElement
+@CustomElement("colorswitcher")
 export default class ColorSwitcher extends HTMLElement {
     private overlay: HTMLElement;
     private input: HTMLInputElement;

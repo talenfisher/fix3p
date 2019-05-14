@@ -20,7 +20,7 @@ const LABEL_TRANSFORMS = {
     MD5ChecksumPointData: "MD5 Checksum"
 };
 
-@CustomElement
+@CustomElement("editor")
 export default class Editor extends HTMLElement {
     private nav: Element;
     private main: Element;

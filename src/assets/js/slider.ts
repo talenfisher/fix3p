@@ -2,7 +2,7 @@ import { CustomElement } from "./decorators";
 
 const THUMB_WIDTH = 30;
 
-@CustomElement
+@CustomElement("slider")
 export default class Slider extends HTMLElement {
     private track: HTMLElement;
     private thumb: HTMLElement;

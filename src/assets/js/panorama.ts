@@ -1,7 +1,7 @@
 import Session from "./session";
 import { CustomElement } from "./decorators";
 
-@CustomElement
+@CustomElement("panorama")
 export default class Panorama extends HTMLElement {
     connectedCallback() {
         Session.on("editor:ready", () => this.view = "editor");

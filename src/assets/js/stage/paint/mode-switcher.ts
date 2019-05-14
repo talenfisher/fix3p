@@ -8,7 +8,7 @@ interface ModeSwitcherOptions {
 
 type Mode = "Paint" | "Lasso" | "Eraser";
 
-@CustomElement
+@CustomElement("modeswitcher")
 export default class ModeSwitcher extends HTMLElement {
     private select: HTMLSelectElement;
     
