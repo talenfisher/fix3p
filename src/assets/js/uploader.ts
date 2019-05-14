@@ -10,7 +10,7 @@ import Logger from "./logger";
 @CustomElement("uploader")
 export default class Uploader extends HTMLElement {
     private label: HTMLElement; 
-    private input: HTMLInputElement;
+    private input: HTMLInputElement; 
     private loadingPopup: Popup;
 
     /**
@@ -67,8 +67,8 @@ export default class Uploader extends HTMLElement {
         
         Session.start(x3p, file.name);
     }
-
-    /**
+   
+    /** 
      * Resets the uploader to its initial state
      */
     reset() {
