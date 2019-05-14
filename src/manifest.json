@@ -6,8 +6,9 @@
     "permissions": [
         "webRequest",
         "webRequestBlocking",
+        "webNavigation",
         "tabs",
-        "file://*/*"
+        "<all_urls>"
     ],
     "background": {
         "scripts": ["chrome.js"],

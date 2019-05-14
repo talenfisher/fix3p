@@ -33,6 +33,7 @@ class FiX3P {
 
         document.on("WebComponentsReady", () => {
             let file = localStorage.getItem("openfile");
+            console.log(file);
             this.init(file);
         });
     }
@@ -70,10 +71,14 @@ class FiX3P {
     }
 
     private async readLocalFile(filename: string): Promise<File> {
-        filename = decodeURIComponent(filename);
-        let xhrResponse = await axios.get(filename, { responseType: "blob" });
+        let xhrResponse = await axios.get(filename, {
+            headers: {
+                "Accept": "*/*",
+                "X-Requested-With": "fix3p"
+            },
+            responseType: "blob" 
+        });
         let xhrData = xhrResponse.data;
-
         return new File([ xhrData ], filename);
     }
 }
