@@ -62,7 +62,7 @@ export default class Uploader extends HTMLElement {
         this.loadingPopup.display();
         
         Logger.action(`read started`, file.name);
-        let x3p = await new X3P({ file });
+        let x3p = await X3P.load({ file });
         Logger.action(`read success`, file.name);
         
         Session.start(x3p, file.name);
