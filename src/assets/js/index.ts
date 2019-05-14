@@ -8,6 +8,7 @@ import Session from "./session";
 import Popup from "./popup";
 import axios from "axios";
 import Logger, { setup as setupLogger } from "./logger";
+import { getHeaderPart } from "./util";
 
 declare var window: any;
 declare var document: any;
@@ -78,7 +79,12 @@ class FiX3P {
             },
             responseType: "blob" 
         });
+        
         let xhrData = xhrResponse.data;
+        let headers = xhrResponse.headers;
+
+        // if the downloaded file was an attachment, get the real filename from the content-disposition header
+        filename = "content-disposition" in headers ? getHeaderPart(headers["content-disposition"], "filename") : filename;
         return new File([ xhrData ], filename);
     }
 }
