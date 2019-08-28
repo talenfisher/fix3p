@@ -1,43 +1,35 @@
 language: node_js
-
 node_js:
-  - '10'
-
+- '10'
 before_script:
-  - npm install
-  - mkdir dist
-  - cd dist
-  
-  - git init
-  - git config user.email "travis@example.com"
-  - git config user.name "Travis CI"
-  - git remote add origin https://${GH_AUTH}@github.com/talenfisher/fix3p.git
-  - git fetch
-  - git reset origin/gh-pages && git checkout gh-pages
-  
-  # setup test files
-  - cd ../tests
-  - git clone https://${GH_AUTH}@github.com/talenfisher/fix3p-testfiles.git data
-  - cd ../
-
+- npm install
+- mkdir dist
+- cd dist
+- git init
+- git config user.email "travis@example.com"
+- git config user.name "Travis CI"
+- git remote add origin https://${GH_AUTH}@github.com/talenfisher/fix3p.git
+- git fetch
+- git reset origin/gh-pages && git checkout gh-pages
+- cd ../tests
+- git clone https://${GH_AUTH}@github.com/talenfisher/fix3p-testfiles.git data
+- cd ../
 script:
-  - NODE_ENV="development" npm run build
-  - npm run test
-
+- NODE_ENV="development" npm run build
+- npm run test
 deploy:
-  - provider: script
-    skip-cleanup: true
-    script: bash bin/deploy
-    local-dir: dist
-    on:
-      all_branches: true
-      condition: $TRAVIS_BRANCH == "master" || -n $TRAVIS_TAG
-
-  - provider: script
-    script: npm run release
-    skip_cleanup: true
-    on:
-      tags: true
-
+- provider: script
+  skip-cleanup: true
+  script: bash bin/deploy
+  local-dir: dist
+  on:
+    all_branches: true
+    condition: $TRAVIS_BRANCH == "master" || -n $TRAVIS_TAG
+- provider: script
+  script: npm run release
+  skip_cleanup: true
+  on:
+    tags: true
 notifications:
-  slack: csafe-isu:$SLACK_TOKEN
+  slack:
+    secure: CBbAVIaxkzqKOeem6nfLrCehA31Ac451+kulFyrUnLHNVVXpwYh1olyZUDBVwIEgjAlZMZ0qPxIQEdCiPpc8eFIy7oF6e+Yhzanh9PdXUfC39atqqf+Kg4U6uXC032/0+t3UaTe6HLc8Dqndm90/rcGdwTdddMudfJQNiWNxxdwn+RI6czSVrg6fXae3pc/2BqwkYLCOCh4+jzuXK0OX/x5MujjsMbA3okCLkd0zmSDzS5cliTmIVU15ABSEJos9B7rLwLlQOIheucidBGJLbxz5c2cfX/Gf9jf+4+PI9mhPCC+oC0CSltYHAgkmxd1lyP02+727QlO4aw8Xq6Lvs/vLBPVndTTHMDcaICDh0Vp86HBEskVcnB2wIqVm0r9YXRPRJQuUuFxzExD7g3hHLzXI/ydk4eUrBiKikNGYPhMjGpVC9d3hJO6I7OnbCJHydS0ks+0zW+8yX3K22w1rXXs0Qnl1/njHoc518rTvumpeqUMT7xE50yjZqJlE7n8xIgvOA8XqqBr3hhmFOEFv7lWM6udKjxh14IIyd3fsWtuSVIHSFMNC+mVmuDvHMGmrkJvpxc+8hIV3rkPaArc0k/Ck8wjjxXFHWTy0RkLW1MSi6GCt8zQFELU6k7qLMH9Dn5KBq1lbJiKrFZUtqP9Vobs4JOaG5z+1Su7b9OdYC9Q=
