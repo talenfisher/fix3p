@@ -1,6 +1,6 @@
 import { EventEmitter } from "events";
 import { clearCache } from "typedarray-pool";
-import { X3P, Renderer } from "x3p.js";
+import X3P, { Renderer } from "x3p.js";
 import { Brush } from "@talenfisher/canvas";
 import Logger from "./logger"; 
 

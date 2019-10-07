@@ -6,7 +6,7 @@ import "./paint/color-switcher";
 import "./paint/size-slider";
 import "./paint/mode-switcher";
 
-import { X3P, Renderer } from "x3p.js";
+import { Renderer } from "x3p.js";
 import Paint from "./paint/index";
 import Editor from "../editor";
 import Session from "../session";
