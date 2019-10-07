@@ -1,13 +1,11 @@
-import { X3P } from "x3p.js";
+import X3P from "x3p.js";
 import Stage from "./stage";
 import Popup from "./popup";
-import { rgbToHex } from "./color";
 import { time, throws, CustomElement } from "./decorators";
 import Logger from "./logger";
 import Session from "./session";
 import fix3p from ".";
 import sanitize from "./sanitize";
-import Annotation from "./stage/annotation";
 
 const EMPTY = "";
 const TAB_ATTR = "data-view";
