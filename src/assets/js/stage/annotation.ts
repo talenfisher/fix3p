@@ -80,6 +80,13 @@ export default class Annotation extends HTMLElement {
             colorSwitcher.value = this.color;
         }
 
+        this.onkeydown = e => {
+            if(e.key === "Enter") {
+                e.preventDefault();
+                this.blur();
+            }
+        }
+
         this.onkeyup = () => {
             let value = sanitize(this.value);
             let annotations = Session.x3p.mask.annotations;
