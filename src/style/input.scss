@@ -164,9 +164,37 @@ fix3p-slider {
     }
 }
 
-fix3p-file {
+fix3p-file-input {
     width: 100%;
     height: 100%;
+
+    .filename-viewer {
+        height: 100%;
+        line-height: 50px;
+        display: none;
+        white-space: nowrap;
+        position: relative;
+        vertical-align: middle;
+
+        .text {
+            display: inline-block;
+            font-size: 1.3em;
+            white-space: nowrap;
+            padding-right: 50px;
+            line-height: 50px;
+            height: 50px;        
+            vertical-align: middle;
+        }
+        
+        .delete-btn {
+            display: inline-block;
+            font-size: 30px;
+            line-height: 50px;
+            vertical-align: middle;
+            color: $primaryColor;
+            cursor: pointer;
+        }
+    }
 
     .upload-btn {
         width: 100%;
@@ -178,6 +206,7 @@ fix3p-file {
             top: 0;
             left: 0;
             padding: 10px;
+            display: none;
         }
         span {
             position: absolute;
@@ -202,6 +231,16 @@ fix3p-file {
                 background: $primaryColor;
                 color: white;
             }
+        }
+    }
+
+    &.active {
+        .upload-btn {
+            display: none;
+        }
+
+        .filename-viewer {
+            display: block;
         }
     }
 }
