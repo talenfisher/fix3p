@@ -1,6 +1,7 @@
 import "@babel/polyfill";
 import "@webcomponents/webcomponentsjs";
 import "./slider";
+import "./file";
 
 import Slider from "./slider";
 
