@@ -1,5 +1,7 @@
 import "@babel/polyfill";
 import "@webcomponents/webcomponentsjs";
+
+import "./dom/setup";
 import "./slider";
 import "./file-input";
 
