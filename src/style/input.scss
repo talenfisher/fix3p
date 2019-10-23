@@ -226,6 +226,7 @@ fix3p-file-input {
             border-radius: 25px;
             transition: background .5s, color .5s;
             cursor: pointer;
+            overflow: hidden;
 
             &:hover {
                 background: $primaryColor;
