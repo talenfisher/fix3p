@@ -62,7 +62,8 @@ export default class Uploader extends HTMLElement {
         this.loadingPopup.display();
         
         Logger.action(`read started`, file.name);
-        let x3p = await X3P.load({ file });
+        let defaultMask = localStorage.getItem("annotation-preset") || undefined;
+        let x3p = await X3P.load({ file, defaultMask });
         Logger.action(`read success`, file.name);
         
         Session.start(x3p, file.name);
