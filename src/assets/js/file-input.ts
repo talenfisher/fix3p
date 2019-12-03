@@ -1,6 +1,7 @@
 import { CustomElement } from "./decorators";
 import Popup from "./popup";
 
+const _file = Symbol();
 
 @CustomElement("file-input")
 export default class FileInput extends HTMLElement {
@@ -8,8 +9,12 @@ export default class FileInput extends HTMLElement {
     private input: HTMLInputElement;
     private displayLabel: HTMLElement;
     private deleteBtn: HTMLElement;
+    private changeListeners: CallableFunction[] = [];
+    private [_file]: File;
 
     public connectedCallback() {
+        if(!this.isConnected) return;
+
         this.innerHTML = `
             <div class="upload-btn">
                 <input type="file" accept=".xml">
@@ -31,30 +36,57 @@ export default class FileInput extends HTMLElement {
 
     private setupListeners() {
         this.uploadBtn.onclick = e => this.input.click();
-        this.input.onchange = this.handleOnChange.bind(this);
+        this.input.onchange = e => {
+            e.stopPropagation();
+            this.handleOnChange();
+        }
 
         this.deleteBtn.onclick = e => {
             this.input.value = "";
-            this.handleOnChange(e);
+            this.handleOnChange();
         }
     }
 
-    private handleOnChange(e) {
+    private async handleOnChange() {
         if(this.input.files.length == 0) {
-            this.classList.remove("active");
-        } else {
-            let filename = this.input.files[0].name;
-            if(!filename.match(/.xml$/)) {
-                let popup = new Popup("Please upload an XML File.");
-                popup.display(3, true);
-                return;
+            this.file = null;
+            return;
+        }
+
+        let file = this.input.files[0];
+        let filename = file.name;
+        
+        if(!filename.match(/.xml$/)) {
+            let popup = new Popup("Please upload an XML File.");
+            popup.display(3, true);
+            return;
+        }
+
+        this.file = file;
+    }
+
+    get file() {
+        return this[_file];
+    }
+
+    set file(file: File) {
+        let prev = this.file;
+        this[_file] = file;
+
+        (async () => {
+            if(prev !== file) {
+                let event = new Event("change", { cancelable: true });
+                if(await this.dispatchEventAsync(event)) { // event was cancelled
+                    return this[_file] = prev;
+                }
             }
 
-            let cancelled = this.dispatchEvent(e);
-            if(!cancelled) {
+            if(file !== null) {    
                 this.classList.add("active");
-                this.displayLabel.innerHTML = this.input.files[0].name;
+                this.displayLabel.innerHTML = file.name;
+            } else {
+                this.classList.remove("active");
             }
-        }
+        })();
     }
 }

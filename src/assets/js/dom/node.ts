@@ -60,6 +60,7 @@ Node.prototype.on = function(event, handler) {
     this.addEventListener(event, handler);
 }
 
+
 /**
  * Adds an event handler to every element of a node list
  */
