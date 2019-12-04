@@ -5,16 +5,19 @@ FiX3P is a web application for editing X3P files, provided by [CSAFE](https://fo
 
 
 # Table of Contents
-1. [Installation](#installation)
-    1. [Chrome Web Store](#chrome-web-store)
-    2. [Docker](#docker)
-    3. [From Source](#from-source)
-2. [Usage](#usage)
-    1. [General Usage](#general-usage)
-    2. [Chrome Extension](#chrome-extension)
-    3. [Settings](#settings)
-       1. [Crash Reporting](#crash-reporting)
-       2. [Presets](#presets)
+- [FiX3P ![Build Status](https://travis-ci.org/talenfisher/fix3p) ![](https://img.shields.io/github/release-pre/talenfisher/fix3p.svg) ![](https://img.shields.io/david/talenfisher/fix3p.svg)](#fix3p-build-statushttpstravis-ciorgtalenfisherfix3p-httpsimgshieldsiogithubrelease-pretalenfisherfix3psvg-httpsimgshieldsiodavidtalenfisherfix3psvg)
+- [Table of Contents](#table-of-contents)
+- [Installation](#installation)
+  - [Chrome Extension](#chrome-extension)
+  - [Docker](#docker)
+  - [From Source](#from-source)
+- [Usage / Features](#usage--features)
+  - [General Usage](#general-usage)
+  - [Chrome Extension](#chrome-extension-1)
+  - [Settings](#settings)
+    - [Crash Reporting](#crash-reporting)
+    - [Render Decimation](#render-decimation)
+    - [Presets](#presets)
 
 # Installation
 Note: if you install the chrome extension, you do not have to install the web application.  They both work independently.  
@@ -55,7 +58,7 @@ Go to /settings.html on hosted versions or right-click on the FiX3P icon and sel
 To enable automatic crash reporting, [enable the setting.](https://github.com/talenfisher/fix3p/wiki/Crash-Reporting)
 
 ### Render Decimation
-If you do not have powerful enough hardware to render high-polygon X3P files, you may turn on render decimation.  Control this by moving the render decimation slider left or right on the settings page.  Farthest left = all polygons, farthest right = less polygons.
+If you do not have powerful enough hardware to render high-polygon X3P files, you may turn on render decimation.  Control this by moving the render decimation slider left or right on the settings page.  Left = more polygons, right = less polygons.
 
 ### Presets
-To set default annotations and backgrounds, [use mask & Annotation preset files.](https://github.com/talenfisher/fix3p/wiki/Mask-&-Annotation-Presets)
+To set default annotations and backgrounds, [use mask & annotation preset files.](https://github.com/talenfisher/fix3p/wiki/Mask-&-Annotation-Presets)
