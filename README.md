@@ -12,7 +12,9 @@ FiX3P is a web application for editing X3P files, provided by [CSAFE](https://fo
 2. [Usage](#usage)
     1. [General Usage](#general-usage)
     2. [Chrome Extension](#chrome-extension)
-3. [Future](#future)
+    3. [Settings](#settings)
+       1. [Crash Reporting](#crash-reporting)
+       2. [Presets](#presets)
 
 # Installation
 Note: if you install the chrome extension, you do not have to install the web application.  They both work independently.  
@@ -38,10 +40,22 @@ After installing from source, run `npm run develop` to both start the server and
 
 ## General Usage
 1. Drag-and-drop an X3P file onto the upload stage
-2. Edit the manifest file's fields and/or select vertex regions
+2. Edit the manifest file's fields and/or annotate the X3P's surface
 3. Click Download or press ctrl-s to save your changes and close the editor
 4. Rinse and repeat
 
 ## Chrome Extension
 - Use your operating system's file explorer or equivalent, use the "open with/open in" option to open X3P files in Google Chrome.
 - Quickly access FiX3P via an icon labelled "X3P" next to the omnibar/search bar.  
+
+## Settings
+Go to /settings.html on hosted versions or right-click on the FiX3P icon and select "Options" to access the settings page of FiX3P.
+
+### Crash Reporting
+To enable automatic crash reporting, [enable the setting.](https://github.com/talenfisher/fix3p/wiki/Crash-Reporting)
+
+### Render Decimation
+If you do not have powerful enough hardware to render high-polygon X3P files, you may turn on render decimation.  Control this by moving the render decimation slider left or right on the settings page.  Farthest left = all polygons, farthest right = less polygons.
+
+### Presets
+To set default annotations and backgrounds, [use mask & Annotation preset files.](https://github.com/talenfisher/fix3p/wiki/Mask-&-Annotation-Presets)
