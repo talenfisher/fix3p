@@ -5,6 +5,7 @@ FiX3P is a web application for editing X3P files, provided by [CSAFE](https://fo
 
 
 # Table of Contents
+
 - [FiX3P ![Build Status](https://travis-ci.org/talenfisher/fix3p) ![](https://img.shields.io/github/release-pre/talenfisher/fix3p.svg) ![](https://img.shields.io/david/talenfisher/fix3p.svg)](#fix3p-build-statushttpstravis-ciorgtalenfisherfix3p-httpsimgshieldsiogithubrelease-pretalenfisherfix3psvg-httpsimgshieldsiodavidtalenfisherfix3psvg)
 - [Table of Contents](#table-of-contents)
 - [Installation](#installation)
