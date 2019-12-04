@@ -2,7 +2,8 @@ import { LogReporter, LogReporterResponse, LogReporterOptions } from ".";
 import Item from "../item";
 import axios from "axios";
 
-const KRASH_REPORT_URL = "https://krash.vila.cythral.com/report";
+const KRASH_REPORT_URL = "https://krash.brigh.id/report";
+
 export default class KrashReporter implements LogReporter {
     private version: string;
 
