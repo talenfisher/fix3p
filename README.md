@@ -1,13 +1,10 @@
-# FiX3P [![Build Status](https://travis-ci.org/talenfisher/fix3p.svg?branch=master)](https://travis-ci.org/talenfisher/fix3p) ![](https://img.shields.io/github/release-pre/talenfisher/fix3p.svg) ![](https://img.shields.io/david/talenfisher/fix3p.svg)
+# FiX3P 
+[![Build Status](https://travis-ci.org/talenfisher/fix3p.svg?branch=master)](https://travis-ci.org/talenfisher/fix3p) ![](https://img.shields.io/github/release-pre/talenfisher/fix3p.svg) ![](https://img.shields.io/david/talenfisher/fix3p.svg)
 
 
 FiX3P is a web application for editing X3P files, provided by [CSAFE](https://forensicstats.org). A hosted version is located [here](https://talenfisher.github.io/fix3p).  
 
-
-# Table of Contents
-
-- [FiX3P ![Build Status](https://travis-ci.org/talenfisher/fix3p) ![](https://img.shields.io/github/release-pre/talenfisher/fix3p.svg) ![](https://img.shields.io/david/talenfisher/fix3p.svg)](#fix3p-build-statushttpstravis-ciorgtalenfisherfix3p-httpsimgshieldsiogithubrelease-pretalenfisherfix3psvg-httpsimgshieldsiodavidtalenfisherfix3psvg)
-- [Table of Contents](#table-of-contents)
+- [FiX3P](#fix3p)
 - [Installation](#installation)
   - [Chrome Extension](#chrome-extension)
   - [Docker](#docker)
