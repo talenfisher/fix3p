@@ -19,6 +19,7 @@ import "./panorama";
 import "./uploader";
 import "./editor";
 import "./stage";
+import Uploader from "./uploader";
 
 class FiX3P {
     public session = Session;
@@ -59,7 +60,7 @@ class FiX3P {
             popup.display();
             
             let file = await this.readLocalFile(filename);
-            let uploader = document.querySelector("fix3p-uploader");
+            let uploader = document.querySelector("fix3p-uploader") as Uploader;
             
             popup.hide(true);
             uploader.read(file);

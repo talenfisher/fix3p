@@ -2,6 +2,9 @@
  * Miscellaneous utilities
  */
 
+import X3P from "x3p.js";
+import Color from "@talenfisher/color";
+
 /**
  * Get a value from a header with several parts
  * ie Content-Disposition: attachment; filename="test.jpg"
@@ -26,4 +29,17 @@ export function getHeaderPart(header: string, partname: string) {
     }
 
     return null;
+}
+
+/**
+ * Gets colors to show as annotations for an X3P in paint mode
+ */
+export function getX3pAnnotationColors(x3p: X3P): string[] {
+    const mask = x3p.mask;
+    const annotationColors = Object.keys(mask.annotations).map(hex => new Color(hex));
+    const colors = new Set<string>();
+    for(let color of [...annotationColors, ...mask.colors]) {
+        colors.add(color.hex6);
+    }
+    return [...colors.values()].filter((color) => color !== mask.color);
 }

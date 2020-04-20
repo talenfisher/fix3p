@@ -14,6 +14,9 @@ import { throws, CustomElement } from "../decorators";
 import Logger from "../logger";
 import fix3p from "../";
 import Annotations from "./annotations";
+import Color from "@talenfisher/color";
+import { doesNotReject } from "assert";
+import { getX3pAnnotationColors } from "../util";
 
 export interface StageOptions {
     el: HTMLElement;
@@ -99,18 +102,13 @@ export default class Stage extends HTMLElement {
         let mask = Session.x3p.mask;
         mask.on("loaded", () => {
             let texture = mask.getTexture(undefined);
-            let colors = mask.colors;
-            let background = mask.color;
+            let colors = getX3pAnnotationColors(x3p);
             
             texture.setPixels(mask.canvas.el);
             Session.renderer.drawMesh();
 
-            for(let color of colors) {
-                let hex = color.hex6;
-                
-                if(hex !== background) {
-                    this.annotations.set(hex, mask.annotations[hex] || "");
-                }
+            for(let color of colors) {                
+                this.annotations.set(color, mask.annotations[color] || "");
             }
 
             this.ready = true;
